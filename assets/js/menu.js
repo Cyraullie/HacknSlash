@@ -387,7 +387,7 @@ export function createOptionsDialog (){
 
     let leftButton = document.createElement("button")
     leftButton.textContent = game.dataset.keyLeft;
-    leftButton.id = "upButton"
+    leftButton.id = "leftButton"
 
     leftDiv.appendChild(leftLabel)
     leftDiv.appendChild(leftButton)
@@ -433,7 +433,7 @@ export function createOptionsDialog (){
     
     let rightLabel = document.createElement("label")
     rightLabel.textContent = "droite";
-    rightLabel.for = "downButton"
+    rightLabel.for = "rightButton"
 
     let rightButton = document.createElement("button")
     rightButton.textContent = game.dataset.keyRight;
