@@ -104,22 +104,19 @@ export function initializeGame() {
 }
 
 function handleKeyDown(event) {
+    
     //keysPressed[event.key.toLowerCase()] = true;
     switch (event.key.toLowerCase()) {
         case game.dataset.keyUp:
-        case "arrowup":
             movingUp = true;
             break;
         case game.dataset.keyLeft:
-        case "arrowleft":
             movingLeft = true;
             break;
         case game.dataset.keyDown:
-        case "arrowdown":
             movingDown = true;
             break;
         case game.dataset.keyRight:
-        case "arrowright":
             movingRight = true;
             break;
         case "escape":
@@ -132,20 +129,16 @@ function handleKeyUp(event) {
     //keysPressed[event.key.toLowerCase()] = false;
     
     switch (event.key.toLowerCase()) {
-        case "w":
-        case "arrowup":
+        case game.dataset.keyUp:
             movingUp = false;
             break;
-        case "a":
-        case "arrowleft":
+        case game.dataset.keyLeft:
             movingLeft = false;
             break;
-        case "s":
-        case "arrowdown":
+        case game.dataset.keyDown:
             movingDown = false;
             break;
-        case "d":
-        case "arrowright":
+        case game.dataset.keyRight:
             movingRight = false;
             break;
     }
@@ -188,6 +181,7 @@ function handlePlayerMovement() {
                 targetX -= dirX * parseInt(player.dataset.speedX)
             }
 */
+
 
 
             if(movingUp && targetY > 30) { targetY -= parseInt(player.dataset.speedY); }

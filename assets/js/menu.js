@@ -31,9 +31,18 @@ export function displayEscape(isGamePaused) {
         dialog.style.display = "block";
         resumeDiv.style.display = "block";
     } else {
+    let upButton = document.getElementById("upButton");
+    let downButton = document.getElementById("downButton");
+    let leftButton = document.getElementById("leftButton");
+    let rightButton = document.getElementById("rightButton");
+    
         dialog.style.display = "none";
         resumeDiv.style.display = "none";
         customDialog.style.display = "none";
+        upButton.disabled = false;
+        downButton.disabled = false;
+        leftButton.disabled = false;
+        rightButton.disabled = false;
     }
 }
 
@@ -334,7 +343,7 @@ export function createOptionsDialog (){
     divAudio.classList.add("tab-content")
 
     let divControl = document.createElement("div")
-    divControl.textContent = "divControl"
+    divControl.textContent = "Contrôles"
     divControl.id = "control"
     divControl.classList.add("tab-content")
     
@@ -342,6 +351,122 @@ export function createOptionsDialog (){
     div1.appendChild(divAudio)
     div1.appendChild(divControl)
 
+
+    let upDiv = document.createElement("div")
+    upDiv.classList.add("keyDiv");
+    divControl.appendChild(upDiv)
+    
+    let upLabel = document.createElement("label")
+    upLabel.textContent = "haut";
+    upLabel.for = "upButton"
+
+    let upButton = document.createElement("button")
+    upButton.textContent = game.dataset.keyUp;
+    upButton.id = "upButton"
+
+    upDiv.appendChild(upLabel)
+    upDiv.appendChild(upButton)
+
+    upButton.addEventListener("click", () => {
+        upButton.textContent = "Appuyez sur la touche"
+        upButton.disabled = false;
+        upButton.addEventListener("keydown", function (event) {
+            game.dataset.keyUp = event.key.toLowerCase();
+            upButton.textContent = game.dataset.keyUp;
+            upButton.disabled = true;
+        })
+    })
+
+    let leftDiv = document.createElement("div")
+    leftDiv.classList.add("keyDiv");
+    divControl.appendChild(leftDiv)
+    
+    let leftLabel = document.createElement("label")
+    leftLabel.textContent = "gauche";
+    leftLabel.for = "leftButton"
+
+    let leftButton = document.createElement("button")
+    leftButton.textContent = game.dataset.keyLeft;
+    leftButton.id = "leftButton"
+
+    leftDiv.appendChild(leftLabel)
+    leftDiv.appendChild(leftButton)
+
+    leftButton.addEventListener("click", () => {
+        leftButton.textContent = "Appuyez sur la touche"
+        leftButton.disabled = false;
+        leftButton.addEventListener("keydown", function (event) {
+            game.dataset.keyLeft = event.key.toLowerCase();
+            leftButton.textContent = game.dataset.keyLeft;
+            leftButton.disabled = true;
+        })
+    })
+    
+    let downDiv = document.createElement("div")
+    downDiv.classList.add("keyDiv");
+    divControl.appendChild(downDiv)
+    
+    let downLabel = document.createElement("label")
+    downLabel.textContent = "bas";
+    downLabel.for = "downButton"
+
+    let downButton = document.createElement("button")
+    downButton.textContent = game.dataset.keyDown;
+    downButton.id = "downButton"
+
+    downDiv.appendChild(downLabel)
+    downDiv.appendChild(downButton)
+
+    downButton.addEventListener("click", () => {
+        downButton.textContent = "Appuyez sur la touche"
+        downButton.disabled = false;
+        downButton.addEventListener("keydown", function (event) {
+            game.dataset.keyDown = event.key.toLowerCase();
+            downButton.textContent = game.dataset.keyDown;
+            downButton.disabled = true;
+        })
+    })
+
+    let rightDiv = document.createElement("div")
+    rightDiv.classList.add("keyDiv");
+    divControl.appendChild(rightDiv)
+    
+    let rightLabel = document.createElement("label")
+    rightLabel.textContent = "droite";
+    rightLabel.for = "rightButton"
+
+    let rightButton = document.createElement("button")
+    rightButton.textContent = game.dataset.keyRight;
+    rightButton.id = "rightButton"
+
+    rightDiv.appendChild(rightLabel)
+    rightDiv.appendChild(rightButton)
+
+    rightButton.addEventListener("click", () => {
+        rightButton.textContent = "Appuyez sur la touche"
+        rightButton.disabled = false;
+        rightButton.addEventListener("keydown", function (event) {
+            game.dataset.keyRight = event.key.toLowerCase();
+            rightButton.textContent = game.dataset.keyRight;
+            rightButton.disabled = true;
+        })
+    })
+    let resume = document.createElement("p")
+    resume.id = "resumeButton"
+    resume.textContent = "Esc"
+    resume.style.position = "absolute";
+    resume.style.left = "10px";
+    resume.style.pointerEvents = "none";
+    resume.style.top = (windowHeight - 50) + "px";
+    //resume.style.width = "126px";
+    resumeDiv.appendChild(resume)
+
+    let resumeText = document.createElement("p")
+    resumeText.textContent = "Quitter le menu"
+    resumeText.style.position = "absolute";
+    resumeText.style.left = "150px";
+    resumeText.style.top = (windowHeight - 40) + "px";
+    resumeDiv.appendChild(resumeText)
     let tabArray = [tabAudio, tabControl, tabGeneral];
 
     tabArray.forEach((tab) => {
@@ -362,6 +487,7 @@ export function createOptionsDialog (){
     });
 
     customDialog.style.width = "630px"
+    customDialog.style.height = "430px"
     /*
     let div5 = document.createElement("div")
     div5.id = "buttonDiv";
