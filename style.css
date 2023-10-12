@@ -245,7 +245,6 @@ ul {
     margin-bottom: 5px;
 }
 
-/* light thème */
 button.selected {
     background-color: #4CAF50; /* Couleur de fond */
     color: white; /* Couleur du texte */
@@ -287,10 +286,19 @@ li.active {
 
 .tab-content {
     display: none;
+    height: 385px;
 }
 
 .close-button {
     display: block;
     margin-top: 10px;
 }
-/* dark thème */
+
+.keyDiv {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 50%;
+    margin: auto;
+    margin-top: 10px;
+}
