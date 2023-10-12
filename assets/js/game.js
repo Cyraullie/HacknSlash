@@ -4,7 +4,7 @@ import { windowHeight, windowWidth } from './data.js';
 import { createPlayer, } from './player.js';
 import { createMonster } from './monster.js';
 import { checkCollisionWithMonsters, startShooting } from './projectile.js';
-import { displayGameOver, displayUpgrade, createUpgradeDialog, createGameOverDialog, createEchapDialog, createOptionsDialog, displayEscape } from './menu.js';
+import { displayGameOver, displayUpgrade, createUpgradeDialog, createGameOverDialog, createEchapDialog, createOptionsDialog, displayEscape, activeButton } from './menu.js';
 import { Howl } from 'howler';
 
 let bossSound
@@ -85,6 +85,7 @@ export function initializeGame() {
 
     createOptionsDialog();
 
+    activeButton();
     const audioButton = document.getElementById("audioButton")
 
     audioButton.addEventListener("input", () => {

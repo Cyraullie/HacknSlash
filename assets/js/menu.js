@@ -9,16 +9,12 @@ export function displayGameOver(text1, text2, score) {
     let scoreText = document.getElementById("score");
     scoreText.textContent = text1 + score + text2;
     scoreText.dataset.score = score;
-    
-    activeButton();
+
     dialog.style.display = "block";
 }
 
 export function displayUpgrade(vagues) {
     let dialog = document.getElementById("upgrade");
-    if(vagues == 5){
-        activeButton();
-    }
     dialog.style.display = "block";
 }
 
@@ -295,7 +291,6 @@ export function createEchapDialog (){
     resumeText.style.top = (windowHeight - 40) + "px";
     resumeDiv.appendChild(resumeText)
 
-    activeButton();
     customDialog.style.display = "none";
 }
 
@@ -451,22 +446,7 @@ export function createOptionsDialog (){
             rightButton.disabled = true;
         })
     })
-    let resume = document.createElement("p")
-    resume.id = "resumeButton"
-    resume.textContent = "Esc"
-    resume.style.position = "absolute";
-    resume.style.left = "10px";
-    resume.style.pointerEvents = "none";
-    resume.style.top = (windowHeight - 50) + "px";
-    //resume.style.width = "126px";
-    resumeDiv.appendChild(resume)
 
-    let resumeText = document.createElement("p")
-    resumeText.textContent = "Quitter le menu"
-    resumeText.style.position = "absolute";
-    resumeText.style.left = "150px";
-    resumeText.style.top = (windowHeight - 40) + "px";
-    resumeDiv.appendChild(resumeText)
     let tabArray = [tabAudio, tabControl, tabGeneral];
 
     tabArray.forEach((tab) => {
@@ -488,24 +468,12 @@ export function createOptionsDialog (){
 
     customDialog.style.width = "630px"
     customDialog.style.height = "430px"
-    /*
-    let div5 = document.createElement("div")
-    div5.id = "buttonDiv";
-    div5.style.justifyContent = "center";
-    customDialog.appendChild(div5)
 
-
-    let button1 = document.createElement("button")
-    button1.id = "validButton"
-    button1.textContent = "Valider"
-    div5.appendChild(button1)
-*/
     game.appendChild(customDialog);
-    activeButton();
     customDialog.style.display = "none";
 }
 
-
+/*
 export function createStartDialog (){
     customDialog = document.getElementById("start");
     let div1 = document.createElement("div")
@@ -582,23 +550,20 @@ export function createStartDialog (){
     resumeText.style.top = (windowHeight - 40) + "px";
     resumeDiv.appendChild(resumeText)
 
-    activeButton();
     customDialog.style.display = "none";
 }
-
+*/
 
 //TODO un menu option
 //un menu de démarrage
 
-function activeButton(){
+export function activeButton(){
     let logButton = document.getElementById("logButton")
     let restartButton = document.getElementById("restartButton")
     let validButton = document.getElementById("validButton")
-    let resumeButton = document.getElementById("resumeButton")
     let themeButton = document.getElementById("themeButton")
     let optionButton = document.getElementById("optionButton")
-    //let tabGeneral = document.querySelectorAll('.tab-button');
-//console.log(tabGeneral)
+
     if(logButton !== null){
         logButton.addEventListener("click", () => {           
             const playerName = document.getElementById("playerName");
@@ -714,7 +679,7 @@ function activeButton(){
             let vagues = document.getElementById("vagues")
             let buttons = document.querySelectorAll('button'); 
             let dialogs = document.getElementsByClassName("dialog")
-            let audioButton = document.getElementsByClassName("audioButton")
+            //let audioButton = document.getElementsByClassName("audioButton")
             
             //let map = document.getElementById("map")
             if(game.dataset.theme == "light"){
