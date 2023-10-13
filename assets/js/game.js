@@ -4,13 +4,13 @@ import { windowHeight, windowWidth } from './data.js';
 import { createPlayer, } from './player.js';
 import { createMonster } from './monster.js';
 import { checkCollisionWithMonsters, startShooting } from './projectile.js';
-import { displayGameOver, displayUpgrade, createUpgradeDialog, createGameOverDialog, createEchapDialog, createOptionsDialog, displayEscape, activeButton } from './menu.js';
+import { displayGameOver, displayUpgrade, createUpgradeDialog, createGameOverDialog, createEchapDialog, createOptionsDialog, displayEscape, activeButton, createStartDialog } from './menu.js';
 import { Howl } from 'howler';
 
 let bossSound
 let backgroundSound;
 
-
+//TODO faire en sorte de pouvoir changer le volume du jeu au niveau du start
 //TODO faire une connection pour garder un pseudo et des touches enregistrer ?
 //TODO bille multi color :)
 //TODO ajout d'un boss tout les 10 vagues ?
@@ -43,22 +43,20 @@ var isEnded = 0;
 let isUpdated = false;
 let bossTime = false;
 
-let keysPressed = {};
-
 let movingUp = false;
 let movingLeft = false;
 let movingDown = false;
 let movingRight = false;
 
-
-export function initializeGame() {
-    // Initialisation du jeu
+export function initializeGameData() {    
     game.dataset.theme = "light"
     game.dataset.volume = 0.5;
     game.dataset.keyUp = "w";
     game.dataset.keyDown = "s";
     game.dataset.keyRight = "d";
     game.dataset.keyLeft = "a";
+  
+    // Initialisation du jeu
     bossSound = new Howl({
         src: ['assets/sounds/boss.mp3'],
         preload: true,
@@ -74,8 +72,7 @@ export function initializeGame() {
         autoplay: true
     });
 
-    player = createPlayer();
-
+    createStartDialog();
 
     createGameOverDialog();
 
@@ -86,6 +83,11 @@ export function initializeGame() {
     createOptionsDialog();
 
     activeButton();
+
+    const vagues = document.createElement("div");
+    vagues.id = "vagues"
+    map.appendChild(vagues);
+
     const audioButton = document.getElementById("audioButton")
 
     audioButton.addEventListener("input", () => {
@@ -94,6 +96,11 @@ export function initializeGame() {
         game.dataset.volume = audioButton.value / 100;
     })
 
+    player = createPlayer();
+}
+
+export function initializeGame() {
+    
     document.addEventListener("keydown", handleKeyDown);
     
     document.addEventListener("keyup", handleKeyUp);

@@ -46,9 +46,6 @@ export function createPlayer() {
     jerem.style.color = "red"
     map.appendChild(jerem);*/
     
-    const vagues = document.createElement("div");
-    vagues.id = "vagues"
-    map.appendChild(vagues);
     map.appendChild(hp);
     
 

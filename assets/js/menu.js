@@ -1,5 +1,6 @@
 import { filepath, apiURL, windowHeight } from './data.js';
 import axios from 'axios';
+import { initializeGame } from './game.js';
 
 var customDialog;
 const game = document.getElementById("game");
@@ -229,40 +230,6 @@ export function createEchapDialog (){
     options.textContent = "Options"
     div4.appendChild(options)
 
-    let controle = document.createElement("button")
-    controle.id = "controleButton"
-    controle.textContent = "Contrôle"
-    div4.appendChild(controle)
-
-    let audioContainer = document.createElement("div")
-    audioContainer.id = "audioContainer"
-    div4.appendChild(audioContainer)
-    
-    let audioLabel = document.createElement("label")
-    audioLabel.for = "audioButton"
-    audioLabel.textContent = "Volume :"
-    audioContainer.appendChild(audioLabel)
-
-    let audio = document.createElement("input")
-    audio.type = "range"
-    audio.min = 0
-    audio.max = 100
-    audio.step = 1
-    audio.value = 50
-    audio.id = "audioButton"
-    audio.textContent = "Audio"
-    audioContainer.appendChild(audio)
-    
-    let difficulty = document.createElement("button")
-    difficulty.id = "difficultyButton"
-    difficulty.textContent = "Difficulté"
-    div4.appendChild(difficulty)
-
-    let theme = document.createElement("button")
-    theme.id = "themeButton"
-    theme.textContent = "Thème : " + game.dataset.theme;
-    div4.appendChild(theme)
-
     customDialog.style.width = "250px"
 
     game.appendChild(customDialog);
@@ -271,8 +238,6 @@ export function createEchapDialog (){
     resumeDiv.id = "resumeDiv"
     resumeDiv.style.display = "none";
     game.appendChild(resumeDiv)
-
-
 
     let resume = document.createElement("p")
     resume.id = "resumeButton"
@@ -285,6 +250,7 @@ export function createEchapDialog (){
     resumeDiv.appendChild(resume)
 
     let resumeText = document.createElement("p")
+    resumeText.id = "resumeText"
     resumeText.textContent = "Quitter le menu"
     resumeText.style.position = "absolute";
     resumeText.style.left = "150px";
@@ -299,7 +265,6 @@ export function createOptionsDialog (){
     let div1 = document.createElement("div")
     div1.id = "tabDiv"
     customDialog.appendChild(div1)
-
 
     let tabs = document.createElement("ul");
     tabs.classList.add = "tabs";
@@ -320,20 +285,25 @@ export function createOptionsDialog (){
     let tabControl = document.createElement("li");
     tabControl.classList.add("tab-button")
     tabControl.dataset.tab = "control"
-    tabControl.textContent = "Contrôle"
+    tabControl.textContent = "Contrôles"
+
+    let cross = document.createElement("img");
+    cross.id = "cross"
+    cross.src = "./assets/images/cross.png";
 
     tabs.appendChild(tabGeneral)
     tabs.appendChild(tabAudio)
     tabs.appendChild(tabControl)
+    tabs.appendChild(cross)
 
     let divGeneral = document.createElement("div")
-    divGeneral.textContent = "divGeneral"
+    divGeneral.textContent = "Général"
     divGeneral.id = "general"
     divGeneral.classList.add("tab-content")
     divGeneral.classList.add("active")
 
     let divAudio = document.createElement("div")
-    divAudio.textContent = "divAudio"
+    divAudio.textContent = "Audio"
     divAudio.id = "audio"
     divAudio.classList.add("tab-content")
 
@@ -346,7 +316,46 @@ export function createOptionsDialog (){
     div1.appendChild(divAudio)
     div1.appendChild(divControl)
 
+// general area
+    let generalContainer = document.createElement("div");
+    generalContainer.id = "generalContainer"
+    divGeneral.appendChild(generalContainer)
 
+    let difficulty = document.createElement("button")
+    difficulty.id = "difficultyButton"
+    difficulty.textContent = "Difficulté"
+    generalContainer.appendChild(difficulty)
+
+    let theme = document.createElement("button")
+    theme.id = "themeButton"
+    theme.textContent = "Thème : " + game.dataset.theme;
+    generalContainer.appendChild(theme)
+// end general area
+
+//audio area
+    //TODO ajouter la gestion d'autre type de son
+    let audioContainer = document.createElement("div")
+    audioContainer.id = "audioContainer"
+    divAudio.appendChild(audioContainer)
+
+    let audioLabel = document.createElement("label")
+    audioLabel.for = "audioButton"
+    audioLabel.textContent = "Volume général :"
+    audioContainer.appendChild(audioLabel)
+
+    let audio = document.createElement("input")
+    audio.type = "range"
+    audio.min = 0
+    audio.max = 100
+    audio.step = 1
+    audio.value = 50
+    audio.id = "audioButton"
+    audio.textContent = "Audio"
+    audioContainer.appendChild(audio)
+
+//end audio area
+
+// controle area
     let upDiv = document.createElement("div")
     upDiv.classList.add("keyDiv");
     divControl.appendChild(upDiv)
@@ -447,6 +456,8 @@ export function createOptionsDialog (){
         })
     })
 
+//end controle area
+
     let tabArray = [tabAudio, tabControl, tabGeneral];
 
     tabArray.forEach((tab) => {
@@ -473,89 +484,37 @@ export function createOptionsDialog (){
     customDialog.style.display = "none";
 }
 
-/*
 export function createStartDialog (){
     customDialog = document.getElementById("start");
     let div1 = document.createElement("div")
     let titleElement = document.createElement("h1");
 
-    titleElement.textContent = "Menu";
+    titleElement.textContent = "The Game";
 
     customDialog.appendChild(div1)
     div1.appendChild(titleElement)
     
-
     let div4 = document.createElement("div")
     div4.id = "menuDiv";
     customDialog.appendChild(div4)
 
-    let controle = document.createElement("button")
-    controle.id = "controleButton"
-    controle.textContent = "Contrôle"
-    div4.appendChild(controle)
+    let play = document.createElement("button")
+    play.id = "playButton"
+    play.textContent = "Jouer"
+    div4.appendChild(play)
 
-    let audioContainer = document.createElement("div")
-    audioContainer.id = "audioContainer"
-    div4.appendChild(audioContainer)
-    
-    let audioLabel = document.createElement("label")
-    audioLabel.for = "audioButton"
-    audioLabel.textContent = "Volume :"
-    audioContainer.appendChild(audioLabel)
+    let options = document.createElement("button")
+    options.id = "optionStartButton"
+    options.textContent = "Options"
+    div4.appendChild(options)
 
-    let audio = document.createElement("input")
-    audio.type = "range"
-    audio.min = 0
-    audio.max = 100
-    audio.step = 1
-    audio.value = 50
-    audio.id = "audioButton"
-    audio.textContent = "Audio"
-    audioContainer.appendChild(audio)
-    
-    let difficulty = document.createElement("button")
-    difficulty.id = "difficultyButton"
-    difficulty.textContent = "Difficulté"
-    div4.appendChild(difficulty)
-
-    let theme = document.createElement("button")
-    theme.id = "themeButton"
-    theme.textContent = "Thème : " + game.dataset.theme;
-    div4.appendChild(theme)
-
+    //TODO les 5 premiers du scoreboard
     customDialog.style.width = "250px"
 
     game.appendChild(customDialog);
-
-    let resumeDiv = document.createElement("div")
-    resumeDiv.id = "resumeDiv"
-    resumeDiv.style.display = "none";
-    game.appendChild(resumeDiv)
-
-
-
-    let resume = document.createElement("p")
-    resume.id = "resumeButton"
-    resume.textContent = "Esc"
-    resume.style.position = "absolute";
-    resume.style.left = "10px";
-    resume.style.top = (windowHeight - 50) + "px";
-    //resume.style.width = "126px";
-    resumeDiv.appendChild(resume)
-
-    let resumeText = document.createElement("p")
-    resumeText.textContent = "Quitter le menu"
-    resumeText.style.position = "absolute";
-    resumeText.style.left = "150px";
-    resumeText.style.top = (windowHeight - 40) + "px";
-    resumeDiv.appendChild(resumeText)
-
-    customDialog.style.display = "none";
+    
+    customDialog.style.display = "block";
 }
-*/
-
-//TODO un menu option
-//un menu de démarrage
 
 export function activeButton(){
     let logButton = document.getElementById("logButton")
@@ -563,6 +522,9 @@ export function activeButton(){
     let validButton = document.getElementById("validButton")
     let themeButton = document.getElementById("themeButton")
     let optionButton = document.getElementById("optionButton")
+    let playButton = document.getElementById("playButton")
+    let optionStartButton = document.getElementById("optionStartButton")
+    let crossButton = document.getElementById("cross")
 
     if(logButton !== null){
         logButton.addEventListener("click", () => {           
@@ -653,17 +615,6 @@ export function activeButton(){
             
         });
     }
-
-    /*if(resumeButton !== null){
-        resumeButton.addEventListener("click", () => {
-            let player = document.getElementById("player");
-            let dialog = document.getElementById("escape");
-
-            player.dataset.isGamePaused = false
-            dialog.style.display = "none";
-            
-        });
-    }*/
     
     
     if(optionButton !== null){
@@ -673,18 +624,35 @@ export function activeButton(){
         });
     }
 
+    if(optionStartButton !== null){
+        optionStartButton.addEventListener("click", () => {
+            let customDialog = document.getElementById("options");
+            customDialog.style.display = "block";
+        });
+    }
+
+    if(playButton !== null){
+        playButton.addEventListener("click", () => {
+            let dialog = document.getElementById("start")
+            dialog.style.display = "none"
+            initializeGame();
+        });
+    }
+
     if(themeButton !== null){
         themeButton.addEventListener("click", () => {
             let map = document.getElementById("map")
             let vagues = document.getElementById("vagues")
             let buttons = document.querySelectorAll('button'); 
             let dialogs = document.getElementsByClassName("dialog")
+            let resumeText = document.getElementById("resumeText");
             //let audioButton = document.getElementsByClassName("audioButton")
             
             //let map = document.getElementById("map")
             if(game.dataset.theme == "light"){
                 map.style.backgroundColor = "black"
                 vagues.style.color = "white"
+                resumeText.style.color = "white"
                 game.dataset.theme = "dark";
 
                 Array.from(dialogs).forEach(dialog => {
@@ -701,6 +669,7 @@ export function activeButton(){
             } else if(game.dataset.theme == "dark") {
                 map.style.backgroundColor = "white"
                 vagues.style.color = "black"
+                resumeText.style.color = "black"
                 game.dataset.theme = "light";
 
                 Array.from(dialogs).forEach(dialog => {
@@ -719,5 +688,12 @@ export function activeButton(){
 
     }
 
+    
+    if(crossButton !== null){
+        crossButton.addEventListener("click", () => {
+            let dialog = document.getElementById("options")
+            dialog.style.display = "none"
+        });
+    }
 
 }
