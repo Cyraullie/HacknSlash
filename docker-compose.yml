@@ -12,7 +12,7 @@ services:
             - ./:/var/www/html
         networks:
             - game-exa
-
+            
     mysql:
         image: mysql:8.0
         container_name: mysql_game
