@@ -14,7 +14,7 @@ export const monsterWidth = 50;
 //gestion de fichier
 const urlActuelle = window.location.href.slice(0, -5);
 export const filepath = "./../../score.txt";
-export const apiURL = urlActuelle + "8280/file.php";
+export const apiURL = urlActuelle + "8280/api.php";
 
 //music
 export const musicPath = "./assets/sounds/main.mp3"
