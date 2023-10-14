@@ -353,7 +353,7 @@ function endGame() {
         monster.remove();
     });
 
-    displayGameOver("votre score est de ", " vague(s)", numVague);
+    displayGameOver("votre score est de ", " vague(s)", numVague-1);
 }
 
 function gameLoop() {
