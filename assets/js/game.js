@@ -49,7 +49,12 @@ let movingDown = false;
 let movingRight = false;
 
 export function initializeGameData() {    
-    game.dataset.theme = "light"
+    if(localStorage.getItem("theme") != null){
+        game.dataset.theme = localStorage.getItem("theme")
+    }else{
+        game.dataset.theme = "light"
+    }
+
     game.dataset.volume = 0.5;
     game.dataset.keyUp = "w";
     game.dataset.keyDown = "s";
@@ -97,6 +102,8 @@ export function initializeGameData() {
     })
 
     player = createPlayer();
+
+    checkTheme()
 }
 
 export function initializeGame() {
@@ -150,6 +157,54 @@ function handleKeyUp(event) {
             movingRight = false;
             break;
     }
+}
+
+export function checkTheme() {
+    let map = document.getElementById("map")
+    let vagues = document.getElementById("vagues")
+    let buttons = document.querySelectorAll('button'); 
+    let dialogs = document.getElementsByClassName("dialog")
+    let resumeText = document.getElementById("resumeText");
+    if(localStorage.getItem("theme") != null){
+        game.dataset.theme = localStorage.getItem("theme")
+    }else{
+        game.dataset.theme = "light"
+    }
+
+    if(game.dataset.theme == "dark"){
+        map.style.backgroundColor = "black"
+        vagues.style.color = "white"
+        resumeText.style.color = "white"
+        
+        Array.from(dialogs).forEach(dialog => {
+            dialog.style.backgroundColor = "#666666"
+            dialog.style.color = "#ffffff"
+        })
+
+        buttons.forEach(button => {
+            button.style.backgroundColor = "#444444"
+            button.style.color = "#ffffff"
+        })
+
+
+    } else if(game.dataset.theme == "light") {
+        map.style.backgroundColor = "white"
+        vagues.style.color = "black"
+        resumeText.style.color = "black"
+
+        Array.from(dialogs).forEach(dialog => {
+            dialog.style.backgroundColor = "#ffffff"
+            dialog.style.color = "black"
+        })
+
+        buttons.forEach(button => {
+            button.style.backgroundColor = "white"
+            button.style.color = "black"
+        })
+    }
+    
+    themeButton.textContent = "Thème : " + game.dataset.theme;
+    document.getElementById("imagePlayer").src = "./assets/images/player_" + game.dataset.theme + ".png";
 }
 
 function togglePauseGame() {
@@ -303,8 +358,10 @@ function endGame() {
 
 function gameLoop() {
     game.addEventListener('mouseleave', () => {
-        player.dataset.isGamePaused = true; // Inversez l'état de la pause
-        displayEscape(JSON.parse(player.dataset.isGamePaused));
+        if(isEnded == 0){
+            player.dataset.isGamePaused = true; // Inversez l'état de la pause
+            displayEscape(JSON.parse(player.dataset.isGamePaused));
+        }
       });
       
     if(!JSON.parse(player.dataset.isGamePaused)) {
