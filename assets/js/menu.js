@@ -1,4 +1,4 @@
-import { filepath, apiURL, windowHeight } from './data.js';
+import { apiURL, windowHeight } from './data.js';
 import axios from 'axios';
 import { checkTheme, initializeGame } from './game.js';
 
@@ -61,8 +61,6 @@ export function createGameOverDialog (){
     let div2 = document.createElement("div")
     div2.id = "divScoreboard"
 
-    //TODO check si le joueur veux inscrire son score si oui insertions dans la db
-    //TODO sinon reload la game
     customDialog.appendChild(div2)
  
     let params = new URLSearchParams({ route: "scoreboard" });
@@ -329,7 +327,6 @@ export function createOptionsDialog (){
 // end general area
 
 //audio area
-    //TODO ajouter la gestion d'autre type de son
     let audioContainer = document.createElement("div")
     audioContainer.id = "audioContainer"
     divAudio.appendChild(audioContainer)
@@ -348,13 +345,15 @@ export function createOptionsDialog (){
     audio.min = 0
     audio.max = 100
     audio.step = 1
-    audio.value = 50
+    audio.value = parseFloat(game.dataset.volume) * 100
     audio.id = "audioButton"
     audio.textContent = "Audio"
     divAudioBar.appendChild(audio)
 
     let audioPercent = document.createElement("p")
-    audioPercent.textContent = (game.dataset.value*100) + "%"
+    audioPercent.id = "audioPercentGeneral"
+    let percent = parseFloat(game.dataset.volume) * 100
+    audioPercent.textContent = percent + "%"
     divAudioBar.appendChild(audioPercent)
 
 //end audio area

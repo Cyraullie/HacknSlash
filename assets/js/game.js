@@ -10,18 +10,20 @@ import { Howl } from 'howler';
 let bossSound
 let backgroundSound;
 
-//TODO faire en sorte de pouvoir changer le volume du jeu au niveau du start
-//TODO faire une connection pour garder un pseudo et des touches enregistrer ?
 //TODO bille multi color :)
-//TODO ajout d'un boss tout les 10 vagues ?
+//TODO booster le boss au hormone
 //TODO upgrade damage/hp/speed of monster
 //TODO add different type of audio so a onglet for that ?
+//TODO ajouter la gestion d'autre type de son
+//TODO ajouter des sons
 //TODO add difficulty
 //TODO finish dark theme
 //TODO install phaser ?
-//TODO Utiliser mysql pour le score (plus simple ?)
-//TODO ajouter le changement de touche dans le menu
 //TODO Faire en sorte de pouvoir changer de touche a l'infini
+//TODO ajouter un affichage des degats
+//TODO Ajouter une variable de cadance de tire
+//TODO Regler le soucis de lag au bout d'un moment (déplace,emt horizontal ?)
+
 
 let nbBoss = 1; //nombre de boss fait
 let numMonstersAtStart = 3;
@@ -121,10 +123,12 @@ export function initializeGameData() {
     const audioButton = document.getElementById("audioButton")
 
     audioButton.addEventListener("input", () => {
+        let audioPercentGeneral = document.getElementById("audioPercentGeneral")
         bossSound.volume(audioButton.value / 100);
         backgroundSound.volume(audioButton.value / 100);
         game.dataset.volume = audioButton.value / 100;
         localStorage.setItem("volume", audioButton.value / 100)
+        audioPercentGeneral.textContent = audioButton.value + "%"
     })
 
     player = createPlayer();
@@ -325,7 +329,7 @@ function checkMonsterAlive() {
                     isUpdated = true;
                 }
                 if(bossTime){
-                    bossSound.fade(game.dataset.volume, 0, 2000);
+                    bossSound.fade(parseInt(game.dataset.volume), 0, 2000);
                     setTimeout(function () {
                         bossSound.stop()
                         backgroundSound.play();
