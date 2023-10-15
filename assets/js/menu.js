@@ -57,13 +57,12 @@ export function createGameOverDialog (){
     div1.appendChild(textElement)
 
     let div2 = document.createElement("div")
-
+    div2.id = "divScoreboard"
 
     //TODO check si le joueur veux inscrire son score si oui insertions dans la db
     //TODO sinon reload la game
     customDialog.appendChild(div2)
-    
-    //TODO faire un check du pseudo sinon mettre le bouton de login
+ 
     let params = new URLSearchParams({ route: "scoreboard" });
     let urlAvecParametres = `${apiURL}?${params}`;
 
@@ -496,6 +495,9 @@ export function createStartDialog (){
     let play = document.createElement("button")
     play.id = "playButton"
     play.textContent = "Jouer"
+    if(localStorage.getItem("player_id") == null){
+        play.disabled = true
+    }
     div4.appendChild(play)
 
     let options = document.createElement("button")
@@ -521,6 +523,7 @@ export function createStartDialog (){
         let urlAvecParametres = `${apiURL}?${params}`;
         axios.get(urlAvecParametres)
         .then(response => {
+            console.log(response)
             if(response.data != ""){
                 localStorage.setItem("player_id", response.data[0]["id"])
             }
@@ -534,7 +537,7 @@ export function createStartDialog (){
 
     let loginButton = document.createElement("button")
     loginButton.id = "loginButton"
-    loginButton.textContent = "S'inscrire"
+    loginButton.textContent = "S'inscrire / Se connecter"
     loginDiv.appendChild(loginButton)
 
     let params = new URLSearchParams({ route: "scoreboard" });
@@ -585,48 +588,63 @@ export function activeButton(){
     let crossButton = document.getElementById("cross")
     let loginButton = document.getElementById("loginButton")
 
-
-
     if(logButton !== null){
-        logButton.addEventListener("click", () => {           
-            let playerName = localStorage.getItem("pseudo", pseudo.value)
-            let scoreText = document.getElementById("score");
-            // Créez un objet FormData vide
-//TODO faire l'enregistrement du score
-                let params = new URLSearchParams({ route: "player", pseudo: pseudo.value});
-                let urlAvecParametres = `${apiURL}?${params}`;
-                axios.get(urlAvecParametres)
-                .then(response => {
-                    console.log(response)
-                    if(response.data != ""){
-                        localStorage.setItem("player_id", response.data[0]["id"])
-                    }else {
-                        let params = new URLSearchParams({ route: "login", pseudo: pseudo.value });
-                        let urlAvecParametres = `${apiURL}?${params}`;
-                        console.log(urlAvecParametres)
+        logButton.addEventListener("click", () => {         
+            let score = document.getElementById("score").dataset.score;
 
-                        axios.get(urlAvecParametres)
-                        .then(response => {
-                            console.log(response)
-                        
-                        })
-                        .catch(error => {
-                            console.log("ertet")
-                        });
-                    }
-                })
-                .catch(error => {
-                    console.error('Erreur :', error);
-                });
+            let params = new URLSearchParams({ route: "score", player_id: localStorage.getItem("player_id"), score: score});
+            let urlAvecParametres = `${apiURL}?${params}`;
+            console.log(urlAvecParametres)
+            axios.get(urlAvecParametres)
+            .then(response => {
+                if(response.data != ""){
+                    let params = new URLSearchParams({ route: "scoreboard" });
+                    let urlAvecParametres = `${apiURL}?${params}`;
+                
+                    axios.get(urlAvecParametres)
+                    .then(response => {
+                        if(Array.isArray(response.data)){
+                            if(response.data != ""){
+                                const scoreboard = document.querySelector('#divScoreboard div')
+                                if(scoreboard != null){
+                                    scoreboard.remove();
+                                }
 
-           
-
+                                let div2 = document.getElementById("divScoreboard")
+                                let newScoreboard = document.createElement("div")
+                                newScoreboard.class = "scoreboard"
+                                newScoreboard.style.marginTop = "10px"
+                                newScoreboard.style.marginBottom = "10px"
+                                div2.appendChild(newScoreboard)
+                
+                                let title = document.createElement("h2");
+                                title.textContent = "scoreboard"
+                                newScoreboard.appendChild(title)
+                
+                                response.data.forEach(item => {
+                                    if(item){
+                                        let text = document.createElement("p");
+                                        text.textContent = item.pseudo + ": " + item.score ;
+                                        newScoreboard.appendChild(text);
+                                    }
+                                });
+                            }
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erreur :', error);
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Erreur :', error);
+            });
         });
     }
 
     if(restartButton !== null){
         restartButton.addEventListener("click", () => {
-            //location.reload();
+            location.reload();
         });
     }
 
@@ -756,15 +774,18 @@ export function activeButton(){
                     console.log(response)
                     if(response.data != ""){
                         localStorage.setItem("player_id", response.data[0]["id"])
+                        let play = document.getElementById("playButton")
+                        play.disabled = false
+                        
                     }else {
                         let params = new URLSearchParams({ route: "login", pseudo: pseudo.value });
                         let urlAvecParametres = `${apiURL}?${params}`;
-                        console.log(urlAvecParametres)
 
                         axios.get(urlAvecParametres)
                         .then(response => {
-                            console.log(response)
-                        
+                            localStorage.setItem("player_id", response.data[0])
+                            let play = document.getElementById("playButton")
+                            play.disabled = false
                         })
                         .catch(error => {
                             console.log("ertet")

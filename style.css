@@ -324,3 +324,9 @@ li.active {
 #generalContainer button {
     margin-top: 10px;
 }
+
+#playButton:disabled {
+  opacity: 0.5; /* Réduit l'opacité du bouton */
+  color: #888; /* Change la couleur du texte en gris */
+  cursor: not-allowed; /* Change le curseur en indisponible */
+}

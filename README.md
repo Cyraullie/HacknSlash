@@ -3,7 +3,6 @@ GAME TEST
 début du projet :
 npm i
 
-npx webpack --config webpack.config.js
 
 lancer le projet :
 npx webpack serve
@@ -17,3 +16,9 @@ PARTIE POUR LE BACKEND PAS NECESSAIRE :
 aller dans le dossier "./assets/php"
 et lancer la commande :
 php -S localhost:8280 
+
+
+Pour lancer la version de production il suffit de faire :
+npx webpack --config webpack.config.js
+puis 
+docker compose up --build -d

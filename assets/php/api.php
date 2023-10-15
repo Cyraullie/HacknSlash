@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $pseudo = $_GET["pseudo"];
             $result = mysqli_query($mysqli, "SELECT id, pseudo FROM `players` WHERE pseudo = '".$pseudo."'");
         
-            $response[0] = "test";
+            $response[0] = "";
             if ($result) {
                 $i = 0;
                 while ($row = mysqli_fetch_assoc($result)) {
@@ -82,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                     $response[0] = $id;
                     $response[1] = $pseudo;
 
-                    echo "Enregistrement inséré avec succès.";
+                    //echo "Enregistrement inséré avec succès.";
                 } else {
                     echo "Erreur lors de l'exécution de la requête : " . $stmt->error;
                 }
@@ -105,14 +105,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 die("Erreur de connexion : " . mysqli_connect_error());
             }
 
-            $score = $_GET["score"];
-            $player_id = $_GET["player_id"];
+            $score = intval($_GET["score"]);
+            $player_id = intval($_GET["player_id"]);
 
             $stmt = $mysqli->prepare("INSERT INTO `scores` (`id`, `score`, `players_id`) VALUES (NULL, ?, ?)");
 
             if ($stmt) {
                 // Lier la variable $pseudo à la requête
-                $stmt->bind_param("s", $score, $player_id);
+                $stmt->bind_param("ii", $score, $player_id);
             
                 // Exécuter la requête
                 if ($stmt->execute()) {

@@ -3,7 +3,7 @@ import { windowHeight, windowWidth, playerHeight, playerWidth} from './data.js';
 let map = document.getElementById("map");
 let game = document.getElementById("game");
 
-let life = 4;
+let life = 2;
 let damage = 2;
 let speedY = 5; // Vitesse de déplacement
 let speedX = (speedY * windowWidth) / playerWidth;
