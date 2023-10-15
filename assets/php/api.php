@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                     $response[$i] = $row;
                     $i++;
                 }
-        
+
                 mysqli_free_result($result);
             }
             mysqli_close($mysqli);

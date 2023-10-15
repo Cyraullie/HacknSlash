@@ -1,6 +1,6 @@
 import { filepath, apiURL, windowHeight } from './data.js';
 import axios from 'axios';
-import { initializeGame } from './game.js';
+import { checkTheme, initializeGame } from './game.js';
 
 var customDialog;
 const game = document.getElementById("game");
@@ -28,10 +28,10 @@ export function displayEscape(isGamePaused) {
         dialog.style.display = "block";
         resumeDiv.style.display = "block";
     } else {
-    let upButton = document.getElementById("upButton");
-    let downButton = document.getElementById("downButton");
-    let leftButton = document.getElementById("leftButton");
-    let rightButton = document.getElementById("rightButton");
+        let upButton = document.getElementById("upButton");
+        let downButton = document.getElementById("downButton");
+        let leftButton = document.getElementById("leftButton");
+        let rightButton = document.getElementById("rightButton");
     
         dialog.style.display = "none";
         resumeDiv.style.display = "none";
@@ -56,51 +56,46 @@ export function createGameOverDialog (){
     div1.appendChild(titleElement)
     div1.appendChild(textElement)
 
-    
     let div2 = document.createElement("div")
-    let input = document.createElement("input");
-    input.type = "text"
-    input.placeholder = "3 initiales"
-    input.maxLength = 3
-    input.name = "playerName"
-    input.id = "playerName"
 
-    
+
+    //TODO check si le joueur veux inscrire son score si oui insertions dans la db
+    //TODO sinon reload la game
     customDialog.appendChild(div2)
     
-    div2.appendChild(input)
-    
-/*
-    const params = new URLSearchParams({ filePath: filepath });
-    const urlAvecParametres = `${apiURL}?${params}`;
-*/
-    let div3 = document.createElement("div")
-    customDialog.appendChild(div3)
-/*
-    const ul = document.createElement("ul");
+    //TODO faire un check du pseudo sinon mettre le bouton de login
+    let params = new URLSearchParams({ route: "scoreboard" });
+    let urlAvecParametres = `${apiURL}?${params}`;
 
     axios.get(urlAvecParametres)
     .then(response => {
-        // Traitement de la réponse icidw
-        let score = 1;
-        response.data.data.forEach(item => {
-            // item contient chaque objet de response.data
-            if(item){
-                const li = document.createElement("li");
-                li.textContent = score + "# " +item; // Définissez le texte de l'élément <li> sur l'élément de données
-                ul.appendChild(li);
-                // Faites ce que vous devez faire avec chaque élément ici
-                score++;
+        if(Array.isArray(response.data)){
+            if(response.data != ""){
+
+                let scoreboard = document.createElement("div")
+                scoreboard.class = "scoreboard"
+                scoreboard.style.marginTop = "10px"
+                scoreboard.style.marginBottom = "10px"
+                div2.appendChild(scoreboard)
+
+                let title = document.createElement("h2");
+                title.textContent = "scoreboard"
+                scoreboard.appendChild(title)
+
+                response.data.forEach(item => {
+                    if(item){
+                        let text = document.createElement("p");
+                        text.textContent = item.pseudo + ": " + item.score ;
+                        scoreboard.appendChild(text);
+                    }
+                });
             }
-            
-        });
+        }
     })
     .catch(error => {
         console.error('Erreur :', error);
     });
 
-    div3.appendChild(ul)
-    */
     let div4 = document.createElement("div")
     div4.id = "buttonDiv";
     customDialog.appendChild(div4)
@@ -108,7 +103,7 @@ export function createGameOverDialog (){
 
     let button1 = document.createElement("button")
     button1.id = "logButton"
-    button1.textContent = "save & play"
+    button1.textContent = "Enregister"
     div4.appendChild(button1)
 
     let button2 = document.createElement("button")
@@ -508,7 +503,70 @@ export function createStartDialog (){
     options.textContent = "Options"
     div4.appendChild(options)
 
-    //TODO les 5 premiers du scoreboard
+    let loginDiv = document.createElement("div")
+    loginDiv.id = "loginDiv";
+    loginDiv.style.marginTop = "10px";
+    div4.appendChild(loginDiv)
+
+    let loginInput = document.createElement("input")
+    loginInput.id = "loginInput"
+    loginInput.type = "text"
+    loginInput.style.width = "190px"
+    loginInput.style.marginTop = "20px"
+    loginInput.placeholder = "Pseudo"
+    if(localStorage.getItem("pseudo") != null){
+        loginInput.value = localStorage.getItem("pseudo")
+
+        let params = new URLSearchParams({ route: "player", pseudo: localStorage.getItem("pseudo")});
+        let urlAvecParametres = `${apiURL}?${params}`;
+        axios.get(urlAvecParametres)
+        .then(response => {
+            if(response.data != ""){
+                localStorage.setItem("player_id", response.data[0]["id"])
+            }
+        })
+        .catch(error => {
+            console.error('Erreur :', error);
+        });
+    }
+
+    loginDiv.appendChild(loginInput)
+
+    let loginButton = document.createElement("button")
+    loginButton.id = "loginButton"
+    loginButton.textContent = "S'inscrire"
+    loginDiv.appendChild(loginButton)
+
+    let params = new URLSearchParams({ route: "scoreboard" });
+    let urlAvecParametres = `${apiURL}?${params}`;
+
+    axios.get(urlAvecParametres)
+    .then(response => {
+        if(Array.isArray(response.data)){
+            if(response.data != ""){
+                let scoreboard = document.createElement("div")
+                scoreboard.class = "scoreboard"
+                scoreboard.style.marginTop = "20px"
+                div4.appendChild(scoreboard)
+
+                let title = document.createElement("h2");
+                title.textContent = "scoreboard"
+                scoreboard.appendChild(title)
+
+                response.data.forEach(item => {
+                    if(item){
+                        let text = document.createElement("p");
+                        text.textContent = item.pseudo + ": " + item.score ;
+                        scoreboard.appendChild(text);
+                    }
+                });
+            }
+        }
+    })
+    .catch(error => {
+        console.error('Erreur :', error);
+    });
+      
     customDialog.style.width = "250px"
 
     game.appendChild(customDialog);
@@ -525,34 +583,41 @@ export function activeButton(){
     let playButton = document.getElementById("playButton")
     let optionStartButton = document.getElementById("optionStartButton")
     let crossButton = document.getElementById("cross")
+    let loginButton = document.getElementById("loginButton")
+
+
 
     if(logButton !== null){
         logButton.addEventListener("click", () => {           
-            const playerName = document.getElementById("playerName");
+            let playerName = localStorage.getItem("pseudo", pseudo.value)
             let scoreText = document.getElementById("score");
             // Créez un objet FormData vide
-            const formData = new FormData();
+//TODO faire l'enregistrement du score
+                let params = new URLSearchParams({ route: "player", pseudo: pseudo.value});
+                let urlAvecParametres = `${apiURL}?${params}`;
+                axios.get(urlAvecParametres)
+                .then(response => {
+                    console.log(response)
+                    if(response.data != ""){
+                        localStorage.setItem("player_id", response.data[0]["id"])
+                    }else {
+                        let params = new URLSearchParams({ route: "login", pseudo: pseudo.value });
+                        let urlAvecParametres = `${apiURL}?${params}`;
+                        console.log(urlAvecParametres)
 
-            // Ajoutez vos valeurs au FormData
-            formData.append('filePath', filepath);
-            formData.append('name', playerName.value.toUpperCase());
-            formData.append('score', scoreText.dataset.score);
-
-            // URL du script PHP sur votre serveur
-            const urlAvecParametres = `${apiURL}`;
-            
-            axios.post(urlAvecParametres, formData, {
-                headers: {
-                  'Content-Type': 'multipart/form-data', // Définissez le type de contenu comme "multipart/form-data"
-                },
-                timeout: 10000, // 10 secondes
-              })
-            .then(response => {
-              // Traitement de la réponse ici
-            })
-            .catch(error => {
-                location.reload();
-            });
+                        axios.get(urlAvecParametres)
+                        .then(response => {
+                            console.log(response)
+                        
+                        })
+                        .catch(error => {
+                            console.log("ertet")
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Erreur :', error);
+                });
 
            
 
@@ -561,7 +626,7 @@ export function activeButton(){
 
     if(restartButton !== null){
         restartButton.addEventListener("click", () => {
-            location.reload();
+            //location.reload();
         });
     }
 
@@ -616,7 +681,6 @@ export function activeButton(){
         });
     }
     
-    
     if(optionButton !== null){
         optionButton.addEventListener("click", () => {
             let customDialog = document.getElementById("options");
@@ -640,60 +704,80 @@ export function activeButton(){
     }
 
     if(themeButton !== null){
-        themeButton.addEventListener("click", () => {
-            let map = document.getElementById("map")
-            let vagues = document.getElementById("vagues")
-            let buttons = document.querySelectorAll('button'); 
-            let dialogs = document.getElementsByClassName("dialog")
-            let resumeText = document.getElementById("resumeText");
-            //let audioButton = document.getElementsByClassName("audioButton")
-            
-            //let map = document.getElementById("map")
+        themeButton.addEventListener("click", () => {           
             if(game.dataset.theme == "light"){
-                map.style.backgroundColor = "black"
-                vagues.style.color = "white"
-                resumeText.style.color = "white"
                 game.dataset.theme = "dark";
-
-                Array.from(dialogs).forEach(dialog => {
-                    dialog.style.backgroundColor = "#666666"
-                    dialog.style.color = "#ffffff"
-                })
-
-                buttons.forEach(button => {
-                    button.style.backgroundColor = "#444444"
-                    button.style.color = "#ffffff"
-                })
-
+                localStorage.setItem("theme", "dark")
 
             } else if(game.dataset.theme == "dark") {
-                map.style.backgroundColor = "white"
-                vagues.style.color = "black"
-                resumeText.style.color = "black"
                 game.dataset.theme = "light";
-
-                Array.from(dialogs).forEach(dialog => {
-                    dialog.style.backgroundColor = "#ffffff"
-                    dialog.style.color = "black"
-                })
-
-                buttons.forEach(button => {
-                    button.style.backgroundColor = "white"
-                    button.style.color = "black"
-                })
+                localStorage.setItem("theme", "light")
             }
-            themeButton.textContent = "Thème : " + game.dataset.theme;
-            document.getElementById("imagePlayer").src = "./assets/images/player_" + game.dataset.theme + ".png";
+
+            checkTheme();
         });
 
     }
 
-    
     if(crossButton !== null){
         crossButton.addEventListener("click", () => {
             let dialog = document.getElementById("options")
+            let upButton = document.getElementById("upButton");
+            let downButton = document.getElementById("downButton");
+            let leftButton = document.getElementById("leftButton");
+            let rightButton = document.getElementById("rightButton");
+
             dialog.style.display = "none"
+
+            upButton.disabled = false;
+            downButton.disabled = false;
+            leftButton.disabled = false;
+            rightButton.disabled = false;
         });
     }
+
+    if(loginButton !== null){
+        loginButton.addEventListener("click", () => {
+            
+            let pseudo = document.getElementById("loginInput");
+
+            if(pseudo.value == ""){
+                pseudo.style.color  = "red"
+                setTimeout(() => {
+                    pseudo.style.color  = "gray"
+                }, 2000);
+            }else {
+                localStorage.setItem("pseudo", pseudo.value)
+
+                let params = new URLSearchParams({ route: "player", pseudo: pseudo.value});
+                let urlAvecParametres = `${apiURL}?${params}`;
+                axios.get(urlAvecParametres)
+                .then(response => {
+                    console.log(response)
+                    if(response.data != ""){
+                        localStorage.setItem("player_id", response.data[0]["id"])
+                    }else {
+                        let params = new URLSearchParams({ route: "login", pseudo: pseudo.value });
+                        let urlAvecParametres = `${apiURL}?${params}`;
+                        console.log(urlAvecParametres)
+
+                        axios.get(urlAvecParametres)
+                        .then(response => {
+                            console.log(response)
+                        
+                        })
+                        .catch(error => {
+                            console.log("ertet")
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Erreur :', error);
+                });
+
+            }
+        });
+    }
+
 
 }
