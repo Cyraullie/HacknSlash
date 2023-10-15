@@ -8,9 +8,11 @@ const game = document.getElementById("game");
 export function displayGameOver(text1, text2, score) {
     let dialog = document.getElementById("gameOver");
     let scoreText = document.getElementById("score");
+    let logButton = document.getElementById("logButton");
     scoreText.textContent = text1 + score + text2;
     scoreText.dataset.score = score;
 
+    logButton.disabled = false
     dialog.style.display = "block";
 }
 
@@ -72,7 +74,7 @@ export function createGameOverDialog (){
             if(response.data != ""){
 
                 let scoreboard = document.createElement("div")
-                scoreboard.class = "scoreboard"
+                scoreboard.classList.add("scoreboard")
                 scoreboard.style.marginTop = "10px"
                 scoreboard.style.marginBottom = "10px"
                 div2.appendChild(scoreboard)
@@ -137,7 +139,7 @@ export function createUpgradeDialog (){
     var imgLife = document.createElement("img");
     imgLife.src = "./assets/images/full_heart.png";
     buttonLife.id = "lifeButton"
-    buttonLife.className = "upgradeButton"
+    buttonLife.classList.add("upgradeButton")
     buttonLife.textContent = "+1 vie"
     buttonLife.setAttribute("data-selected", "false");
     buttonLife.appendChild(imgLife)
@@ -147,7 +149,7 @@ export function createUpgradeDialog (){
     var imgDamage = document.createElement("img");
     imgDamage.src = "./assets/images/sword.png";
     buttonDamage.id = "damageButton"
-    buttonDamage.className = "upgradeButton"
+    buttonDamage.classList.add("upgradeButton")
     buttonDamage.textContent = "+1 dégat"
     buttonDamage.setAttribute("data-selected", "false");
     buttonDamage.appendChild(imgDamage)
@@ -157,7 +159,7 @@ export function createUpgradeDialog (){
     var imgRegen = document.createElement("img");
     imgRegen.src = "./assets/images/full_heart.png";
     buttonRegen.id = "regenButton"
-    buttonRegen.className = "upgradeButton"
+    buttonRegen.classList.add("upgradeButton")
     buttonRegen.textContent = "full regen"
     buttonRegen.setAttribute("data-selected", "false");
     buttonRegen.appendChild(imgRegen)
@@ -261,7 +263,7 @@ export function createOptionsDialog (){
     customDialog.appendChild(div1)
 
     let tabs = document.createElement("ul");
-    tabs.classList.add = "tabs";
+    tabs.classList.add("tabs");
 
     div1.appendChild(tabs)
     
@@ -337,6 +339,10 @@ export function createOptionsDialog (){
     audioLabel.textContent = "Volume général :"
     audioContainer.appendChild(audioLabel)
 
+    let divAudioBar = document.createElement("div")
+    divAudioBar.classList.add("divAudioBar")
+    audioContainer.appendChild(divAudioBar)
+
     let audio = document.createElement("input")
     audio.type = "range"
     audio.min = 0
@@ -345,7 +351,11 @@ export function createOptionsDialog (){
     audio.value = 50
     audio.id = "audioButton"
     audio.textContent = "Audio"
-    audioContainer.appendChild(audio)
+    divAudioBar.appendChild(audio)
+
+    let audioPercent = document.createElement("p")
+    audioPercent.textContent = (game.dataset.value*100) + "%"
+    divAudioBar.appendChild(audioPercent)
 
 //end audio area
 
@@ -370,6 +380,7 @@ export function createOptionsDialog (){
         upButton.disabled = false;
         upButton.addEventListener("keydown", function (event) {
             game.dataset.keyUp = event.key.toLowerCase();
+            localStorage.setItem("keyUp", event.key.toLowerCase())
             upButton.textContent = game.dataset.keyUp;
             upButton.disabled = true;
         })
@@ -395,6 +406,7 @@ export function createOptionsDialog (){
         leftButton.disabled = false;
         leftButton.addEventListener("keydown", function (event) {
             game.dataset.keyLeft = event.key.toLowerCase();
+            localStorage.setItem("keyLeft", event.key.toLowerCase())
             leftButton.textContent = game.dataset.keyLeft;
             leftButton.disabled = true;
         })
@@ -420,6 +432,7 @@ export function createOptionsDialog (){
         downButton.disabled = false;
         downButton.addEventListener("keydown", function (event) {
             game.dataset.keyDown = event.key.toLowerCase();
+            localStorage.setItem("keyDown", event.key.toLowerCase())
             downButton.textContent = game.dataset.keyDown;
             downButton.disabled = true;
         })
@@ -445,6 +458,7 @@ export function createOptionsDialog (){
         rightButton.disabled = false;
         rightButton.addEventListener("keydown", function (event) {
             game.dataset.keyRight = event.key.toLowerCase();
+            localStorage.setItem("keyRight", event.key.toLowerCase())
             rightButton.textContent = game.dataset.keyRight;
             rightButton.disabled = true;
         })
@@ -548,7 +562,7 @@ export function createStartDialog (){
         if(Array.isArray(response.data)){
             if(response.data != ""){
                 let scoreboard = document.createElement("div")
-                scoreboard.class = "scoreboard"
+                scoreboard.classList.add("scoreboard")
                 scoreboard.style.marginTop = "20px"
                 div4.appendChild(scoreboard)
 
@@ -600,7 +614,7 @@ export function activeButton(){
                 if(response.data != ""){
                     let params = new URLSearchParams({ route: "scoreboard" });
                     let urlAvecParametres = `${apiURL}?${params}`;
-                
+                    logButton.disabled = true
                     axios.get(urlAvecParametres)
                     .then(response => {
                         if(Array.isArray(response.data)){
@@ -612,7 +626,7 @@ export function activeButton(){
 
                                 let div2 = document.getElementById("divScoreboard")
                                 let newScoreboard = document.createElement("div")
-                                newScoreboard.class = "scoreboard"
+                                newScoreboard.classList.add("scoreboard")
                                 newScoreboard.style.marginTop = "10px"
                                 newScoreboard.style.marginBottom = "10px"
                                 div2.appendChild(newScoreboard)
@@ -666,7 +680,7 @@ export function activeButton(){
 
                 let imageHeart = document.createElement("img");
                 imageHeart.src = "./assets/images/full_heart.png";
-                imageHeart.className = "heart";
+                imageHeart.classList.add("heart");
                 imageHeart.id = "heart" + parseInt(player.dataset.initialLife - 1);
                 hp.appendChild(imageHeart);
 

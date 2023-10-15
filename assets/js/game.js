@@ -21,6 +21,7 @@ let backgroundSound;
 //TODO install phaser ?
 //TODO Utiliser mysql pour le score (plus simple ?)
 //TODO ajouter le changement de touche dans le menu
+//TODO Faire en sorte de pouvoir changer de touche a l'infini
 
 let nbBoss = 1; //nombre de boss fait
 let numMonstersAtStart = 3;
@@ -55,11 +56,35 @@ export function initializeGameData() {
         game.dataset.theme = "light"
     }
 
-    game.dataset.volume = 0.5;
-    game.dataset.keyUp = "w";
-    game.dataset.keyDown = "s";
-    game.dataset.keyRight = "d";
-    game.dataset.keyLeft = "a";
+    if(localStorage.getItem("keyUp") != null){
+        game.dataset.keyUp = localStorage.getItem("keyUp")
+    }else{
+        game.dataset.keyUp = "w"
+    }
+
+    if(localStorage.getItem("keyDown") != null){
+        game.dataset.keyDown = localStorage.getItem("keyDown")
+    }else{
+        game.dataset.keyDown = "s"
+    }
+
+    if(localStorage.getItem("keyRight") != null){
+        game.dataset.keyRight = localStorage.getItem("keyRight")
+    }else{
+        game.dataset.keyRight = "d"
+    }
+
+    if(localStorage.getItem("keyLeft") != null){
+        game.dataset.keyLeft = localStorage.getItem("keyLeft")
+    }else{
+        game.dataset.keyLeft = "a"
+    }
+
+    if(localStorage.getItem("volume") != null){
+        game.dataset.volume = localStorage.getItem("volume")
+    }else{
+        game.dataset.volume = 0.5;
+    }
   
     // Initialisation du jeu
     bossSound = new Howl({
@@ -99,6 +124,7 @@ export function initializeGameData() {
         bossSound.volume(audioButton.value / 100);
         backgroundSound.volume(audioButton.value / 100);
         game.dataset.volume = audioButton.value / 100;
+        localStorage.setItem("volume", audioButton.value / 100)
     })
 
     player = createPlayer();
