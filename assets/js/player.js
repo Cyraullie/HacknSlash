@@ -5,8 +5,7 @@ let game = document.getElementById("game");
 
 let life = 4;
 let damage = 2;
-let speedY = 5; // Vitesse de déplacement
-let speedX = 5;
+let speed = 5; // Vitesse de déplacement
 
 export function createPlayer() {
     if(localStorage.getItem("keyUp") != null){
@@ -38,8 +37,7 @@ export function createPlayer() {
     player.dataset.invincible = false;
     player.dataset.initialLife = life;
     player.dataset.damage = damage;
-    player.dataset.speedX = speedX;
-    player.dataset.speedY = speedY;
+    player.dataset.speed = speed;
     player.dataset.isGamePaused = false;
     player.id = "player";
 
@@ -107,8 +105,8 @@ function handlePlayerMovement() {
 
 
 //TODO remettre les checks pour les upgrades et la fin
-            let moveX = (deltaX / distance) * parseInt(player.dataset.speedX);
-            let moveY = (deltaY / distance) * parseInt(player.dataset.speedY);
+            let moveX = (deltaX / distance) * parseInt(player.dataset.speed);
+            let moveY = (deltaY / distance) * parseInt(player.dataset.speed);
 
             var targetX = playerRect.left + moveX;
             var targetY = playerRect.top + moveY;
