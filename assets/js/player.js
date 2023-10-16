@@ -88,8 +88,11 @@ export function createPlayer() {
 
     // Position initiale du joueur (au centre de la fenêtre)
 
-    const initialX = (windowWidth) / 2;
-    const initialY = (windowHeight) / 2;
+    const initialX = Math.round((windowWidth) / 2);
+    const initialY = Math.round((windowHeight) / 2);
+
+    //console.log(Math.round(initialX))
+    //console.log(Math.round(initialY))
 
     player.style.left = initialX + "px";
     player.style.top = initialY + "px";
@@ -97,67 +100,34 @@ export function createPlayer() {
 
     
 function handlePlayerMovement() {
-    //if(!isUpdated){
-        /*if(!JSON.parse(player.dataset.isGamePaused)) {
-            //if(isEnded == 0){
-                const playerRect = player.getBoundingClientRect();
-                //const mapRect = map.getBoundingClientRect()
-
-
-            let test = windowWidth / windowHeight
-            let speedX = player.dataset.speedY * test
-            console.log(speedX)
-    //TODO ajouter la limite de la map :)
-    //TODO faire une seul variable pour la vitesse 
-                var targetX = playerRect.left; // Position cible en X
-                var targetY = playerRect.top; // Position cible en Y
-
-                const deltaX = windowWidth * (!JSON.parse(player.dataset.movingLeft) - !JSON.parse(player.dataset.movingRight));
-                const deltaY = windowHeight * (!JSON.parse(player.dataset.movingUp) - !JSON.parse(player.dataset.movingDown));
-                
-                const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-                console.log(distance)
-                let moveX = ((deltaX / distance) * speedX);
-                let moveY = (deltaY / distance) * player.dataset.speedY;
-
-                targetX += moveX;
-                targetY += moveY;
     
-                player.style.left = targetX + "px";
-                player.style.top = targetY + "px";
 
-            //}
-        }*/
-    //}
-    //const mapRect = map.getBoundingClientRect()
-
-
-    let test = windowWidth / windowHeight
-    let speedX =  (speedY * windowWidth) / windowHeight;
-    console.log(speedX)
     let interval = 30;
 
     let moveInterval = setInterval(function() {
-        //if (!JSON.parse(player.dataset.isGamePaused)) {
+        if (!JSON.parse(player.dataset.isGamePaused)) {
             const playerRect = player.getBoundingClientRect();
           const deltaX = windowWidth * (!JSON.parse(player.dataset.movingLeft) - !JSON.parse(player.dataset.movingRight));
           const deltaY = windowHeight * (!JSON.parse(player.dataset.movingUp) - !JSON.parse(player.dataset.movingDown));
-  
+
+         // console.log ("delatx : " + deltaX) 
+         // console.log ("delatY : " + deltaY) 
+
           const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-          let moveX = (deltaX / distance) * speedX;
-          let moveY = (deltaY / distance) * player.dataset.speedY;
+          let moveX = (deltaX / distance) * parseInt(player.dataset.speedX);
+          let moveY = (deltaY / distance) * parseInt(player.dataset.speedY);
             
-          /*console.log(moveX)as
-          console.log(moveY)*/
-          var targetX = playerRect.left + moveX;
+          console.log("moveX : " + moveX)
+          console.log("moveY : " + moveY)
+
+          var targetX = playerRect.right + moveX;
           var targetY = playerRect.top + moveY;
-         /* console.log(targetX)
-          console.log(targetY)*/
+          console.log("targetX : " + targetX)
+          console.log("targetY : " + targetY)
+
           player.style.left = targetX + "px";
           player.style.top = targetY + "px";
-        //} else {
-         //clearInterval(moveInterval);
-        //}
+        } 
       }, interval);
     }
     
