@@ -5,19 +5,46 @@ let game = document.getElementById("game");
 
 let life = 4;
 let damage = 2;
-let speedY = 5; // Vitesse de déplacement
-let speedX = (speedY * windowWidth) / playerWidth;
+let speed = 5; // Vitesse de déplacement
 
 export function createPlayer() {
+    if(localStorage.getItem("keyUp") != null){
+        game.dataset.keyUp = localStorage.getItem("keyUp")
+    }else{
+        game.dataset.keyUp = "w"
+    }
+
+    if(localStorage.getItem("keyDown") != null){
+        game.dataset.keyDown = localStorage.getItem("keyDown")
+    }else{
+        game.dataset.keyDown = "s"
+    }
+
+    if(localStorage.getItem("keyRight") != null){
+        game.dataset.keyRight = localStorage.getItem("keyRight")
+    }else{
+        game.dataset.keyRight = "d"
+    }
+
+    if(localStorage.getItem("keyLeft") != null){
+        game.dataset.keyLeft = localStorage.getItem("keyLeft")
+    }else{
+        game.dataset.keyLeft = "a"
+    }
+
     const player = document.createElement("div");
     player.dataset.life = life;
     player.dataset.invincible = false;
     player.dataset.initialLife = life;
     player.dataset.damage = damage;
-    player.dataset.speedX = speedX;
-    player.dataset.speedY = speedY;
+    player.dataset.speed = speed;
     player.dataset.isGamePaused = false;
     player.id = "player";
+
+    player.dataset.movingUp = false
+    player.dataset.movingDown = false
+    player.dataset.movingLeft = false
+    player.dataset.movingRight = false
 
     const hp = document.createElement("div");
     hp.id = "hp"
@@ -59,10 +86,52 @@ export function createPlayer() {
 
     // Position initiale du joueur (au centre de la fenêtre)
 
-    const initialX = (windowWidth - playerWidth) / 2;
-    const initialY = (windowHeight - playerHeight) / 2;
+    const initialX = Math.round((windowWidth) / 2);
+    const initialY = Math.round((windowHeight) / 2);
 
     player.style.left = initialX + "px";
     player.style.top = initialY + "px";
+    
+
+    
+function handlePlayerMovement() {
+        if (!JSON.parse(player.dataset.isGamePaused)) {
+            const playerRect = player.getBoundingClientRect();
+            
+            const deltaX = windowWidth * (!JSON.parse(player.dataset.movingLeft) - !JSON.parse(player.dataset.movingRight));
+            const deltaY = windowHeight * (!JSON.parse(player.dataset.movingUp) - !JSON.parse(player.dataset.movingDown));
+
+            const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+
+
+//TODO remettre les checks pour les upgrades et la fin
+            let moveX = (deltaX / distance) * parseInt(player.dataset.speed);
+            let moveY = (deltaY / distance) * parseInt(player.dataset.speed);
+
+            var targetX = playerRect.left + moveX;
+            var targetY = playerRect.top + moveY;
+
+            if(
+                targetY > 30 &&
+                targetY < windowHeight - playerHeight - 10 &&
+                targetX > 10 &&
+                targetX < windowWidth - playerWidth - 10
+            ) { 
+                player.style.left = targetX + "px";
+                player.style.top = targetY + "px";
+            }
+        } 
+      requestAnimationFrame(handlePlayerMovement);
+    }
+    
+
+
+    requestAnimationFrame(handlePlayerMovement);
+
     return player;
 } 
+
+
+
+
+

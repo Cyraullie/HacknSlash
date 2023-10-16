@@ -45,7 +45,6 @@ section {
 
 #player{
     position: relative;
-    transition: left 0.2s ease-in-out;
 }
 
 
