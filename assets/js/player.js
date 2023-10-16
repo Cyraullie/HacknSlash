@@ -120,7 +120,7 @@ function handlePlayerMovement() {
           console.log("moveX : " + moveX)
           console.log("moveY : " + moveY)
 
-          var targetX = playerRect.right + moveX;
+          var targetX = playerRect.left + moveX;
           var targetY = playerRect.top + moveY;
           console.log("targetX : " + targetX)
           console.log("targetY : " + targetY)
