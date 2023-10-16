@@ -18,16 +18,20 @@ let backgroundSound;
 //TODO ajouter des sons
 //TODO add difficulty
 //TODO finish dark theme
-//TODO install phaser ?
+//TODO install phaser ?????
 //TODO Faire en sorte de pouvoir changer de touche a l'infini
 //TODO ajouter un affichage des degats
 //TODO Ajouter une variable de cadance de tire
 //TODO Regler le soucis de lag au bout d'un moment (déplace,emt horizontal ?)
-
+//TODO ajout de succés (no move challenge (si tu bouge une fois le défi n'est plus réalisabel))
+//TODO ajouter un bouton pour voir ses succès qui seront stocké dans la base de donnée
+//TODO empecher de rentrer des scores a la mains tel que les deux glands 
+//TODO ajouter un bouton continuer dans le menu echap
+//TODO arreter le check des degats quand il y a une pause :)
 
 let nbBoss = 1; //nombre de boss fait
 let numMonstersAtStart = 3;
-var numVague = 1;
+var numVague = 5;
 let player;
 var map = document.getElementById("map");
 var game = document.getElementById("game");
@@ -46,42 +50,13 @@ var isEnded = 0;
 let isUpdated = false;
 let bossTime = false;
 
-let movingUp = false;
-let movingLeft = false;
-let movingDown = false;
-let movingRight = false;
-
 export function initializeGameData() {    
     if(localStorage.getItem("theme") != null){
         game.dataset.theme = localStorage.getItem("theme")
     }else{
         game.dataset.theme = "light"
     }
-
-    if(localStorage.getItem("keyUp") != null){
-        game.dataset.keyUp = localStorage.getItem("keyUp")
-    }else{
-        game.dataset.keyUp = "w"
-    }
-
-    if(localStorage.getItem("keyDown") != null){
-        game.dataset.keyDown = localStorage.getItem("keyDown")
-    }else{
-        game.dataset.keyDown = "s"
-    }
-
-    if(localStorage.getItem("keyRight") != null){
-        game.dataset.keyRight = localStorage.getItem("keyRight")
-    }else{
-        game.dataset.keyRight = "d"
-    }
-
-    if(localStorage.getItem("keyLeft") != null){
-        game.dataset.keyLeft = localStorage.getItem("keyLeft")
-    }else{
-        game.dataset.keyLeft = "a"
-    }
-
+    
     if(localStorage.getItem("volume") != null){
         game.dataset.volume = localStorage.getItem("volume")
     }else{
@@ -132,17 +107,19 @@ export function initializeGameData() {
     })
 
     player = createPlayer();
+    player.dataset.timeStamp = performance.now();
 
     checkTheme()
 }
 
 export function initializeGame() {
-    
+
+
+    game.addEventListener("mousedown", handleMouseClick);
+
     document.addEventListener("keydown", handleKeyDown);
     
     document.addEventListener("keyup", handleKeyUp);
-
-    game.addEventListener("mousedown", handleMouseClick);
 
     // Boucle de jeu principale
     requestAnimationFrame(gameLoop);
@@ -153,16 +130,16 @@ function handleKeyDown(event) {
     //keysPressed[event.key.toLowerCase()] = true;
     switch (event.key.toLowerCase()) {
         case game.dataset.keyUp:
-            movingUp = true;
+            player.dataset.movingUp = true;
             break;
         case game.dataset.keyLeft:
-            movingLeft = true;
+            player.dataset.movingLeft = true;
             break;
         case game.dataset.keyDown:
-            movingDown = true;
+            player.dataset.movingDown = true;
             break;
         case game.dataset.keyRight:
-            movingRight = true;
+            player.dataset.movingRight = true;
             break;
         case "escape":
             togglePauseGame();
@@ -175,16 +152,16 @@ function handleKeyUp(event) {
     
     switch (event.key.toLowerCase()) {
         case game.dataset.keyUp:
-            movingUp = false;
+            player.dataset.movingUp = false;
             break;
         case game.dataset.keyLeft:
-            movingLeft = false;
+            player.dataset.movingLeft = false;
             break;
         case game.dataset.keyDown:
-            movingDown = false;
+            player.dataset.movingDown = false;
             break;
         case game.dataset.keyRight:
-            movingRight = false;
+            player.dataset.movingRight = false;
             break;
     }
 }
@@ -245,49 +222,6 @@ function togglePauseGame() {
 function handleMouseClick(event) {
     startShooting(event.clientX, event.clientY, player);
 }
-
-function handlePlayerMovement() {
-    if(!JSON.parse(player.dataset.isGamePaused)) {
-        if(isEnded == 0){
-            const playerRect = player.getBoundingClientRect();
-
-            let playerHeight = playerRect.height;
-            let playerWidth = playerRect.width;
-
-            var targetX = playerRect.left; // Position cible en X
-            var targetY = playerRect.top; // Position cible en Y
-//TODO tout les touches
-           // let dirX = (keysPressed["a"]) - (keysPressed["d"])
-            //let dirY = (keysPressed["w"]) - (keysPressed["s"])
-
-
-
-//TODO limite fuck dup (remettre tout les if répare le tout ?)
-            //TODO nerf diago pythagore :) diago plus rapide que ligne droite
-            /*if(targetY > 30 && targetY < windowHeight - playerHeight-10) {
-                 //targetY -= dirY * parseInt(player.dataset.speedY); 
-                 targetY -= dirY * parseInt(player.dataset.speedY);
-                }
-
-            if(targetX > 10 && targetX < windowWidth - playerWidth-10) { 
-                //targetX -= parseInt(player.dataset.speedX); 
-                targetX -= dirX * parseInt(player.dataset.speedX)
-            }
-*/
-
-
-
-            if(movingUp && targetY > 30) { targetY -= parseInt(player.dataset.speedY); }
-            if(movingDown && targetY < windowHeight - playerHeight-10) { targetY += parseInt(player.dataset.speedY);  }
-            if(movingLeft && targetX > 10) { targetX -= parseInt(player.dataset.speedX);  }
-            if(movingRight && targetX < windowWidth - playerWidth-10) { targetX += parseInt(player.dataset.speedX); }
-
-            player.style.top = targetY + "px";
-            player.style.left = targetX + "px";
-        }
-    }
-}
-
 
 function checkHP() {
     for(let i = 0; i < player.dataset.initialLife; i++){
@@ -375,7 +309,7 @@ function endGame() {
     // Supprimez les gestionnaires d'événements lorsque le jeu est terminé
     game.removeEventListener("mousedown", handleMouseClick);
     document.removeEventListener("keydown", handleKeyDown);
-    document.removeEventListener("keyup", handleKeyUp);
+    //document.removeEventListener("keyup", handleKeyUp);
 
     const monsters = document.querySelectorAll(".monster");
 
@@ -402,16 +336,17 @@ function gameLoop() {
             checkHP();
             checkMonsterAlive()
         
-            handlePlayerMovement();
+            //handlePlayerMovement();
             checkCollisionWithMonsters();
         
             // Appeler la boucle de jeu à la prochaine frame
         }
     }
 
-    
-    
     requestAnimationFrame(gameLoop);
+    
+    
+    
     
 }
 

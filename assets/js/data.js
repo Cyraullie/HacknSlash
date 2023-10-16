@@ -3,6 +3,9 @@
 export var windowWidth = window.innerWidth;
 export var windowHeight = window.innerHeight;
 
+console.log(window.innerWidth)
+console.log(window.innerHeight)
+
 // information du joueur
 export var playerWidth = 20;
 export var playerHeight = 50;
