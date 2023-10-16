@@ -91,49 +91,44 @@ export function createPlayer() {
     const initialX = Math.round((windowWidth) / 2);
     const initialY = Math.round((windowHeight) / 2);
 
-    //console.log(Math.round(initialX))
-    //console.log(Math.round(initialY))
-
     player.style.left = initialX + "px";
     player.style.top = initialY + "px";
     
 
     
 function handlePlayerMovement() {
-    
-
-    let interval = 30;
-
-    let moveInterval = setInterval(function() {
         if (!JSON.parse(player.dataset.isGamePaused)) {
             const playerRect = player.getBoundingClientRect();
-          const deltaX = windowWidth * (!JSON.parse(player.dataset.movingLeft) - !JSON.parse(player.dataset.movingRight));
-          const deltaY = windowHeight * (!JSON.parse(player.dataset.movingUp) - !JSON.parse(player.dataset.movingDown));
-
-         // console.log ("delatx : " + deltaX) 
-         // console.log ("delatY : " + deltaY) 
-
-          const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-          let moveX = (deltaX / distance) * parseInt(player.dataset.speedX);
-          let moveY = (deltaY / distance) * parseInt(player.dataset.speedY);
             
-          console.log("moveX : " + moveX)
-          console.log("moveY : " + moveY)
+            const deltaX = windowWidth * (!JSON.parse(player.dataset.movingLeft) - !JSON.parse(player.dataset.movingRight));
+            const deltaY = windowHeight * (!JSON.parse(player.dataset.movingUp) - !JSON.parse(player.dataset.movingDown));
 
-          var targetX = playerRect.left + moveX;
-          var targetY = playerRect.top + moveY;
-          console.log("targetX : " + targetX)
-          console.log("targetY : " + targetY)
+            const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
 
-          player.style.left = targetX + "px";
-          player.style.top = targetY + "px";
+
+//TODO remettre les checks pour les upgrades et la fin
+            let moveX = (deltaX / distance) * parseInt(player.dataset.speedX);
+            let moveY = (deltaY / distance) * parseInt(player.dataset.speedY);
+
+            var targetX = playerRect.left + moveX;
+            var targetY = playerRect.top + moveY;
+
+            if(
+                targetY > 30 &&
+                targetY < windowHeight - playerHeight - 10 &&
+                targetX > 10 &&
+                targetX < windowWidth - playerWidth - 10
+            ) { 
+                player.style.left = targetX + "px";
+                player.style.top = targetY + "px";
+            }
         } 
-      }, interval);
+      requestAnimationFrame(handlePlayerMovement);
     }
     
 
 
-    handlePlayerMovement();
+    requestAnimationFrame(handlePlayerMovement);
 
     return player;
 } 
