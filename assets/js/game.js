@@ -238,7 +238,7 @@ export function checkTheme() {
     document.getElementById("imagePlayer").src = "./assets/images/player_" + game.dataset.theme + ".png";
 }
 
-function togglePauseGame() {
+export function togglePauseGame() {
     isPaused = !isPaused; // Inversez l'état de la pause
     displayEscape(isPaused);
 }

@@ -1,6 +1,6 @@
 import { apiURL, windowHeight } from './data.js';
 import axios from 'axios';
-import { checkTheme, initializeGame } from './game.js';
+import { checkTheme, initializeGame, togglePauseGame } from './game.js';
 
 var customDialog;
 const game = document.getElementById("game");
@@ -218,6 +218,11 @@ export function createEchapDialog (){
     let div4 = document.createElement("div")
     div4.id = "menuDiv";
     customDialog.appendChild(div4)
+
+    let resumeButton = document.createElement("button")
+    resumeButton.id = "resumeRealButton"
+    resumeButton.textContent = "Continuer"
+    div4.appendChild(resumeButton)
 
     let options = document.createElement("button")
     options.id = "optionButton"
@@ -600,6 +605,7 @@ export function activeButton(){
     let optionStartButton = document.getElementById("optionStartButton")
     let crossButton = document.getElementById("cross")
     let loginButton = document.getElementById("loginButton")
+    let resumeRealButton = document.getElementById("resumeRealButton")
 
     if(logButton !== null){
         logButton.addEventListener("click", () => {         
@@ -658,6 +664,12 @@ export function activeButton(){
     if(restartButton !== null){
         restartButton.addEventListener("click", () => {
             location.reload();
+        });
+    }
+
+    if(resumeRealButton !== null){
+        resumeRealButton.addEventListener("click", () => {
+            togglePauseGame();
         });
     }
 
