@@ -24,8 +24,8 @@ let backgroundSound;
 //TODO ajout de succés (no move challenge (si tu bouge une fois le défi n'est plus réalisabel))
 //TODO ajouter un bouton pour voir ses succès qui seront stocké dans la base de donnée
 //TODO creer des succés (db ?)
-//TODO empecher de rentrer des scores a la mains tel que les deux glands 
-//TODO ajouter un bouton continuer dans le menu echap
+//TODO empecher de rentrer des scores a la mains tel que les deux glands
+//TODO inscriptions complète ? login + password ?
 
 let nbBoss = 1; //nombre de boss fait
 let numMonstersAtStart = 3;
@@ -128,12 +128,7 @@ export function initializeGameData() {
 
     checkTheme()
 
-    game.addEventListener('mouseleave', () => {
-        if(game.dataset.isGamePaused){
-            isPaused = true; // Inversez l'état de la pause
-            displayEscape(isPaused);
-        }
-      });
+
 }
 
 export function initializeGame() {
@@ -144,6 +139,13 @@ export function initializeGame() {
     document.addEventListener("keydown", handleKeyDown);
     
     document.addEventListener("keyup", handleKeyUp);
+
+    game.addEventListener('mouseleave', () => {
+        if(game.dataset.isGamePaused){
+            isPaused = true; // Inversez l'état de la pause
+            displayEscape(isPaused);
+        }
+      });
 
     // Boucle de jeu principale
     requestAnimationFrame(gameLoop);

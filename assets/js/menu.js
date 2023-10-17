@@ -13,6 +13,7 @@ export function displayGameOver(text1, text2, score) {
     scoreText.dataset.score = score;
 
     logButton.disabled = false
+    console.log(scoreText)
     dialog.style.display = "block";
 }
 
@@ -610,6 +611,7 @@ export function activeButton(){
     if(logButton !== null){
         logButton.addEventListener("click", () => {         
             let score = document.getElementById("score").dataset.score;
+
 
             let params = new URLSearchParams({ route: "score", player_id: localStorage.getItem("player_id"), score: score});
             let urlAvecParametres = `${apiURL}?${params}`;
