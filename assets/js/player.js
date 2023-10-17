@@ -74,7 +74,6 @@ export function createPlayer() {
     
     map.appendChild(hp);
     
-
     // Définir la taille et la position initiale du joueur
     player.style.width = playerWidth + "px";
     player.style.height = playerHeight + "px";

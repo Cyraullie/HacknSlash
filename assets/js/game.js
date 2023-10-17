@@ -20,11 +20,10 @@ let backgroundSound;
 //TODO finish dark theme
 //TODO install phaser ?????
 //TODO Faire en sorte de pouvoir changer de touche a l'infini
-//TODO ajouter un affichage des degats
 //TODO Ajouter une variable de cadance de tire
-//TODO Regler le soucis de lag au bout d'un moment (déplace,emt horizontal ?)
 //TODO ajout de succés (no move challenge (si tu bouge une fois le défi n'est plus réalisabel))
 //TODO ajouter un bouton pour voir ses succès qui seront stocké dans la base de donnée
+//TODO creer des succés (db ?)
 //TODO empecher de rentrer des scores a la mains tel que les deux glands 
 //TODO ajouter un bouton continuer dans le menu echap
 
@@ -109,7 +108,23 @@ export function initializeGameData() {
     })
 
     player = createPlayer();
-    player.dataset.timeStamp = performance.now();
+
+    let damageDiv = document.createElement("div");
+    damageDiv.id = "damage"
+    damageDiv.style.left = windowWidth - 42 + "px"
+    map.appendChild(damageDiv);
+
+    let damageText = document.createElement("p")
+    damageText.id = "damageText"
+    damageText.textContent = player.dataset.damage + "x";
+    damageText.style.marginRight = "5px"
+    damageDiv.appendChild(damageText);
+
+    let imageDamage = document.createElement("img");
+    imageDamage.src = "./assets/images/sword.png";
+    imageDamage.className = "heart";
+    imageDamage.id = "sword";
+    damageDiv.appendChild(imageDamage);
 
     checkTheme()
 
@@ -177,6 +192,8 @@ export function checkTheme() {
     let buttons = document.querySelectorAll('button'); 
     let dialogs = document.getElementsByClassName("dialog")
     let resumeText = document.getElementById("resumeText");
+    let damageText = document.getElementById("damageText");
+
     if(localStorage.getItem("theme") != null){
         game.dataset.theme = localStorage.getItem("theme")
     }else{
@@ -187,6 +204,7 @@ export function checkTheme() {
         map.style.backgroundColor = "black"
         vagues.style.color = "white"
         resumeText.style.color = "white"
+        damageText.style.color = "white"
         
         Array.from(dialogs).forEach(dialog => {
             dialog.style.backgroundColor = "#666666"
@@ -203,6 +221,7 @@ export function checkTheme() {
         map.style.backgroundColor = "white"
         vagues.style.color = "black"
         resumeText.style.color = "black"
+        damageText.style.color = "black"
 
         Array.from(dialogs).forEach(dialog => {
             dialog.style.backgroundColor = "#ffffff"
@@ -338,6 +357,8 @@ function gameLoop() {
         game.dataset.isGamePaused = true;
     } else {
         game.dataset.isGamePaused = false;
+        let damageText = document.getElementById("damageText")
+        damageText.textContent = player.dataset.damage + "x";
     }
 
     //console.log(game.dataset.isGamePaused)

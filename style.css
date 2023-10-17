@@ -37,6 +37,15 @@ section {
     left: 0;
 }
 
+#damage {
+    display: flex;
+    flex-direction: row;
+    position: absolute;
+    pointer-events: none;
+    top: 0;
+}
+
+
 .heart {
     height: 20px;
     width: 20px;
