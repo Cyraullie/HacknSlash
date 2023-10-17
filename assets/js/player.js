@@ -102,8 +102,6 @@ function handlePlayerMovement() {
 
             const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
 
-
-//TODO remettre les checks pour les upgrades et la fin
             let moveX = (deltaX / distance) * parseInt(player.dataset.speed);
             let moveY = (deltaY / distance) * parseInt(player.dataset.speed);
 

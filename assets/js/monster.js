@@ -87,25 +87,26 @@ export function createMonster(life, monsterSpeed, damage, nbBoss = 1) {
             playerRect.right > monsterRect.left &&
             playerRect.bottom > monsterRect.top 
         ) {
-            if(!JSON.parse(player.dataset.invincible)){
-                // Le monstre a atteint le joueur, vous pouvez ajouter votre logique de jeu ici (par exemple, réduire la santé du joueur)
-                player.dataset.life = player.dataset.life - monster.dataset.damage
-                let  imagePlayer = document.getElementById("imagePlayer");
-                
-                imagePlayer.src = "./assets/images/player_hurt.png";
-                player.dataset.invincible = true;
-
-                let actualSpeedPlayer = parseInt(player.dataset.speed);
-
-                player.dataset.speed = actualSpeedPlayer * 2
-                setTimeout(() => {
-                    imagePlayer.src = "./assets/images/player_" + game.dataset.theme + ".png";
-                    player.dataset.invincible = false;
-                    player.dataset.speed = actualSpeedPlayer
-                }, 2000);
+            if(!JSON.parse(game.dataset.isGamePaused)){
+                if(!JSON.parse(player.dataset.invincible)){
+                    // Le monstre a atteint le joueur, vous pouvez ajouter votre logique de jeu ici (par exemple, réduire la santé du joueur)
+                    player.dataset.life = player.dataset.life - monster.dataset.damage
+                    let  imagePlayer = document.getElementById("imagePlayer");
+                    
+                    imagePlayer.src = "./assets/images/player_hurt.png";
+                    player.dataset.invincible = true;
+    
+                    let actualSpeedPlayer = parseInt(player.dataset.speed);
+    
+                    player.dataset.speed = actualSpeedPlayer * 2
+                    setTimeout(() => {
+                        imagePlayer.src = "./assets/images/player_" + game.dataset.theme + ".png";
+                        player.dataset.invincible = false;
+                        player.dataset.speed = actualSpeedPlayer
+                    }, 2000);
+                }
             }
            
-            
             //monster.remove(); // Supprimez le monstre
         }
     }

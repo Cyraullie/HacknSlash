@@ -27,7 +27,6 @@ let backgroundSound;
 //TODO ajouter un bouton pour voir ses succès qui seront stocké dans la base de donnée
 //TODO empecher de rentrer des scores a la mains tel que les deux glands 
 //TODO ajouter un bouton continuer dans le menu echap
-//TODO arreter le check des degats quand il y a une pause :)
 
 let nbBoss = 1; //nombre de boss fait
 let numMonstersAtStart = 3;
