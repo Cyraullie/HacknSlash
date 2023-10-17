@@ -16,7 +16,7 @@ export function displayGameOver(text1, text2, score) {
     dialog.style.display = "block";
 }
 
-export function displayUpgrade(vagues) {
+export function displayUpgrade() {
     let dialog = document.getElementById("upgrade");
     dialog.style.display = "block";
 }
@@ -686,6 +686,7 @@ export function activeButton(){
 
                 lifeButton.setAttribute("data-selected", "false");
                 lifeButton.classList.remove("selected");
+                game.dataset.isGamePaused = false;
                 document.getElementById("upgrade").style.display = "none";
             }
         
@@ -696,6 +697,7 @@ export function activeButton(){
                 
                 damageButton.setAttribute("data-selected", "false");
                 damageButton.classList.remove("selected");
+                game.dataset.isGamePaused = false;
                 document.getElementById("upgrade").style.display = "none";
             }
         
@@ -706,6 +708,7 @@ export function activeButton(){
                 
                 regenButton.setAttribute("data-selected", "false");
                 regenButton.classList.remove("selected");
+                game.dataset.isGamePaused = false;
                 document.getElementById("upgrade").style.display = "none";
             }
             

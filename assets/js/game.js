@@ -31,7 +31,7 @@ let backgroundSound;
 
 let nbBoss = 1; //nombre de boss fait
 let numMonstersAtStart = 3;
-var numVague = 5;
+var numVague = 0;
 let player;
 var map = document.getElementById("map");
 var game = document.getElementById("game");
@@ -46,11 +46,14 @@ game.style.minWidth = windowWidth + "px";
 game.style.maxHeight = windowHeight + "px";
 game.style.maxWidth = windowWidth + "px";
 
-var isEnded = 0;
+var isEnded = false;
 let isUpdated = false;
+let isPaused = false;
+
 let bossTime = false;
 
 export function initializeGameData() {    
+    game.dataset.isGamePaused = false;
     if(localStorage.getItem("theme") != null){
         game.dataset.theme = localStorage.getItem("theme")
     }else{
@@ -110,6 +113,13 @@ export function initializeGameData() {
     player.dataset.timeStamp = performance.now();
 
     checkTheme()
+
+    game.addEventListener('mouseleave', () => {
+        if(game.dataset.isGamePaused){
+            isPaused = true; // Inversez l'état de la pause
+            displayEscape(isPaused);
+        }
+      });
 }
 
 export function initializeGame() {
@@ -126,8 +136,6 @@ export function initializeGame() {
 }
 
 function handleKeyDown(event) {
-    
-    //keysPressed[event.key.toLowerCase()] = true;
     switch (event.key.toLowerCase()) {
         case game.dataset.keyUp:
             player.dataset.movingUp = true;
@@ -148,8 +156,6 @@ function handleKeyDown(event) {
 }
 
 function handleKeyUp(event) {
-    //keysPressed[event.key.toLowerCase()] = false;
-    
     switch (event.key.toLowerCase()) {
         case game.dataset.keyUp:
             player.dataset.movingUp = false;
@@ -215,8 +221,8 @@ export function checkTheme() {
 }
 
 function togglePauseGame() {
-    player.dataset.isGamePaused = !JSON.parse(player.dataset.isGamePaused); // Inversez l'état de la pause
-    displayEscape(JSON.parse(player.dataset.isGamePaused));
+    isPaused = !isPaused; // Inversez l'état de la pause
+    displayEscape(isPaused);
 }
 
 function handleMouseClick(event) {
@@ -234,18 +240,23 @@ function checkHP() {
     }
 
     if(player.dataset.life <= 0){
-        isEnded++;
+        isEnded = true;
         endGame()
     }
 }
 
 function checkMonsterAlive() {
     let monsters = document.querySelectorAll(".monster")
-    if(isEnded == 0){
+    
+    if(!JSON.parse(game.dataset.isGamePaused)) {
         if (monsters.length === 0) {
             if(document.getElementById("upgrade").style.display == "none"){
                 let vagues = document.getElementById("vagues");
-                vagues.textContent = "Vagues " + (numVague);              
+                vagues.textContent = "Vagues " + (numVague+1);              
+            }
+
+            if(!isUpdated){
+                numVague++;
             }
 
             if(numVague % 10 === 0){ 
@@ -259,7 +270,7 @@ function checkMonsterAlive() {
 
             if((numVague - 1) % 5 === 0 && (numVague - 1) != 0){
                 if(!isUpdated){
-                    displayUpgrade(numVague);
+                    displayUpgrade();
                     isUpdated = true;
                 }
                 if(bossTime){
@@ -271,15 +282,13 @@ function checkMonsterAlive() {
                     bossTime = false;
                 }
             }
-
+            
             if(document.getElementById("upgrade").style.display == "none" && numVague % 10 !== 0){
                 isUpdated = false;
                 spawnMonsters();                
             }
 
-            if(!isUpdated){
-                numVague++;
-            }
+            
         }
     }
 }
@@ -321,32 +330,33 @@ function endGame() {
 }
 
 function gameLoop() {
-    game.addEventListener('mouseleave', () => {
-        if(isEnded == 0){
-            player.dataset.isGamePaused = true; // Inversez l'état de la pause
-            displayEscape(JSON.parse(player.dataset.isGamePaused));
-        }
-      });
-      
-    if(!JSON.parse(player.dataset.isGamePaused)) {
-        if(isEnded == 0){
-            // Mettre à jour la logique du jeu (mouvement, collisions, etc.)
-            // Gestionnaire d'événement pour déclencher le tir (par exemple, un clic de souris)
-        
-            checkHP();
-            checkMonsterAlive()
-        
-            //handlePlayerMovement();
-            checkCollisionWithMonsters();
-        
-            // Appeler la boucle de jeu à la prochaine frame
-        }
+    if(document.getElementById("upgrade").style.display == "none" && numVague % 10 !== 0){
+        isUpdated = false;
+        game.dataset.isGamePaused = false;
     }
 
-    requestAnimationFrame(gameLoop);
+    if(isEnded || isPaused || isUpdated){
+        game.dataset.isGamePaused = true;
+    } else {
+        game.dataset.isGamePaused = false;
+    }
+
+    //console.log(game.dataset.isGamePaused)
+
+    
+    // Mettre à jour la logique du jeu (mouvement, collisions, etc.)
+    // Gestionnaire d'événement pour déclencher le tir (par exemple, un clic de souris)
+
+    checkHP();
+    checkMonsterAlive()
+
+    //handlePlayerMovement();
+    checkCollisionWithMonsters();
+
+    // Appeler la boucle de jeu à la prochaine frame
     
     
-    
-    
+
+    requestAnimationFrame(gameLoop); 
 }
 

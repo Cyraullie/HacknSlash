@@ -19,7 +19,7 @@ var targetX = 0;
 var targetY = 0;
 
 export function startShooting(x, y, player) {
-    if(!JSON.parse(player.dataset.isGamePaused)) {
+    if(!JSON.parse(game.dataset.isGamePaused)) {
     
         damage = player.dataset.damage;
         let playerHitbox = player.getBoundingClientRect();
@@ -66,7 +66,7 @@ function moveProjectile(projectileX, projectileY, targetX, targetY, projectile) 
                 projHitBox.bottom < windowHeight 
             ) {
                 
-                if(!JSON.parse(player.dataset.isGamePaused)) {
+                if(!JSON.parse(game.dataset.isGamePaused)) {
                     projectileX += moveX;
                     projectileY += moveY;
 

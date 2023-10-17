@@ -38,7 +38,6 @@ export function createPlayer() {
     player.dataset.initialLife = life;
     player.dataset.damage = damage;
     player.dataset.speed = speed;
-    player.dataset.isGamePaused = false;
     player.id = "player";
 
     player.dataset.movingUp = false
@@ -95,7 +94,7 @@ export function createPlayer() {
 
     
 function handlePlayerMovement() {
-        if (!JSON.parse(player.dataset.isGamePaused)) {
+        if (!JSON.parse(game.dataset.isGamePaused)) {
             const playerRect = player.getBoundingClientRect();
             
             const deltaX = windowWidth * (!JSON.parse(player.dataset.movingLeft) - !JSON.parse(player.dataset.movingRight));

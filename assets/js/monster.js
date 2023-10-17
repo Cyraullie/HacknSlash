@@ -61,7 +61,7 @@ export function createMonster(life, monsterSpeed, damage, nbBoss = 1) {
         const monsterRect = monster.getBoundingClientRect();
 
         
-        if(!JSON.parse(player.dataset.isGamePaused)) {
+        if(!JSON.parse(game.dataset.isGamePaused)) {
             const deltaX = playerRect.left - monsterRect.left;
             const deltaY = playerRect.top - monsterRect.top;
 
