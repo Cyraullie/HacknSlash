@@ -475,16 +475,36 @@ export function createOptionsDialog (){
 
     tabArray.forEach((tab) => {
         tab.addEventListener("click", () => {
-            tab.classList.add("active");
-
-            let tabContent = document.getElementById(tab.dataset.tab)
-            tabContent.classList.add("active");
-
+            if(game.dataset.theme == "light"){
+                if(!tabs.classList.contains("dark_active")){
+                    tabs.classList.remove("dark_active")
+                    tab.classList.add("active");
+                    let tabContent = document.getElementById(tab.dataset.tab)
+                    tabContent.classList.add("active");
+                }
+            } else if(game.dataset.theme == "dark"){
+                if(!tabs.classList.contains("active")){
+                    tabs.classList.remove("active")
+                    tab.classList.add("dark_active");
+                    let tabContent = document.getElementById(tab.dataset.tab)
+                    tabContent.classList.add("dark_active");
+                }
+            }
+            
             tabArray.forEach((otherTab) => {
                 if (otherTab !== tab) {
                     let otherTabContent = document.getElementById(otherTab.dataset.tab)
-                    otherTab.classList.remove("active");
-                    otherTabContent.classList.remove("active");
+                    if(game.dataset.theme == "light"){
+                        otherTab.classList.remove("active");
+                        otherTabContent.classList.remove("active");
+                        otherTab.classList.remove("dark_active");
+                        otherTabContent.classList.remove("dark_active");
+                    } else if(game.dataset.theme == "dark"){
+                        otherTab.classList.remove("dark_active");
+                        otherTabContent.classList.remove("dark_active");
+                        otherTab.classList.remove("active");
+                        otherTabContent.classList.remove("active");
+                    }
                 }
             });
         });

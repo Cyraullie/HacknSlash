@@ -9,29 +9,6 @@ let speed = 5; // Vitesse de déplacement
 let fireRate = 400;
 
 export function createPlayer() {
-    if(localStorage.getItem("keyUp") != null){
-        game.dataset.keyUp = localStorage.getItem("keyUp")
-    }else{
-        game.dataset.keyUp = "w"
-    }
-
-    if(localStorage.getItem("keyDown") != null){
-        game.dataset.keyDown = localStorage.getItem("keyDown")
-    }else{
-        game.dataset.keyDown = "s"
-    }
-
-    if(localStorage.getItem("keyRight") != null){
-        game.dataset.keyRight = localStorage.getItem("keyRight")
-    }else{
-        game.dataset.keyRight = "d"
-    }
-
-    if(localStorage.getItem("keyLeft") != null){
-        game.dataset.keyLeft = localStorage.getItem("keyLeft")
-    }else{
-        game.dataset.keyLeft = "a"
-    }
 
     const player = document.createElement("div");
     player.dataset.life = life;

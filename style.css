@@ -292,6 +292,11 @@ li.active {
     border-left: 0px solid black
 }
 
+li.dark_active {
+    background-color: #444 !important;
+    border-left: 0px solid white
+}
+
 .tab-content {
     display: none;
 }
@@ -303,6 +308,16 @@ li.active {
     display: block;
     background-color: #f0f0f0;
 }
+
+
+.tab-content.dark_active {
+    position: relative;
+    top: 0px;
+    margin-top: 0px;
+    display: block;
+    background-color: #222;
+}
+
 
 .tab-content {
     display: none;

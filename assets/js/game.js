@@ -20,12 +20,12 @@ let backgroundSound;
 //TODO finish dark theme
 //TODO install phaser ?????
 //TODO Faire en sorte de pouvoir changer de touche a l'infini
-//TODO Ajouter une variable de cadance de tire
 //TODO ajout de succés (no move challenge (si tu bouge une fois le défi n'est plus réalisabel))
 //TODO ajouter un bouton pour voir ses succès qui seront stocké dans la base de donnée
 //TODO creer des succés (db ?)
 //TODO empecher de rentrer des scores a la mains tel que les deux glands
 //TODO inscriptions complète ? login + password ?
+//TODO Ajouter une variable de cadance de tire (fait) (est-ce que c'est pas trop ce que j 'ai mis pour le moment ?)
 
 let nbBoss = 1; //nombre de boss fait
 let numMonstersAtStart = 3;
@@ -64,6 +64,30 @@ export function initializeGameData() {
         game.dataset.volume = 0.5;
     }
   
+    if(localStorage.getItem("keyUp") != null){
+        game.dataset.keyUp = localStorage.getItem("keyUp")
+    }else{
+        game.dataset.keyUp = "w"
+    }
+
+    if(localStorage.getItem("keyDown") != null){
+        game.dataset.keyDown = localStorage.getItem("keyDown")
+    }else{
+        game.dataset.keyDown = "s"
+    }
+
+    if(localStorage.getItem("keyRight") != null){
+        game.dataset.keyRight = localStorage.getItem("keyRight")
+    }else{
+        game.dataset.keyRight = "d"
+    }
+
+    if(localStorage.getItem("keyLeft") != null){
+        game.dataset.keyLeft = localStorage.getItem("keyLeft")
+    }else{
+        game.dataset.keyLeft = "a"
+    }
+
     // Initialisation du jeu
     bossSound = new Howl({
         src: ['assets/sounds/boss.mp3'],
@@ -195,6 +219,10 @@ export function checkTheme() {
     let dialogs = document.getElementsByClassName("dialog")
     let resumeText = document.getElementById("resumeText");
     let damageText = document.getElementById("damageText");
+    let tabContent = Array.from(document.getElementsByClassName("tab-content"))
+    let tabControl = Array.from(document.getElementsByClassName("tab-button"))
+    console.log(tabControl)
+    console.log(tabContent)
 
     if(localStorage.getItem("theme") != null){
         game.dataset.theme = localStorage.getItem("theme")
@@ -219,6 +247,19 @@ export function checkTheme() {
         })
 
 
+        tabControl.forEach(tabs => {
+
+            if(tabs.classList.contains("active")){
+                tabs.classList.add("dark_active")
+                tabs.classList.remove("active")
+            }
+            tabs.style.backgroundColor = "#333"
+        })
+
+        tabContent.forEach(tabs => {
+            tabs.style.backgroundColor = "#333333"
+        })
+
     } else if(game.dataset.theme == "light") {
         map.style.backgroundColor = "white"
         vagues.style.color = "black"
@@ -234,6 +275,22 @@ export function checkTheme() {
             button.style.backgroundColor = "white"
             button.style.color = "black"
         })
+
+        tabControl.forEach(tabs => {
+            if(tabs.classList.contains("dark_active")){
+                tabs.classList.remove("dark_active")
+                tabs.classList.add("active")
+            }
+            tabs.style.backgroundColor = "" 
+        })
+
+        tabContent.forEach(tabs => {
+            if(tabs.classList.contains("dark_active")){
+                tabs.classList.remove("dark_active")
+                tabs.classList.add("active")
+            }
+            tabs.style.backgroundColor = "" 
+        })
     }
     
     themeButton.textContent = "Thème : " + game.dataset.theme;
@@ -246,7 +303,15 @@ export function togglePauseGame() {
 }
 
 function handleMouseClick(event) {
-    startShooting(event.clientX, event.clientY, player);
+
+    if (!player.hasAttribute('data-firing')) {
+        startShooting(event.clientX, event.clientY, player);
+        player.setAttribute('data-firing', 'true');
+        
+        setTimeout(function() {
+          player.removeAttribute('data-firing');
+        }, parseInt(player.dataset.fireRate));
+    }
 }
 
 function checkHP() {
@@ -368,7 +433,7 @@ function gameLoop() {
     
     // Mettre à jour la logique du jeu (mouvement, collisions, etc.)
     // Gestionnaire d'événement pour déclencher le tir (par exemple, un clic de souris)
-
+   
     checkHP();
     checkMonsterAlive()
 
