@@ -103,7 +103,7 @@ export function createMonster(life, monsterSpeed, damage, nbBoss = 1) {
                         imagePlayer.src = "./assets/images/player_" + game.dataset.theme + ".png";
                         player.dataset.invincible = false;
                         player.dataset.speed = actualSpeedPlayer
-                    }, 2000);
+                    }, 1000);
                 }
             }
            

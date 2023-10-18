@@ -5,15 +5,13 @@ import { checkTheme, initializeGame, togglePauseGame } from './game.js';
 var customDialog;
 const game = document.getElementById("game");
 
-export function displayGameOver(text1, text2, score) {
+export function displayGameOver(text1, text2) {
     let dialog = document.getElementById("gameOver");
     let scoreText = document.getElementById("score");
     let logButton = document.getElementById("logButton");
-    scoreText.textContent = text1 + score + text2;
-    scoreText.dataset.score = score;
+    scoreText.textContent = text1 + sessionStorage.getItem("vagues") + text2;
 
     logButton.disabled = false
-    console.log(scoreText)
     dialog.style.display = "block";
 }
 
@@ -490,7 +488,7 @@ export function createOptionsDialog (){
                     tabContent.classList.add("dark_active");
                 }
             }
-            
+
             tabArray.forEach((otherTab) => {
                 if (otherTab !== tab) {
                     let otherTabContent = document.getElementById(otherTab.dataset.tab)
@@ -633,12 +631,13 @@ export function activeButton(){
             let score = document.getElementById("score").dataset.score;
 
 
-            let params = new URLSearchParams({ route: "score", player_id: localStorage.getItem("player_id"), score: score});
+            let params = new URLSearchParams({ route: "score", player_id: localStorage.getItem("player_id"), score: sessionStorage.getItem("vagues")});
             let urlAvecParametres = `${apiURL}?${params}`;
             console.log(urlAvecParametres)
             axios.get(urlAvecParametres)
             .then(response => {
                 if(response.data != ""){
+                    sessionStorage.removeItem("vagues")
                     let params = new URLSearchParams({ route: "scoreboard" });
                     let urlAvecParametres = `${apiURL}?${params}`;
                     logButton.disabled = true

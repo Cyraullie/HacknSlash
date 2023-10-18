@@ -17,7 +17,6 @@ let backgroundSound;
 //TODO ajouter la gestion d'autre type de son
 //TODO ajouter des sons
 //TODO add difficulty
-//TODO finish dark theme
 //TODO install phaser ?????
 //TODO Faire en sorte de pouvoir changer de touche a l'infini
 //TODO ajout de succés (no move challenge (si tu bouge une fois le défi n'est plus réalisabel))
@@ -25,7 +24,6 @@ let backgroundSound;
 //TODO creer des succés (db ?)
 //TODO empecher de rentrer des scores a la mains tel que les deux glands
 //TODO inscriptions complète ? login + password ?
-//TODO Ajouter une variable de cadance de tire (fait) (est-ce que c'est pas trop ce que j 'ai mis pour le moment ?)
 
 let nbBoss = 1; //nombre de boss fait
 let numMonstersAtStart = 3;
@@ -410,8 +408,8 @@ function endGame() {
     monsters.forEach((monster) => {
         monster.remove();
     });
-
-    displayGameOver("votre score est de ", " vague(s)", numVague-1);
+    sessionStorage.setItem("vagues", numVague-1)
+    displayGameOver("votre score est de ", " vague(s)");
 }
 
 function gameLoop() {
