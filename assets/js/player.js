@@ -6,6 +6,7 @@ let game = document.getElementById("game");
 let life = 4;
 let damage = 2;
 let speed = 5; // Vitesse de déplacement
+let fireRate = 400;
 
 export function createPlayer() {
     if(localStorage.getItem("keyUp") != null){
@@ -38,6 +39,7 @@ export function createPlayer() {
     player.dataset.initialLife = life;
     player.dataset.damage = damage;
     player.dataset.speed = speed;
+    player.dataset.fireRate = fireRate;
     player.id = "player";
 
     player.dataset.movingUp = false
