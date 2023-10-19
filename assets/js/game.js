@@ -24,7 +24,6 @@ let backgroundSound;
 //TODO creer des succés (db ?)
 //TODO empecher de rentrer des scores a la mains tel que les deux glands
 //TODO inscriptions complète ? login + password ?
-//TODO ajout de l'upgrade pour la cadence de tire 
 
 let nbBoss = 1; //nombre de boss fait
 let numMonstersAtStart = 3;
@@ -181,6 +180,9 @@ export function initializeGame() {
 
 function handleMouseClickDown(){
     handleClick = true;
+    if(handleClick){
+        handleMouseClick(event)
+    }
 }
 
 function handleMouseClickUp(){
@@ -445,7 +447,6 @@ function gameLoop() {
     }
 
     //console.log(game.dataset.isGamePaused)
-
     
     // Mettre à jour la logique du jeu (mouvement, collisions, etc.)
     // Gestionnaire d'événement pour déclencher le tir (par exemple, un clic de souris)

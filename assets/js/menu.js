@@ -17,6 +17,42 @@ export function displayGameOver(text1, text2) {
 
 export function displayUpgrade() {
     let dialog = document.getElementById("upgrade");
+    let fireRateButton = document.getElementById("fireRateButton")
+    let regenButton = document.getElementById("regenButton")
+    let damageButton = document.getElementById("damageButton")
+    let lifeButton = document.getElementById("lifeButton")
+
+    let upgrade = Math.floor(Math.random() * 4)
+
+    switch (upgrade) {
+        case 0 : 
+            lifeButton.hidden = false;
+            damageButton.hidden = false;
+            regenButton.hidden = false;
+            fireRateButton.hidden = true;
+            break;
+        case 1 : 
+            lifeButton.hidden = false;
+            damageButton.hidden = false;
+            regenButton.hidden = true;
+            fireRateButton.hidden = false;
+            break;
+        case 2 : 
+            lifeButton.hidden = false;
+            damageButton.hidden = true;
+            regenButton.hidden = false;
+            fireRateButton.hidden = false;
+            break;
+        case 3 : 
+            lifeButton.hidden = true;
+            damageButton.hidden = false;
+            regenButton.hidden = false;
+            fireRateButton.hidden = false;
+            break;
+
+    }
+
+
     dialog.style.display = "block";
 }
 
@@ -162,7 +198,17 @@ export function createUpgradeDialog (){
     buttonRegen.appendChild(imgRegen)
     div4.appendChild(buttonRegen)
 
-    let buttons = [buttonLife, buttonDamage, buttonRegen];
+    let buttonFireRate = document.createElement("button")
+    var imgFireRate = document.createElement("img");
+    imgFireRate.src = "./assets/images/fireRate.png";
+    buttonFireRate.id = "fireRateButton"
+    buttonFireRate.classList.add("upgradeButton")
+    buttonFireRate.textContent = "full regen"
+    buttonFireRate.setAttribute("data-selected", "false");
+    buttonFireRate.appendChild(imgFireRate)
+    div4.appendChild(buttonFireRate)
+
+    let buttons = [buttonLife, buttonDamage, buttonRegen, buttonFireRate];
 
     buttons.forEach((button) => {
         button.addEventListener("click", () => {
@@ -699,6 +745,7 @@ export function activeButton(){
             let lifeButton = document.getElementById("lifeButton")
             let damageButton = document.getElementById("damageButton")
             let regenButton = document.getElementById("regenButton")
+            let fireRateButton = document.getElementById("fireRateButton")
 
             if (lifeButton.getAttribute("data-selected") === "true") {
                 let player = document.getElementById("player")
@@ -741,6 +788,17 @@ export function activeButton(){
                 
                 regenButton.setAttribute("data-selected", "false");
                 regenButton.classList.remove("selected");
+                game.dataset.isGamePaused = false;
+                document.getElementById("upgrade").style.display = "none";
+            }
+
+            if (fireRateButton.getAttribute("data-selected") === "true") {
+                let player = document.getElementById("player")
+
+                player.dataset.fireRate = parseInt(player.dataset.fireRate) - 50;
+                
+                fireRateButton.setAttribute("data-selected", "false");
+                fireRateButton.classList.remove("selected");
                 game.dataset.isGamePaused = false;
                 document.getElementById("upgrade").style.display = "none";
             }
