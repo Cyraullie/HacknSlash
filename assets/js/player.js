@@ -69,8 +69,6 @@ export function createPlayer() {
     player.style.left = initialX + "px";
     player.style.top = initialY + "px";
     
-
-    
 function handlePlayerMovement() {
         if (!JSON.parse(game.dataset.isGamePaused)) {
             const playerRect = player.getBoundingClientRect();
@@ -99,8 +97,6 @@ function handlePlayerMovement() {
       requestAnimationFrame(handlePlayerMovement);
     }
     
-
-
     requestAnimationFrame(handlePlayerMovement);
 
     return player;

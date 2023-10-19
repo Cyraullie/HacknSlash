@@ -633,7 +633,7 @@ export function activeButton(){
 
             let params = new URLSearchParams({ route: "score", player_id: localStorage.getItem("player_id"), score: sessionStorage.getItem("vagues")});
             let urlAvecParametres = `${apiURL}?${params}`;
-            console.log(urlAvecParametres)
+            
             axios.get(urlAvecParametres)
             .then(response => {
                 if(response.data != ""){

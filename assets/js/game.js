@@ -24,6 +24,7 @@ let backgroundSound;
 //TODO creer des succés (db ?)
 //TODO empecher de rentrer des scores a la mains tel que les deux glands
 //TODO inscriptions complète ? login + password ?
+//TODO ajout de l'upgrade pour la cadence de tire 
 
 let nbBoss = 1; //nombre de boss fait
 let numMonstersAtStart = 3;
@@ -42,6 +43,7 @@ game.style.minWidth = windowWidth + "px";
 game.style.maxHeight = windowHeight + "px";
 game.style.maxWidth = windowWidth + "px";
 
+let handleClick = false;
 var isEnded = false;
 let isUpdated = false;
 let isPaused = false;
@@ -156,7 +158,11 @@ export function initializeGameData() {
 export function initializeGame() {
 
 
-    game.addEventListener("mousedown", handleMouseClick);
+    game.addEventListener("mousedown", handleMouseClickDown);
+
+    game.addEventListener("mouseup", handleMouseClickUp);
+
+    game.addEventListener("mousemove", handleMouseClickMove);
 
     document.addEventListener("keydown", handleKeyDown);
     
@@ -171,6 +177,20 @@ export function initializeGame() {
 
     // Boucle de jeu principale
     requestAnimationFrame(gameLoop);
+}
+
+function handleMouseClickDown(){
+    handleClick = true;
+}
+
+function handleMouseClickUp(){
+    handleClick = false;
+}
+
+function handleMouseClickMove(event){
+    if(handleClick){
+        handleMouseClick(event)
+    }
 }
 
 function handleKeyDown(event) {
@@ -219,8 +239,6 @@ export function checkTheme() {
     let damageText = document.getElementById("damageText");
     let tabContent = Array.from(document.getElementsByClassName("tab-content"))
     let tabControl = Array.from(document.getElementsByClassName("tab-button"))
-    console.log(tabControl)
-    console.log(tabContent)
 
     if(localStorage.getItem("theme") != null){
         game.dataset.theme = localStorage.getItem("theme")
@@ -433,9 +451,10 @@ function gameLoop() {
     // Gestionnaire d'événement pour déclencher le tir (par exemple, un clic de souris)
    
     checkHP();
-    checkMonsterAlive()
+    checkMonsterAlive();
 
     //handlePlayerMovement();
+   // handleMouseClick();
     checkCollisionWithMonsters();
 
     // Appeler la boucle de jeu à la prochaine frame
