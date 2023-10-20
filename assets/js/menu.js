@@ -203,7 +203,7 @@ export function createUpgradeDialog (){
     imgFireRate.src = "./assets/images/fireRate.png";
     buttonFireRate.id = "fireRateButton"
     buttonFireRate.classList.add("upgradeButton")
-    buttonFireRate.textContent = "full regen"
+    buttonFireRate.textContent = "amélio cadence"
     buttonFireRate.setAttribute("data-selected", "false");
     buttonFireRate.appendChild(imgFireRate)
     div4.appendChild(buttonFireRate)
@@ -795,7 +795,7 @@ export function activeButton(){
             if (fireRateButton.getAttribute("data-selected") === "true") {
                 let player = document.getElementById("player")
 
-                player.dataset.fireRate = parseInt(player.dataset.fireRate) - 50;
+                player.dataset.fireRate = parseInt(player.dataset.fireRate) - 10;
                 
                 fireRateButton.setAttribute("data-selected", "false");
                 fireRateButton.classList.remove("selected");
