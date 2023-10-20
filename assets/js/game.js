@@ -31,7 +31,7 @@ let backgroundSound;
 //TODO mettre des paterne pour des boss ()
 //TODO mettre les hp avec une barre de pv
 //TODO ralentissement vers la vagues 450 environs et toujours plus xD
-//TODO bloquer la fireRate a 100 ? et après mettre une opiton pour aujouter une chance de lancer un deuxième projectiles en meme temps ?
+//TODO faire un check des autres touches pour les controlles
 
 let nbBoss = 1; //nombre de boss fait
 let numMonstersAtStart = 3;
@@ -143,7 +143,7 @@ export function initializeGameData() {
 
     let damageDiv = document.createElement("div");
     damageDiv.id = "damage"
-    damageDiv.style.left = windowWidth - 42 + "px"
+    damageDiv.style.left = windowWidth - 47 + "px"
     map.appendChild(damageDiv);
 
     let damageText = document.createElement("p")
@@ -247,6 +247,7 @@ export function checkTheme() {
     let buttons = document.querySelectorAll('button'); 
     let dialogs = document.getElementsByClassName("dialog")
     let resumeText = document.getElementById("resumeText");
+    let pvText = document.getElementById("pvText");
     let damageText = document.getElementById("damageText");
     let tabContent = Array.from(document.getElementsByClassName("tab-content"))
     let tabControl = Array.from(document.getElementsByClassName("tab-button"))
@@ -262,7 +263,8 @@ export function checkTheme() {
         vagues.style.color = "white"
         resumeText.style.color = "white"
         damageText.style.color = "white"
-        
+        pvText.style.color = "white"
+
         Array.from(dialogs).forEach(dialog => {
             dialog.style.backgroundColor = "#666666"
             dialog.style.color = "#ffffff"
@@ -292,6 +294,7 @@ export function checkTheme() {
         vagues.style.color = "black"
         resumeText.style.color = "black"
         damageText.style.color = "black"
+        pvText.style.color = "black"
 
         Array.from(dialogs).forEach(dialog => {
             dialog.style.backgroundColor = "#ffffff"
@@ -342,7 +345,17 @@ function handleMouseClick(event) {
 }
 
 function checkHP() {
-    for(let i = 0; i < player.dataset.initialLife; i++){
+
+    let barrePVRemplis = document.getElementById('pvFull');
+    let textePV = document.getElementById('pvText');
+    
+
+    let pourcentagePV = (player.dataset.life / player.dataset.initialLife) * 100;
+    barrePVRemplis.style.width = pourcentagePV + '%';
+    textePV.textContent = `${player.dataset.life} / ${player.dataset.initialLife} PV`;
+        
+
+    /*for(let i = 0; i < player.dataset.initialLife; i++){
         let heart = document.getElementById("heart" + i);
         if(i + 1 <= player.dataset.life){
             heart.src = "./assets/images/full_heart.png";
@@ -350,7 +363,7 @@ function checkHP() {
             heart.src = "./assets/images/empty_heart.png";
         }
     }
-
+*/
     if(player.dataset.life <= 0){
         isEnded = true;
         endGame()

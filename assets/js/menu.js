@@ -757,14 +757,14 @@ export function activeButton(){
                 player.dataset.life = parseInt(player.dataset.life) + 1;
 
 
-                let hp = document.getElementById("hp");
+                /*let hp = document.getElementById("hp");
                 hp.style.width = 20 * player.dataset.initialLife + "px";
 
                 let imageHeart = document.createElement("img");
                 imageHeart.src = "./assets/images/full_heart.png";
                 imageHeart.classList.add("heart");
                 imageHeart.id = "heart" + parseInt(player.dataset.initialLife - 1);
-                hp.appendChild(imageHeart);
+                hp.appendChild(imageHeart);*/
 
 
                 lifeButton.setAttribute("data-selected", "false");

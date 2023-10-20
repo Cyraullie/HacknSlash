@@ -31,18 +31,40 @@ section {
 }
 
 #hp {
+    display: flex;
+    flex-direction: row;
     position: absolute;
     pointer-events: none;
-    top: 0;
-    left: 0;
+    top: 5px;
+    left: 5px;
 }
+
+.pvBar {
+    width: 200px;
+    height: 20px;
+    background-color: red;
+    border: 1px solid #333;
+    position: relative;
+    margin-right: 5px;
+}
+
+
+.pvFull {
+    height: 100%;
+    background-color: #4CAF50;
+}
+
+.pvText {
+    font-weight: bold;
+}
+
 
 #damage {
     display: flex;
     flex-direction: row;
     position: absolute;
     pointer-events: none;
-    top: 0;
+    top: 5px;
 }
 
 

@@ -27,16 +27,36 @@ export function createPlayer() {
     const hp = document.createElement("div");
     hp.id = "hp"
 
-    hp.style.width = 20 * player.dataset.life + "px";
+    //hp.style.width = 20 * player.dataset.life + "px";
+    let pvBar = document.createElement("div");
+    pvBar.classList.add("pvBar")
+    pvBar.id = "pvBar"
 
+    let pvFull = document.createElement("div");
+    pvFull.classList.add("pvFull")
+    pvFull.id = "pvFull"
+
+    let pvText = document.createElement("span")
+    pvText.classList.add("pvText")
+    pvText.id = "pvText"
+    pvText.textContent = `${player.dataset.life} / ${player.dataset.initialLife} PV`;
+
+
+
+    hp.appendChild(pvBar);
+    hp.appendChild(pvText);
+    pvBar.appendChild(pvFull);
+
+
+    /* 
     for(let i = 0; i < player.dataset.life; i++){
         
         const imageHeart = document.createElement("img");
         imageHeart.src = "./assets/images/full_heart.png";
         imageHeart.className = "heart";
         imageHeart.id = "heart" + i;
-        hp.appendChild(imageHeart);
-    }
+        
+    } */
     
     const imagePlayer = document.createElement("img");
     imagePlayer.id = "imagePlayer"
