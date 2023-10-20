@@ -492,9 +492,7 @@ function gameLoop() {
             projectile.remove();
         })
         //pour empecher un meilleur score que nath :)
-        if(numVague == 665){
-            endGame()
-        }
+        
     }
     requestAnimationFrame(gameLoop); 
 }
