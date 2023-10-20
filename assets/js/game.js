@@ -24,10 +24,22 @@ let backgroundSound;
 //TODO creer des succés (db ?)
 //TODO empecher de rentrer des scores a la mains tel que les deux glands
 //TODO inscriptions complète ? login + password ?
+//TODO enlever l'option upgrade fireRate si à 0
+//TODO la vagues de l'upgrade du boss est mise pour la vague 11/21/etc et skip cette vague en passant a la 12/22/etc
+//TODO Chaque moment d'upgrade la vague suivante est skip 
+//TODO la musique du boss se lance une fois et ne se relance jamais après le premier boss vaincu
+//TODO ajout de l'upgrade de la vitesse du perso
+//TODO remette a false les movement quand il y a un echap
+//TODO degage les boules au changement de vagues
+//TODO bug d'attack speed
+//TODO mettre des paterne pour des boss ()
+//TODO mettre les hp avec une barre de pv
+//TODO ralentissement vers la vagues 450 environs et toujours plus xD
+//TODO bloquer la fireRate a 100 ? et après mettre une opiton pour aujouter une chance de lancer un deuxième projectiles en meme temps ?
 
 let nbBoss = 1; //nombre de boss fait
 let numMonstersAtStart = 3;
-var numVague = 0;
+var numVague = 1;
 let player;
 var map = document.getElementById("map");
 var game = document.getElementById("game");
@@ -44,13 +56,14 @@ game.style.maxWidth = windowWidth + "px";
 
 let handleClick = false;
 var isEnded = false;
-let isUpdated = false;
+var isUpdated = false;
 let isPaused = false;
 
 let bossTime = false;
 
 export function initializeGameData() {    
-    game.dataset.isGamePaused = false;
+    game.dataset.isGamePaused = false; 
+    game.dataset.isUpdated = false;
     if(localStorage.getItem("theme") != null){
         game.dataset.theme = localStorage.getItem("theme")
     }else{
@@ -178,7 +191,7 @@ export function initializeGame() {
     requestAnimationFrame(gameLoop);
 }
 
-function handleMouseClickDown(){
+function handleMouseClickDown(event){
     handleClick = true;
     if(handleClick){
         handleMouseClick(event)
@@ -351,22 +364,11 @@ function checkHP() {
 function checkMonsterAlive() {
     let monsters = document.querySelectorAll(".monster")
     
-    if(!JSON.parse(game.dataset.isGamePaused)) {
+    //if(!JSON.parse(game.dataset.isGamePaused)) {
         if (monsters.length === 0) {
-            if(document.getElementById("upgrade").style.display == "none"){
-                let vagues = document.getElementById("vagues");
-                vagues.textContent = "Vagues " + (numVague+1);              
-            }
-
-            if(!isUpdated){
-                numVague++;
-            }
 
             if(numVague % 10 === 0){ 
                 if(!isUpdated){
-                    backgroundSound.stop();
-                    
-                    bossSound.play();
                     spawnBoss();
                 }
             }
@@ -377,7 +379,7 @@ function checkMonsterAlive() {
                     isUpdated = true;
                 }
                 if(bossTime){
-                    bossSound.fade(parseInt(game.dataset.volume), 0, 2000);
+                    bossSound.fade(parseFloat(game.dataset.volume), 0, 2000);
                     setTimeout(function () {
                         bossSound.stop()
                         backgroundSound.play();
@@ -393,7 +395,7 @@ function checkMonsterAlive() {
 
             
         }
-    }
+    //}
 }
 
 function spawnMonsters() {
@@ -410,6 +412,11 @@ function spawnMonsters() {
 }
 
 function spawnBoss() {
+    
+    backgroundSound.stop();
+
+    bossSound.volume(localStorage.getItem("volume"));
+    bossSound.play();
     bossTime = true;
     monsterLifeMax = 6;
     numMonstersAtStart = 5;
@@ -433,10 +440,10 @@ function endGame() {
 }
 
 function gameLoop() {
-    if(document.getElementById("upgrade").style.display == "none" && numVague % 10 !== 0){
+    /*if(document.getElementById("upgrade").style.display == "none" && numVague % 10 !== 0){
         isUpdated = false;
         game.dataset.isGamePaused = false;
-    }
+    }*/
 
     if(isEnded || isPaused || isUpdated){
         game.dataset.isGamePaused = true;
@@ -461,7 +468,25 @@ function gameLoop() {
     // Appeler la boucle de jeu à la prochaine frame
     
     
+    let monsters = document.querySelectorAll(".monster")
 
+    if(document.getElementById("upgrade").style.display == "none"){
+        let vagues = document.getElementById("vagues");
+        vagues.textContent = "Vagues " + (numVague);              
+    }
+
+    if (monsters.length === 0 && !isUpdated) {
+        numVague++;
+        let projectiles = document.querySelectorAll(".projectile")
+
+        projectiles.forEach(projectile => {
+            projectile.remove();
+        })
+        //pour empecher un meilleur score que nath :)
+        if(numVague == 665){
+            endGame()
+        }
+    }
     requestAnimationFrame(gameLoop); 
 }
 
