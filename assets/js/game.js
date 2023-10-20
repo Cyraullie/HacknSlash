@@ -373,7 +373,7 @@ function checkHP() {
 function checkMonsterAlive() {
     let monsters = document.querySelectorAll(".monster")
     
-    //if(!JSON.parse(game.dataset.isGamePaused)) {
+    if(!JSON.parse(game.dataset.isGamePaused)) {
         if (monsters.length === 0) {
 
             if(numVague % 10 === 0){ 
@@ -404,7 +404,7 @@ function checkMonsterAlive() {
 
             
         }
-    //}
+    }
 }
 
 function spawnMonsters() {
@@ -444,7 +444,7 @@ function endGame() {
     monsters.forEach((monster) => {
         monster.remove();
     });
-    sessionStorage.setItem("vagues", numVague-1)
+    sessionStorage.setItem("vagues", numVague)
     displayGameOver("votre score est de ", " vague(s)");
 }
 
@@ -476,23 +476,22 @@ function gameLoop() {
 
     // Appeler la boucle de jeu à la prochaine frame
     
-    
-    let monsters = document.querySelectorAll(".monster")
+    if(!JSON.parse(game.dataset.isGamePaused)) {
+        let monsters = document.querySelectorAll(".monster")
 
-    if(document.getElementById("upgrade").style.display == "none"){
-        let vagues = document.getElementById("vagues");
-        vagues.textContent = "Vagues " + (numVague);              
-    }
-
-    if (monsters.length === 0 && !isUpdated) {
-        numVague++;
-        let projectiles = document.querySelectorAll(".projectile")
-
-        projectiles.forEach(projectile => {
-            projectile.remove();
-        })
-        //pour empecher un meilleur score que nath :)
+        if(document.getElementById("upgrade").style.display == "none"){
+            let vagues = document.getElementById("vagues");
+            vagues.textContent = "Vagues " + (numVague);              
+        }
         
+        if (monsters.length === 0 && !isUpdated) {
+            numVague++;
+            let projectiles = document.querySelectorAll(".projectile")
+
+            projectiles.forEach(projectile => {
+                projectile.remove();
+            })            
+        }
     }
     requestAnimationFrame(gameLoop); 
 }
