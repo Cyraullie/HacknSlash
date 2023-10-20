@@ -1,10 +1,12 @@
+import { playerHeight, playerWidth } from "./data";
+
 const map = document.getElementById("map");
 var game = document.getElementById("game");
 
 const windowWidth = window.innerWidth;
 const windowHeight = window.innerHeight;
 
-const limitMin = 0;
+const limitMin = 10;
 
 var projectileX = 0;
 var projectileY = 0;
@@ -58,12 +60,11 @@ function moveProjectile(projectileX, projectileY, targetX, targetY, projectile) 
         // Fonction pour mettre à jour la position de la balle jusqu'à la cible
         function updatePosition() {
             var projHitBox = projectile.getBoundingClientRect();
-
             if (
                 projHitBox.left > limitMin &&
-                projHitBox.top > limitMin &&
-                projHitBox.right < windowWidth &&
-                projHitBox.bottom < windowHeight 
+                projHitBox.top > 30 &&
+                projHitBox.right < windowWidth - playerWidth - 10 &&
+                projHitBox.bottom < windowHeight  - playerHeight - 10
             ) {
                 
                 if(!JSON.parse(game.dataset.isGamePaused)) {

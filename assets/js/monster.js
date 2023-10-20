@@ -32,18 +32,18 @@ export function createMonster(life, monsterSpeed, damage, nbBoss = 1) {
     switch (side) {
         case 0: // Haut
             monsterX = Math.random() * (windowWidth - 50);
-            monsterY = 0;
+            monsterY = 30;
             break;
         case 1: // Droite
-            monsterX = windowWidth - 50;
+            monsterX = windowWidth - 50 - 10;
             monsterY = Math.random() * (windowHeight - 50);
             break;
         case 2: // Bas
             monsterX = Math.random() * (windowWidth - 50);
-            monsterY = windowHeight - 50;
+            monsterY = windowHeight - 50 - 10;
             break;
         case 3: // Gauche
-            monsterX = 0;
+            monsterX = 10;
             monsterY = Math.random() * (windowHeight - 50);
             break;
     }

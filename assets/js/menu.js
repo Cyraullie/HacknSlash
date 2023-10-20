@@ -21,8 +21,11 @@ export function displayUpgrade() {
     let regenButton = document.getElementById("regenButton")
     let damageButton = document.getElementById("damageButton")
     let lifeButton = document.getElementById("lifeButton")
-
-    let upgrade = Math.floor(Math.random() * 4)
+    let upgrade = 0
+    if(player.dataset.fireRate > 100){
+        upgrade = Math.floor(Math.random() * 4)
+    }
+    
 
     switch (upgrade) {
         case 0 : 
@@ -795,7 +798,7 @@ export function activeButton(){
             if (fireRateButton.getAttribute("data-selected") === "true") {
                 let player = document.getElementById("player")
 
-                player.dataset.fireRate = parseInt(player.dataset.fireRate) - 10;
+                player.dataset.fireRate = parseInt(player.dataset.fireRate) - 25;
                 
                 fireRateButton.setAttribute("data-selected", "false");
                 fireRateButton.classList.remove("selected");

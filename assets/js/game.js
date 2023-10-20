@@ -25,12 +25,8 @@ let backgroundSound;
 //TODO empecher de rentrer des scores a la mains tel que les deux glands
 //TODO inscriptions complète ? login + password ?
 //TODO enlever l'option upgrade fireRate si à 0
-//TODO la vagues de l'upgrade du boss est mise pour la vague 11/21/etc et skip cette vague en passant a la 12/22/etc
-//TODO Chaque moment d'upgrade la vague suivante est skip 
-//TODO la musique du boss se lance une fois et ne se relance jamais après le premier boss vaincu
 //TODO ajout de l'upgrade de la vitesse du perso
 //TODO remette a false les movement quand il y a un echap
-//TODO degage les boules au changement de vagues
 //TODO bug d'attack speed
 //TODO mettre des paterne pour des boss ()
 //TODO mettre les hp avec une barre de pv
