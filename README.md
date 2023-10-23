@@ -22,3 +22,6 @@ Pour lancer la version de production il suffit de faire :
 npx webpack --config webpack.config.js
 puis 
 docker compose up --build -d
+
+Pour générer l'application :
+npm run build
