@@ -51,17 +51,11 @@ function createWindow() {
 app.whenReady().then(createWindow);
 
 
-
-
-
-
 // Ajoutez une fonction pour changer la taille de la fenêtre
-function changeWindowSize(width, height) {
+export function changeWindowSize(width, height) {
   if (mainWindow) {
     mainWindow.setSize(width, height);
   }
 }
 
-// Exemple d'utilisation pour changer la taille de la fenêtre
-// Appelez cette fonction où vous en avez besoin dans votre application
-changeWindowSize(1024, 768);
+
