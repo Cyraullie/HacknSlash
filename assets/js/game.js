@@ -32,6 +32,7 @@ let backgroundSound;
 //TODO mettre les hp avec une barre de pv
 //TODO ralentissement vers la vagues 450 environs et toujours plus xD
 //TODO faire un check des autres touches pour les controlles
+//TODO voir s'il est possible de transformer le tout en app ?
 
 let nbBoss = 1; //nombre de boss fait
 let numMonstersAtStart = 3;
