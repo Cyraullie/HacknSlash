@@ -18,20 +18,17 @@ let backgroundSound;
 //TODO ajouter des sons
 //TODO add difficulty
 //TODO install phaser ?????
-//TODO Faire en sorte de pouvoir changer de touche a l'infini
 //TODO ajout de succés (no move challenge (si tu bouge une fois le défi n'est plus réalisabel))
 //TODO ajouter un bouton pour voir ses succès qui seront stocké dans la base de donnée
 //TODO creer des succés (db ?)
 //TODO empecher de rentrer des scores a la mains tel que les deux glands
 //TODO inscriptions complète ? login + password ?
-//TODO enlever l'option upgrade fireRate si à 0
 //TODO ajout de l'upgrade de la vitesse du perso
 //TODO remette a false les movement quand il y a un echap
 //TODO bug d'attack speed
 //TODO mettre des paterne pour des boss ()
 //TODO mettre les hp avec une barre de pv
 //TODO ralentissement vers la vagues 450 environs et toujours plus xD
-//TODO faire un check des autres touches pour les controlles
 //TODO voir s'il est possible que les gens puissent jouer depuis l'app a distance !!!
 
 let nbBoss = 1; //nombre de boss fait
@@ -457,23 +454,15 @@ function endGame() {
 }
 
 function gameLoop() {
-    /*if(document.getElementById("upgrade").style.display == "none" && numVague % 10 !== 0){
-        isUpdated = false;
-        game.dataset.isGamePaused = false;
-    }*/
 
     if(isEnded || isPaused || isUpdated){
-       /* console.log(isEnded)
-        console.log(isPaused)
-        console.log(isUpdated)*/
+
         game.dataset.isGamePaused = true;
     } else {
         game.dataset.isGamePaused = false;
         let damageText = document.getElementById("damageText")
         damageText.textContent = player.dataset.damage + "x";
     }
-
-    //console.log(game.dataset.isGamePaused)
     
     // Mettre à jour la logique du jeu (mouvement, collisions, etc.)
     // Gestionnaire d'événement pour déclencher le tir (par exemple, un clic de souris)

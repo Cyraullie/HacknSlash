@@ -30,7 +30,7 @@ app.on('ready', () => {
   });
   
   // pour le dev
-  mainWindow.webContents.openDevTools();
+  //mainWindow.webContents.openDevTools();
   let customMenu = Menu.buildFromTemplate([
     /*{
       label: 'Custom Menu', // Vous pouvez personnaliser le nom du menu

@@ -430,13 +430,12 @@ export function createOptionsDialog (){
 
     upButton.addEventListener("click", () => {
         upButton.textContent = "Appuyez sur la touche"
-        upButton.disabled = false;
-        upButton.addEventListener("keydown", function (event) {
-            game.dataset.keyUp = event.key.toLowerCase();
-            localStorage.setItem("keyUp", event.key.toLowerCase())
-            upButton.textContent = game.dataset.keyUp;
-            upButton.disabled = true;
-        })
+
+        const keydownHandler = (event) => {
+            keyChanger(event, upButton, keydownHandler);
+        };
+    
+        upButton.addEventListener("keydown", keydownHandler);
     })
 
     let leftDiv = document.createElement("div")
@@ -456,15 +455,14 @@ export function createOptionsDialog (){
 
     leftButton.addEventListener("click", () => {
         leftButton.textContent = "Appuyez sur la touche"
-        leftButton.disabled = false;
-        leftButton.addEventListener("keydown", function (event) {
-            game.dataset.keyLeft = event.key.toLowerCase();
-            localStorage.setItem("keyLeft", event.key.toLowerCase())
-            leftButton.textContent = game.dataset.keyLeft;
-            leftButton.disabled = true;
-        })
-    })
+
+        const keydownHandler = (event) => {
+            keyChanger(event, leftButton, keydownHandler);
+        };
     
+        leftButton.addEventListener("keydown", keydownHandler);
+    })
+
     let downDiv = document.createElement("div")
     downDiv.classList.add("keyDiv");
     divControl.appendChild(downDiv)
@@ -482,13 +480,12 @@ export function createOptionsDialog (){
 
     downButton.addEventListener("click", () => {
         downButton.textContent = "Appuyez sur la touche"
-        downButton.disabled = false;
-        downButton.addEventListener("keydown", function (event) {
-            game.dataset.keyDown = event.key.toLowerCase();
-            localStorage.setItem("keyDown", event.key.toLowerCase())
-            downButton.textContent = game.dataset.keyDown;
-            downButton.disabled = true;
-        })
+
+        const keydownHandler = (event) => {
+            keyChanger(event, downButton, keydownHandler);
+        };
+    
+        downButton.addEventListener("keydown", keydownHandler);
     })
 
     let rightDiv = document.createElement("div")
@@ -508,15 +505,92 @@ export function createOptionsDialog (){
 
     rightButton.addEventListener("click", () => {
         rightButton.textContent = "Appuyez sur la touche"
-        rightButton.disabled = false;
-        rightButton.addEventListener("keydown", function (event) {
-            game.dataset.keyRight = event.key.toLowerCase();
-            localStorage.setItem("keyRight", event.key.toLowerCase())
-            rightButton.textContent = game.dataset.keyRight;
-            rightButton.disabled = true;
-        })
+
+        const keydownHandler = (event) => {
+            keyChanger(event, rightButton, keydownHandler);
+        };
+    
+        rightButton.addEventListener("keydown", keydownHandler);
     })
 
+
+    function keyChanger(event, button, keydownHandler) {
+        let key = event.key.toLowerCase();
+        
+        switch (button.id) {
+            case "upButton" :
+                if(!(game.dataset.keyRight == key || game.dataset.keyDown == key || game.dataset.keyLeft == key)) {
+                    game.dataset.keyUp = key;
+                    localStorage.setItem("keyUp", key)
+                    upButton.textContent = game.dataset.keyUp;
+                    upButton.removeEventListener("keydown", keydownHandler)
+                } else {
+                    upButton.classList.add("shake-animation");
+                    upButton.style.color = "red";
+
+                    // Attendez 0.5 seconde et supprimez l'animation
+                    setTimeout(() => {
+                        upButton.classList.remove("shake-animation");
+                        upButton.style.color = downButton.style.color;
+                    }, 500);
+                }
+                break;
+
+            case "rightButton" :
+                if(!(game.dataset.keyUp == key || game.dataset.keyDown == key || game.dataset.keyLeft == key)) {
+                    game.dataset.keyRight = key;
+                    localStorage.setItem("keyRight", key)
+                    rightButton.textContent = game.dataset.keyRight;
+                    rightButton.removeEventListener("keydown", keydownHandler)
+                } else {
+                    rightButton.classList.add("shake-animation");
+                    rightButton.style.color = "red";
+
+                    // Attendez 0.5 seconde et supprimez l'animation
+                    setTimeout(() => {
+                        rightButton.classList.remove("shake-animation");
+                        rightButton.style.color = upButton.style.color;
+                    }, 500);
+                }
+                break;
+
+            case "leftButton" :
+                if(!(game.dataset.keyRight == key || game.dataset.keyDown == key || game.dataset.keyUp == key)) {
+                    game.dataset.keyLeft = key;
+                    localStorage.setItem("keyLeft", key)
+                    leftButton.textContent = game.dataset.keyLeft;
+                    leftButton.removeEventListener("keydown", keydownHandler)
+                } else {
+                    leftButton.classList.add("shake-animation");
+                    leftButton.style.color = "red";
+
+                    // Attendez 0.5 seconde et supprimez l'animation
+                    setTimeout(() => {
+                        leftButton.classList.remove("shake-animation");
+                        leftButton.style.color = upButton.style.color;
+                    }, 500);
+                }
+                break;
+
+            case "downButton" :
+                if(!(game.dataset.keyRight == key || game.dataset.keyLeft == key || game.dataset.keyUp == key)) {
+                    game.dataset.keyDown = key;
+                    localStorage.setItem("keyDown", key)
+                    downButton.textContent = game.dataset.keyDown;
+                    downButton.removeEventListener("keydown", keydownHandler)
+                } else {
+                    downButton.classList.add("shake-animation");
+                    downButton.style.color = "red";
+
+                    // Attendez 0.5 seconde et supprimez l'animation
+                    setTimeout(() => {
+                        downButton.classList.remove("shake-animation");
+                        downButton.style.color = upButton.style.color;
+                    }, 500);
+                }
+                break;
+        }
+    }
 //end controle area
 
     let tabArray = [tabAudio, tabControl, tabGeneral];

@@ -393,3 +393,29 @@ li.dark_active {
   color: #888; /* Change la couleur du texte en gris */
   cursor: not-allowed; /* Change le curseur en indisponible */
 }
+
+@keyframes shake {
+    0% {
+      transform: translateX(0);
+    }
+    20% {
+      transform: translateX(-5px);
+    }
+    40% {
+      transform: translateX(5px);
+    }
+    60% {
+      transform: translateX(-5px);
+    }
+    80% {
+      transform: translateX(5px);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+  
+  .shake-animation {
+    animation: shake 0.5s ease infinite;
+    color: red;
+  }
