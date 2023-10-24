@@ -407,7 +407,7 @@ function checkMonsterAlive() {
             }
         }
     }
-    if (monsters.length === 0) {
+    if (monsters.length === 0 && !isEnded) {
         if(document.getElementById("upgrade").style.display == "none" && numVague % 10 !== 0){
             isUpdated = false;  
             spawnMonsters();         
@@ -452,7 +452,7 @@ function endGame() {
     monsters.forEach((monster) => {
         monster.remove();
     });
-    sessionStorage.setItem("vagues", numVague)
+    sessionStorage.setItem("vagues", numVague - 1)
     displayGameOver("votre score est de ", " vague(s)");
 }
 
