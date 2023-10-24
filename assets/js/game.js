@@ -180,6 +180,10 @@ export function initializeGame() {
     game.addEventListener('mouseleave', () => {
         if(game.dataset.isGamePaused){
             isPaused = true; // Inversez l'état de la pause
+            player.dataset.movingUp = false;
+            player.dataset.movingRight = false;
+            player.dataset.movingLeft = false;
+            player.dataset.movingDown = false;
             displayEscape(isPaused);
         }
       });
@@ -330,6 +334,10 @@ export function checkTheme() {
 
 export function togglePauseGame() {
     isPaused = !isPaused; // Inversez l'état de la pause
+    player.dataset.movingUp = false;
+    player.dataset.movingRight = false;
+    player.dataset.movingLeft = false;
+    player.dataset.movingDown = false;
     displayEscape(isPaused);
 }
 
