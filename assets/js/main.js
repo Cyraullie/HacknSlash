@@ -1,6 +1,5 @@
-import { initializeGame } from './game.js';
-
+import { initializeGameData } from './game.js';
 
 document.addEventListener('DOMContentLoaded', function () {
-    initializeGame();
+    initializeGameData();
 });

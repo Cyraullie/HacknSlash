@@ -1,6 +1,6 @@
 version: '3.8'
 services:
-    webapp:
+    main:
         image: php:8.2-apache
         build:
             context: ./
@@ -10,3 +10,47 @@ services:
         #network_mode: "host"
         volumes:
             - ./:/var/www/html
+        networks:
+            - game-exa
+            
+    mysql:
+        image: mysql:8.0
+        container_name: mysql_game
+        depends_on:
+         - main
+        volumes:
+            - ./db:/var/lib/mysql
+            - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+        environment:
+            MYSQL_ALLOW_EMPTY_PASSWORD: "no"
+            MYSQL_DATABASE: game
+            #MYSQL_ROOT: "root"
+            MYSQL_USER: gamer
+            MYSQL_PASSWORD: gamer
+            #MYSQL_ROOT_PASSWORD: "test"
+        ports:
+            - 3306:3306
+        networks:
+            - game-exa
+
+    phpmyadmin:
+        depends_on:
+            - mysql
+        image: phpmyadmin/phpmyadmin
+        container_name: tikit_phpmyadmin
+        environment:
+            PMA_HOST: mysql
+            PMA_PORT: 3306
+        ports:
+            - 8181:80
+        networks:
+            - game-exa
+
+networks:
+  game-exa:
+    driver: bridge
+
+volumes:
+  db: 
+    driver: local
+

@@ -5,33 +5,58 @@ let game = document.getElementById("game");
 
 let life = 4;
 let damage = 2;
-let speedY = 5; // Vitesse de déplacement
-let speedX = (speedY * windowWidth) / playerWidth;
+let speed = 5; // Vitesse de déplacement
+let fireRate = 400;
 
 export function createPlayer() {
+
     const player = document.createElement("div");
     player.dataset.life = life;
     player.dataset.invincible = false;
     player.dataset.initialLife = life;
     player.dataset.damage = damage;
-    player.dataset.speedX = speedX;
-    player.dataset.speedY = speedY;
-    player.dataset.isGamePaused = false;
+    player.dataset.speed = speed;
+    player.dataset.fireRate = fireRate;
     player.id = "player";
+
+    player.dataset.movingUp = false
+    player.dataset.movingDown = false
+    player.dataset.movingLeft = false
+    player.dataset.movingRight = false
 
     const hp = document.createElement("div");
     hp.id = "hp"
 
-    hp.style.width = 20 * player.dataset.life + "px";
+    //hp.style.width = 20 * player.dataset.life + "px";
+    let pvBar = document.createElement("div");
+    pvBar.classList.add("pvBar")
+    pvBar.id = "pvBar"
 
+    let pvFull = document.createElement("div");
+    pvFull.classList.add("pvFull")
+    pvFull.id = "pvFull"
+
+    let pvText = document.createElement("span")
+    pvText.classList.add("pvText")
+    pvText.id = "pvText"
+    pvText.textContent = `${player.dataset.life} / ${player.dataset.initialLife} PV`;
+
+
+
+    hp.appendChild(pvBar);
+    hp.appendChild(pvText);
+    pvBar.appendChild(pvFull);
+
+
+    /* 
     for(let i = 0; i < player.dataset.life; i++){
         
         const imageHeart = document.createElement("img");
         imageHeart.src = "./assets/images/full_heart.png";
         imageHeart.className = "heart";
         imageHeart.id = "heart" + i;
-        hp.appendChild(imageHeart);
-    }
+        
+    } */
     
     const imagePlayer = document.createElement("img");
     imagePlayer.id = "imagePlayer"
@@ -46,12 +71,8 @@ export function createPlayer() {
     jerem.style.color = "red"
     map.appendChild(jerem);*/
     
-    const vagues = document.createElement("div");
-    vagues.id = "vagues"
-    map.appendChild(vagues);
     map.appendChild(hp);
     
-
     // Définir la taille et la position initiale du joueur
     player.style.width = playerWidth + "px";
     player.style.height = playerHeight + "px";
@@ -62,10 +83,46 @@ export function createPlayer() {
 
     // Position initiale du joueur (au centre de la fenêtre)
 
-    const initialX = (windowWidth - playerWidth) / 2;
-    const initialY = (windowHeight - playerHeight) / 2;
+    const initialX = Math.round((windowWidth) / 2);
+    const initialY = Math.round((windowHeight) / 2);
 
     player.style.left = initialX + "px";
     player.style.top = initialY + "px";
+    
+function handlePlayerMovement() {
+        if (!JSON.parse(game.dataset.isGamePaused)) {
+            const playerRect = player.getBoundingClientRect();
+            
+            const deltaX = windowWidth * (!JSON.parse(player.dataset.movingLeft) - !JSON.parse(player.dataset.movingRight));
+            const deltaY = windowHeight * (!JSON.parse(player.dataset.movingUp) - !JSON.parse(player.dataset.movingDown));
+
+            const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+
+            let moveX = (deltaX / distance) * parseInt(player.dataset.speed);
+            let moveY = (deltaY / distance) * parseInt(player.dataset.speed);
+
+            var targetX = playerRect.left + moveX;
+            var targetY = playerRect.top + moveY;
+
+            if(
+                targetY > 30 &&
+                targetY < windowHeight - playerHeight - 10 &&
+                targetX > 10 &&
+                targetX < windowWidth - playerWidth - 10
+            ) { 
+                player.style.left = targetX + "px";
+                player.style.top = targetY + "px";
+            }
+        } 
+      requestAnimationFrame(handlePlayerMovement);
+    }
+    
+    requestAnimationFrame(handlePlayerMovement);
+
     return player;
 } 
+
+
+
+
+

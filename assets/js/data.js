@@ -12,9 +12,15 @@ export const monsterHeight = 50;
 export const monsterWidth = 50;
 
 //gestion de fichier
-const urlActuelle = window.location.href.slice(0, -5);
+var urlActuelle = window.location.href.slice(0, -5);
+if(urlActuelle != "http://localhost:" || urlActuelle != "http://178.211.245.23:")
+{
+    urlActuelle = "http://178.211.245.23:"
+}
+
+//
 export const filepath = "./../../score.txt";
-export const apiURL = urlActuelle + "8280/file.php";
+export const apiURL = urlActuelle + "8280/api.php";
 
 //music
 export const musicPath = "./assets/sounds/main.mp3"

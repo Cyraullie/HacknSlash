@@ -32,18 +32,18 @@ export function createMonster(life, monsterSpeed, damage, nbBoss = 1) {
     switch (side) {
         case 0: // Haut
             monsterX = Math.random() * (windowWidth - 50);
-            monsterY = 0;
+            monsterY = 30;
             break;
         case 1: // Droite
-            monsterX = windowWidth - 50;
+            monsterX = windowWidth - 50 - 10;
             monsterY = Math.random() * (windowHeight - 50);
             break;
         case 2: // Bas
             monsterX = Math.random() * (windowWidth - 50);
-            monsterY = windowHeight - 50;
+            monsterY = windowHeight - 50 - 10;
             break;
         case 3: // Gauche
-            monsterX = 0;
+            monsterX = 10;
             monsterY = Math.random() * (windowHeight - 50);
             break;
     }
@@ -61,7 +61,7 @@ export function createMonster(life, monsterSpeed, damage, nbBoss = 1) {
         const monsterRect = monster.getBoundingClientRect();
 
         
-        if(!JSON.parse(player.dataset.isGamePaused)) {
+        if(!JSON.parse(game.dataset.isGamePaused)) {
             const deltaX = playerRect.left - monsterRect.left;
             const deltaY = playerRect.top - monsterRect.top;
 
@@ -87,29 +87,26 @@ export function createMonster(life, monsterSpeed, damage, nbBoss = 1) {
             playerRect.right > monsterRect.left &&
             playerRect.bottom > monsterRect.top 
         ) {
-            console.log(player.dataset.invincible)
-            if(!JSON.parse(player.dataset.invincible)){
-                // Le monstre a atteint le joueur, vous pouvez ajouter votre logique de jeu ici (par exemple, réduire la santé du joueur)
-                player.dataset.life = player.dataset.life - monster.dataset.damage
-                let  imagePlayer = document.getElementById("imagePlayer");
-                
-                imagePlayer.src = "./assets/images/player_hurt.png";
-                player.dataset.invincible = true;
-
-                let actualSpeedPlayerY = parseInt(player.dataset.speedY);
-                let actualSpeedPlayerX = parseInt(player.dataset.speedX);
-
-                player.dataset.speedY = actualSpeedPlayerY * 2
-                player.dataset.speedX = actualSpeedPlayerX * 2
-                setTimeout(() => {
-                    imagePlayer.src = "./assets/images/player_" + game.dataset.theme + ".png";
-                    player.dataset.invincible = false;
-                    player.dataset.speedY = actualSpeedPlayerY
-                    player.dataset.speedX = actualSpeedPlayerX
-                }, 2000);
+            if(!JSON.parse(game.dataset.isGamePaused)){
+                if(!JSON.parse(player.dataset.invincible)){
+                    // Le monstre a atteint le joueur, vous pouvez ajouter votre logique de jeu ici (par exemple, réduire la santé du joueur)
+                    player.dataset.life = player.dataset.life - monster.dataset.damage
+                    let  imagePlayer = document.getElementById("imagePlayer");
+                    
+                    imagePlayer.src = "./assets/images/player_hurt.png";
+                    player.dataset.invincible = true;
+    
+                    let actualSpeedPlayer = parseInt(player.dataset.speed);
+    
+                    player.dataset.speed = actualSpeedPlayer * 2
+                    setTimeout(() => {
+                        imagePlayer.src = "./assets/images/player_" + game.dataset.theme + ".png";
+                        player.dataset.invincible = false;
+                        player.dataset.speed = actualSpeedPlayer
+                    }, 1000);
+                }
             }
            
-            
             //monster.remove(); // Supprimez le monstre
         }
     }
