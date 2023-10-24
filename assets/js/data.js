@@ -17,7 +17,7 @@ if(urlActuelle != "http://localhost:" || urlActuelle != "http://178.211.245.23:"
 {
     urlActuelle = "http://178.211.245.23:"
 }
-console.log(urlActuelle)
+
 //
 export const filepath = "./../../score.txt";
 export const apiURL = urlActuelle + "8280/api.php";

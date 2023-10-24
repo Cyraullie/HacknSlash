@@ -377,6 +377,7 @@ export function createOptionsDialog (){
     theme.id = "themeButton"
     theme.textContent = "Thème : " + game.dataset.theme;
     generalContainer.appendChild(theme)
+    
 // end general area
 
 //audio area

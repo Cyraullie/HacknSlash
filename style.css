@@ -208,6 +208,19 @@ button {
     color: #000;
 }
 
+select {
+    padding: 10px 50px;
+    border-radius: 4px;
+    border: 0;
+    box-shadow: 0 0 50px rgba(0,0,0,0.1);
+    font-weight: bold;
+    cursor: pointer;
+    background-color: #fff;
+    font-size: 15px;
+    text-decoration: 0;
+    color: #000;
+}
+
 .dialog {
     display: none;
     position: fixed;
@@ -369,6 +382,11 @@ li.dark_active {
 #generalContainer button {
     margin-top: 10px;
 }
+
+#generalContainer select {
+    margin-top: 10px;
+}
+
 
 #playButton:disabled {
   opacity: 0.5; /* Réduit l'opacité du bouton */

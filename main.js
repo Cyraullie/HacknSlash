@@ -1,26 +1,37 @@
-const { app, BrowserWindow, Menu } = require('electron');
+const { app, BrowserWindow, Menu, screen  } = require('electron');
 const path = require('path');
 
-let mainWindow; // Déclarez la fenêtre en tant que variable globale
+app.on('ready', () => {
+  const primaryDisplay = screen.getPrimaryDisplay();
+  const { width, height } = primaryDisplay.workAreaSize;
 
-function createWindow() {
-  mainWindow = new BrowserWindow({ 
-    width: 800,
-    height: 600,
+  let mainWindow = new BrowserWindow({
+    width: width,
+    height: height,
     resizable: false,
     icon: path.join(__dirname, 'Logo_M.ico'), 
+    webPreferences: {
+      nodeIntegration: true
+    }
   });
 
-
-
   mainWindow.webContents.session.webRequest.onBeforeSendHeaders((details, callback) => {
-      details.requestHeaders['Origin'] = '*';
-      callback({ cancel: false, requestHeaders: details.requestHeaders });
-    });
+    details.requestHeaders['Origin'] = '*';
+    callback({ cancel: false, requestHeaders: details.requestHeaders });
+  });
 
+  // Chargez votre contenu web
   mainWindow.loadFile('index.html');
+
+  mainWindow.maximize();
+
+  mainWindow.on('will-move', (e) => {
+    e.preventDefault();
+  });
+  
+  // pour le dev
   mainWindow.webContents.openDevTools();
-  const customMenu = Menu.buildFromTemplate([
+  let customMenu = Menu.buildFromTemplate([
     /*{
       label: 'Custom Menu', // Vous pouvez personnaliser le nom du menu
       submenu: [
@@ -42,20 +53,16 @@ function createWindow() {
 
   Menu.setApplicationMenu(customMenu);
 
+  // Gérez l'événement de fermeture de la fenêtre
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
+});
 
-}
+  //mainWindow.maximize();
 
-app.whenReady().then(createWindow);
+  
 
 
-// Ajoutez une fonction pour changer la taille de la fenêtre
-export function changeWindowSize(width, height) {
-  if (mainWindow) {
-    mainWindow.setSize(width, height);
-  }
-}
 
 

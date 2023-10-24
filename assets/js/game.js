@@ -32,7 +32,7 @@ let backgroundSound;
 //TODO mettre les hp avec une barre de pv
 //TODO ralentissement vers la vagues 450 environs et toujours plus xD
 //TODO faire un check des autres touches pour les controlles
-//TODO voir s'il est possible de transformer le tout en app ?
+//TODO voir s'il est possible que les gens puissent jouer depuis l'app a distance !!!
 
 let nbBoss = 1; //nombre de boss fait
 let numMonstersAtStart = 3;
@@ -382,7 +382,7 @@ function checkMonsterAlive() {
                     spawnBoss();
                 }
             }
-
+            
             if((numVague - 1) % 5 === 0 && (numVague - 1) != 0){
                 if(!isUpdated){
                     displayUpgrade();
@@ -397,13 +397,12 @@ function checkMonsterAlive() {
                     bossTime = false;
                 }
             }
-            
-            if(document.getElementById("upgrade").style.display == "none" && numVague % 10 !== 0){
-                isUpdated = false;
-                spawnMonsters();                
-            }
-
-            
+        }
+    }
+    if (monsters.length === 0) {
+        if(document.getElementById("upgrade").style.display == "none" && numVague % 10 !== 0){
+            isUpdated = false;  
+            spawnMonsters();         
         }
     }
 }
@@ -456,6 +455,9 @@ function gameLoop() {
     }*/
 
     if(isEnded || isPaused || isUpdated){
+       /* console.log(isEnded)
+        console.log(isPaused)
+        console.log(isUpdated)*/
         game.dataset.isGamePaused = true;
     } else {
         game.dataset.isGamePaused = false;
@@ -476,7 +478,6 @@ function gameLoop() {
     checkCollisionWithMonsters();
 
     // Appeler la boucle de jeu à la prochaine frame
-    
     if(!JSON.parse(game.dataset.isGamePaused)) {
         let monsters = document.querySelectorAll(".monster")
 
@@ -486,6 +487,7 @@ function gameLoop() {
         }
         
         if (monsters.length === 0 && !isUpdated) {
+            console.log("newVague")
             numVague++;
             let projectiles = document.querySelectorAll(".projectile")
 

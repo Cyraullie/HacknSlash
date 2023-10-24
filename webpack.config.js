@@ -5,7 +5,6 @@ module.exports = {
   entry: {
     bundle: [
       path.resolve(__dirname, 'assets/js/main.js'),
-      path.resolve(__dirname, 'assets/js/menu.js'),
     ],
   },
   output: {
