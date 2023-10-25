@@ -203,7 +203,7 @@ export function createUpgradeDialog (){
 
     let buttonFireRate = document.createElement("button")
     var imgFireRate = document.createElement("img");
-    imgFireRate.src = "./assets/images/fireRate.png";
+    imgFireRate.src = "./assets/images/fire_rate.png";
     buttonFireRate.id = "fireRateButton"
     buttonFireRate.classList.add("upgradeButton")
     buttonFireRate.textContent = "amélio cadence"

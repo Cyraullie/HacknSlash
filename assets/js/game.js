@@ -24,12 +24,10 @@ let backgroundSound;
 //TODO empecher de rentrer des scores a la mains tel que les deux glands
 //TODO inscriptions complète ? login + password ?
 //TODO ajout de l'upgrade de la vitesse du perso
-//TODO remette a false les movement quand il y a un echap
 //TODO bug d'attack speed
 //TODO mettre des paterne pour des boss ()
 //TODO mettre les hp avec une barre de pv
 //TODO ralentissement vers la vagues 450 environs et toujours plus xD
-//TODO voir s'il est possible que les gens puissent jouer depuis l'app a distance !!!
 
 let nbBoss = 1; //nombre de boss fait
 let numMonstersAtStart = 3;
