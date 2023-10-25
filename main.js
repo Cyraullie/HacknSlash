@@ -1,8 +1,7 @@
-const { app, BrowserWindow, Menu, screen, dialog, autoUpdater } = require('electron');
+const { app, BrowserWindow, Menu, screen, dialog } = require('electron');
 const path = require('path');
 
 app.on('ready', () => {
-  autoUpdater.setFeedURL('https://github.com/Cyraullie/HacknSlash/blob/develop/dist/latest.yml')
   const primaryDisplay = screen.getPrimaryDisplay();
   const { width, height } = primaryDisplay.workAreaSize;
 
@@ -55,7 +54,7 @@ app.on('ready', () => {
 
   
   // Vérifiez s'il y a des mises à jour au démarrage
-  autoUpdater.checkForUpdates();
+  /*autoUpdater.checkForUpdates();
 
   autoUpdater.on('update-available', () => {
     // Une mise à jour est disponible, vous pouvez afficher un message à l'utilisateur
@@ -70,22 +69,9 @@ app.on('ready', () => {
         autoUpdater.downloadUpdate();
       }
     });
-  });
+  });*/
 
-  autoUpdater.on('update-downloaded', () => {
-    // La mise à jour a été téléchargée, vous pouvez proposer à l'utilisateur de l'installer
-    dialog.showMessageBox({
-      type: 'info',
-      title: 'Mise à jour téléchargée',
-      message: "La mise à jour a été téléchargée. Voulez-vous l'installer maintenant ?",
-      buttons: ['Installer', 'Plus tard'],
-    }, (buttonIndex) => {
-      if (buttonIndex === 0) {
-        // Si l'utilisateur clique sur "Installer", vous pouvez quitter l'application et installer la mise à jour
-        autoUpdater.quitAndInstall();
-      }
-    });
-  });
+  
 
   Menu.setApplicationMenu(customMenu);
 
