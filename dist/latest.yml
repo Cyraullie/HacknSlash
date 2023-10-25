@@ -1,8 +1,8 @@
 version: 1.0.0
 files:
   - url: game-Setup-1.0.0.exe
-    sha512: HIkCjyttC4BFofhDhvUXEywyVCoX2cnEGOb3gJiOYAwlf53bwupHlr6+V8sDhFlD0XJRe2xpPRRxyYJbA1Pc5w==
-    size: 82802532
+    sha512: jcltK4/IIJdzWZViBywGoZ8kltHpIEouxIHbXgxeS7Q2ZbHIceSr7sxP2wCTS96Buay0L/sv72SbQvC/ahnISg==
+    size: 82802765
 path: game-Setup-1.0.0.exe
-sha512: HIkCjyttC4BFofhDhvUXEywyVCoX2cnEGOb3gJiOYAwlf53bwupHlr6+V8sDhFlD0XJRe2xpPRRxyYJbA1Pc5w==
-releaseDate: '2023-10-25T09:42:18.432Z'
+sha512: jcltK4/IIJdzWZViBywGoZ8kltHpIEouxIHbXgxeS7Q2ZbHIceSr7sxP2wCTS96Buay0L/sv72SbQvC/ahnISg==
+releaseDate: '2023-10-25T10:52:53.204Z'

@@ -2,4 +2,6 @@ node_modules/
 bundle.js
 score.txt
 db
-dist
+dist/win-unpacked
+dist/builder*
+dist/*.blockmap

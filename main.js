@@ -1,8 +1,8 @@
-const { app, BrowserWindow, Menu, screen, dialog } = require('electron');
-const { autoUpdater } = require('electron-updater');
+const { app, BrowserWindow, Menu, screen, dialog, autoUpdater } = require('electron');
 const path = require('path');
 
 app.on('ready', () => {
+  autoUpdater.setFeedURL('https://github.com/Cyraullie/HacknSlash/blob/develop/dist/latest.yml')
   const primaryDisplay = screen.getPrimaryDisplay();
   const { width, height } = primaryDisplay.workAreaSize;
 
@@ -12,7 +12,8 @@ app.on('ready', () => {
     resizable: false,
     icon: path.join(__dirname, 'Logo_M.ico'), 
     webPreferences: {
-      nodeIntegration: true
+      nodeIntegration: true,
+      contextIsolation: false,
     }
   });
 
@@ -31,7 +32,7 @@ app.on('ready', () => {
   });
   
   // pour le dev
-  //mainWindow.webContents.openDevTools();
+  mainWindow.webContents.openDevTools();
   let customMenu = Menu.buildFromTemplate([
     /*{
       label: 'Custom Menu', // Vous pouvez personnaliser le nom du menu
@@ -52,38 +53,38 @@ app.on('ready', () => {
     },*/
   ]);
 
-  autoUpdater.setFeedURL('https://github.com/Cyraullie/HacknSlash/blob/develop/dist/latest.yml')
+  
   // Vérifiez s'il y a des mises à jour au démarrage
   autoUpdater.checkForUpdates();
 
   autoUpdater.on('update-available', () => {
     // Une mise à jour est disponible, vous pouvez afficher un message à l'utilisateur
-  dialog.showMessageBox({
-    type: 'info',
-    title: 'Mise à jour disponible',
-    message: 'Une mise à jour est disponible. Voulez-vous la télécharger maintenant ?',
-    buttons: ['Télécharger', 'Plus tard'],
-  }, (buttonIndex) => {
-    if (buttonIndex === 0) {
-      // Si l'utilisateur clique sur "Télécharger", vous pouvez commencer le processus de téléchargement
-      autoUpdater.downloadUpdate();
-    }
-  });
+    dialog.showMessageBox({
+      type: 'info',
+      title: 'Mise à jour disponible',
+      message: 'Une mise à jour est disponible. Voulez-vous la télécharger maintenant ?',
+      buttons: ['Télécharger', 'Plus tard'],
+    }, (buttonIndex) => {
+      if (buttonIndex === 0) {
+        // Si l'utilisateur clique sur "Télécharger", vous pouvez commencer le processus de téléchargement
+        autoUpdater.downloadUpdate();
+      }
+    });
   });
 
   autoUpdater.on('update-downloaded', () => {
     // La mise à jour a été téléchargée, vous pouvez proposer à l'utilisateur de l'installer
-  dialog.showMessageBox({
-    type: 'info',
-    title: 'Mise à jour téléchargée',
-    message: "La mise à jour a été téléchargée. Voulez-vous l'installer maintenant ?",
-    buttons: ['Installer', 'Plus tard'],
-  }, (buttonIndex) => {
-    if (buttonIndex === 0) {
-      // Si l'utilisateur clique sur "Installer", vous pouvez quitter l'application et installer la mise à jour
-      autoUpdater.quitAndInstall();
-    }
-  });
+    dialog.showMessageBox({
+      type: 'info',
+      title: 'Mise à jour téléchargée',
+      message: "La mise à jour a été téléchargée. Voulez-vous l'installer maintenant ?",
+      buttons: ['Installer', 'Plus tard'],
+    }, (buttonIndex) => {
+      if (buttonIndex === 0) {
+        // Si l'utilisateur clique sur "Installer", vous pouvez quitter l'application et installer la mise à jour
+        autoUpdater.quitAndInstall();
+      }
+    });
   });
 
   Menu.setApplicationMenu(customMenu);
@@ -93,11 +94,3 @@ app.on('ready', () => {
     mainWindow = null;
   });
 });
-
-  //mainWindow.maximize();
-
-  
-
-
-
-
