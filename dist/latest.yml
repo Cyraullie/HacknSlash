@@ -1,0 +1,8 @@
+version: 1.0.0
+files:
+  - url: game-Setup-1.0.0.exe
+    sha512: 64vQRWQ8XOEfmjhZS4HxSx7HRcvw8J2EZacKQLWP0C2dRkmB96jth8humwMJ91nb5DdbQ/tzUAInj+G1fs6nQw==
+    size: 82802553
+path: game-Setup-1.0.0.exe
+sha512: 64vQRWQ8XOEfmjhZS4HxSx7HRcvw8J2EZacKQLWP0C2dRkmB96jth8humwMJ91nb5DdbQ/tzUAInj+G1fs6nQw==
+releaseDate: '2023-10-25T09:25:48.211Z'
