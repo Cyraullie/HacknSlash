@@ -21,40 +21,31 @@ export function displayUpgrade() {
     let regenButton = document.getElementById("regenButton")
     let damageButton = document.getElementById("damageButton")
     let lifeButton = document.getElementById("lifeButton")
-    let upgrade = 0
-    if(player.dataset.fireRate > 100){
-        upgrade = Math.floor(Math.random() * 4)
-    }
-    
+    let moveSpeedButton = document.getElementById("moveSpeedButton")
+    let upgradesToDisplay = 3; // Nombre d'améliorations à afficher
+    let upgradesShown = 0; // Nombre d'améliorations actuellement affichées
+    let buttonsToDisplay = [];
+    let buttonsToDisplayToHidden = [lifeButton, damageButton, regenButton, fireRateButton, moveSpeedButton];
 
-    switch (upgrade) {
-        case 0 : 
-            lifeButton.hidden = false;
-            damageButton.hidden = false;
-            regenButton.hidden = false;
-            fireRateButton.hidden = true;
-            break;
-        case 1 : 
-            lifeButton.hidden = false;
-            damageButton.hidden = false;
-            regenButton.hidden = true;
-            fireRateButton.hidden = false;
-            break;
-        case 2 : 
-            lifeButton.hidden = false;
-            damageButton.hidden = true;
-            regenButton.hidden = false;
-            fireRateButton.hidden = false;
-            break;
-        case 3 : 
-            lifeButton.hidden = true;
-            damageButton.hidden = false;
-            regenButton.hidden = false;
-            fireRateButton.hidden = false;
-            break;
-
+    for(let i = 0; i < buttonsToDisplayToHidden.length; i++){
+        buttonsToDisplayToHidden[i].hidden = true;
     }
 
+    if (parseInt(player.dataset.fireRate) > 100) {
+        buttonsToDisplay = [lifeButton, damageButton, regenButton, fireRateButton, moveSpeedButton];
+    } else {
+        buttonsToDisplay = [lifeButton, damageButton, regenButton, moveSpeedButton];
+    }
+        while (upgradesShown < upgradesToDisplay) {
+            console.log(upgradesShown)
+            let randomUpgrade = Math.floor(Math.random() * buttonsToDisplay.length);
+
+            if (buttonsToDisplay[randomUpgrade].hidden) {
+                // Cette amélioration n'est pas déjà affichée, on l'affiche
+                buttonsToDisplay[randomUpgrade].hidden = false;
+                upgradesShown++;
+            }
+        }
 
     dialog.style.display = "block";
 }
@@ -177,6 +168,7 @@ export function createUpgradeDialog (){
     buttonLife.id = "lifeButton"
     buttonLife.classList.add("upgradeButton")
     buttonLife.textContent = "+1 vie"
+    buttonLife.hidden = true
     buttonLife.setAttribute("data-selected", "false");
     buttonLife.appendChild(imgLife)
     div4.appendChild(buttonLife)  
@@ -187,6 +179,7 @@ export function createUpgradeDialog (){
     buttonDamage.id = "damageButton"
     buttonDamage.classList.add("upgradeButton")
     buttonDamage.textContent = "+1 dégat"
+    buttonDamage.hidden = true
     buttonDamage.setAttribute("data-selected", "false");
     buttonDamage.appendChild(imgDamage)
     div4.appendChild(buttonDamage)
@@ -197,6 +190,7 @@ export function createUpgradeDialog (){
     buttonRegen.id = "regenButton"
     buttonRegen.classList.add("upgradeButton")
     buttonRegen.textContent = "full regen"
+    buttonRegen.hidden = true
     buttonRegen.setAttribute("data-selected", "false");
     buttonRegen.appendChild(imgRegen)
     div4.appendChild(buttonRegen)
@@ -207,11 +201,23 @@ export function createUpgradeDialog (){
     buttonFireRate.id = "fireRateButton"
     buttonFireRate.classList.add("upgradeButton")
     buttonFireRate.textContent = "amélio cadence"
+    buttonFireRate.hidden = true
     buttonFireRate.setAttribute("data-selected", "false");
     buttonFireRate.appendChild(imgFireRate)
     div4.appendChild(buttonFireRate)
 
-    let buttons = [buttonLife, buttonDamage, buttonRegen, buttonFireRate];
+    let buttonMoveSpeed = document.createElement("button")
+    var imgMoveSpeed = document.createElement("img");
+    imgMoveSpeed.src = "./assets/images/move_speed.png";
+    buttonMoveSpeed.id = "moveSpeedButton"
+    buttonMoveSpeed.classList.add("upgradeButton")
+    buttonMoveSpeed.textContent = "amélio ms"
+    buttonMoveSpeed.hidden = true
+    buttonMoveSpeed.setAttribute("data-selected", "false");
+    buttonMoveSpeed.appendChild(imgMoveSpeed)
+    div4.appendChild(buttonMoveSpeed)
+
+    let buttons = [buttonLife, buttonDamage, buttonRegen, buttonFireRate, buttonMoveSpeed];
 
     buttons.forEach((button) => {
         button.addEventListener("click", () => {
@@ -824,7 +830,8 @@ export function activeButton(){
             let damageButton = document.getElementById("damageButton")
             let regenButton = document.getElementById("regenButton")
             let fireRateButton = document.getElementById("fireRateButton")
-
+            let moveSpeedButton = document.getElementById("moveSpeedButton")
+            
             if (lifeButton.getAttribute("data-selected") === "true") {
                 let player = document.getElementById("player")
  
@@ -866,6 +873,17 @@ export function activeButton(){
                 
                 regenButton.setAttribute("data-selected", "false");
                 regenButton.classList.remove("selected");
+                game.dataset.isGamePaused = false;
+                document.getElementById("upgrade").style.display = "none";
+            }
+
+            if (moveSpeedButton.getAttribute("data-selected") === "true") {
+                let player = document.getElementById("player")
+
+                player.dataset.speed = parseInt(player.dataset.speed) + 1;
+                
+                moveSpeedButton.setAttribute("data-selected", "false");
+                moveSpeedButton.classList.remove("selected");
                 game.dataset.isGamePaused = false;
                 document.getElementById("upgrade").style.display = "none";
             }

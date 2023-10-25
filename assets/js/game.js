@@ -23,7 +23,6 @@ let backgroundSound;
 //TODO creer des succés (db ?)
 //TODO empecher de rentrer des scores a la mains tel que les deux glands
 //TODO inscriptions complète ? login + password ?
-//TODO ajout de l'upgrade de la vitesse du perso
 //TODO bug d'attack speed
 //TODO mettre des paterne pour des boss ()
 //TODO mettre les hp avec une barre de pv
@@ -482,7 +481,6 @@ function gameLoop() {
         }
         
         if (monsters.length === 0 && !isUpdated) {
-            console.log("newVague")
             numVague++;
             let projectiles = document.querySelectorAll(".projectile")
 
