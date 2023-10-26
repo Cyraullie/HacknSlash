@@ -6,7 +6,7 @@ let game = document.getElementById("game");
 let life = 4;
 let damage = 2;
 let speed = 5; // Vitesse de déplacement
-let fireRate = 100;
+let fireRate = 400;
 
 export function createPlayer() {
 

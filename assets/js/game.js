@@ -34,7 +34,7 @@ let backgroundSound;
 let nbBoss = 1; //nombre de boss fait
 let numMonstersAtStart = 3;
 var numVague = 1;
-var numVagueNoMove = 49;
+var numVagueNoMove = 0;
 let player;
 var map = document.getElementById("map");
 var game = document.getElementById("game");
