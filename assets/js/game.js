@@ -10,6 +10,7 @@ import { Howl } from 'howler';
 let bossSound
 let backgroundSound;
 
+//TODO mettre une vrai image pour les monstres et le joueur
 //TODO bille multi color :)
 //TODO booster le boss au hormone
 //TODO upgrade damage/hp/speed of monster
@@ -18,15 +19,16 @@ let backgroundSound;
 //TODO ajouter des sons
 //TODO add difficulty
 //TODO install phaser ?????
+
 //TODO ajout de succés (no move challenge (si tu bouge une fois le défi n'est plus réalisabel))
 //TODO ajouter un bouton pour voir ses succès qui seront stocké dans la base de donnée
 //TODO creer des succés (db ?)
-//TODO empecher de rentrer des scores a la mains tel que les deux glands
+
 //TODO inscriptions complète ? login + password ?
 //TODO bug d'attack speed
 //TODO mettre des paterne pour des boss ()
-//TODO mettre les hp avec une barre de pv
-//TODO ralentissement vers la vagues 450 environs et toujours plus xD
+
+//BUG ralentissement vers la vagues 450 environs et toujours plus xD
 
 let nbBoss = 1; //nombre de boss fait
 let numMonstersAtStart = 3;

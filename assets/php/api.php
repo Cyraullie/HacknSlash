@@ -5,6 +5,8 @@ header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
 header("Access-Control-Allow-Credentials: true");
 
+$key_enc = "gJq61S3am6COY2R6aH8i7msrdguIpDYL";
+
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     // Le script a été appelé avec une requête HTTP GET
 
@@ -19,8 +21,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             }
 
             $pseudo = $_GET["pseudo"];
-            $result = mysqli_query($mysqli, "SELECT id, pseudo FROM `players` WHERE pseudo = '".$pseudo."'");
-        
+            $pwd = $_GET["password"];
+            $result = mysqli_query($mysqli, "SELECT id, pseudo, password FROM `players` WHERE pseudo = '".$pseudo."'");
+
+            $pwd_enc = openssl_encrypt($pwd, 'AES-256-CBC', $key_enc, 0);
             $response[0] = "";
             if ($result) {
                 $i = 0;
@@ -34,7 +38,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             mysqli_close($mysqli);
 
             header('Content-Type: application/json');
+
             echo json_encode($response);
+            /*if($response[0]["password"] == $pwd_enc){
+                echo json_encode($response);
+            } else {
+                $response[0] = "Identifiant ou mot de passe incorrect";
+                echo json_encode($response);
+            }*/
+
             break;
 
         case "scoreboard" :
@@ -70,11 +82,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             }
 
             $pseudo = $_GET["pseudo"];
+            $pwd = $_GET["password"];
 
-            $stmt = $mysqli->prepare("INSERT INTO `players` (`id`, `pseudo`) VALUES (NULL, ?)");
+            $pwd_enc = openssl_encrypt($pwd, 'AES-256-CBC', $key_enc, 0);
+            $stmt = $mysqli->prepare("INSERT INTO `players` (`id`, `pseudo`, `password`) VALUES (NULL, ?, ?)");
             $response[0] = "test";
             if ($stmt) {
-                $stmt->bind_param("s", $pseudo);
+                $stmt->bind_param("ss", $pseudo, $pwd_enc);
             
                 if ($stmt->execute()) {
 

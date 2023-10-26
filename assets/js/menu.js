@@ -683,7 +683,7 @@ export function createStartDialog (){
     loginInput.style.width = "190px"
     loginInput.style.marginTop = "20px"
     loginInput.placeholder = "Pseudo"
-    if(localStorage.getItem("pseudo") != null){
+    /*if(localStorage.getItem("pseudo") != null){
         loginInput.value = localStorage.getItem("pseudo")
 
         let params = new URLSearchParams({ route: "player", pseudo: localStorage.getItem("pseudo")});
@@ -698,9 +698,34 @@ export function createStartDialog (){
         .catch(error => {
             console.error('Erreur :', error);
         });
-    }
+    }*/
 
     loginDiv.appendChild(loginInput)
+
+    let passwordInput = document.createElement("input")
+    passwordInput.id = "passwordInput"
+    passwordInput.type = "password"
+    passwordInput.style.width = "190px"
+    passwordInput.style.marginTop = "10px"
+    passwordInput.placeholder = "Mot de passe"
+    /*if(localStorage.getItem("pseudo") != null){
+        loginInput.value = localStorage.getItem("pseudo")
+
+        let params = new URLSearchParams({ route: "player", pseudo: localStorage.getItem("pseudo")});
+        let urlAvecParametres = `${apiURL}?${params}`;
+        axios.get(urlAvecParametres)
+        .then(response => {
+            console.log(response)
+            if(response.data != ""){
+                localStorage.setItem("player_id", response.data[0]["id"])
+            }
+        })
+        .catch(error => {
+            console.error('Erreur :', error);
+        });
+    }*/
+
+    loginDiv.appendChild(passwordInput)
 
     let loginButton = document.createElement("button")
     loginButton.id = "loginButton"
@@ -961,33 +986,46 @@ export function activeButton(){
         loginButton.addEventListener("click", () => {
             
             let pseudo = document.getElementById("loginInput");
-
-            if(pseudo.value == ""){
-                pseudo.style.color  = "red"
+            let pwd = document.getElementById("passwordInput");
+            
+            if(pseudo.value == "" || pwd.value == ""){
+                pseudo.style.border  = "red 1px solid"
+                pwd.style.border  = "red 1px solid"
                 setTimeout(() => {
-                    pseudo.style.color  = "gray"
+                    pseudo.style.border  = ""
+                    pwd.style.border  = ""
                 }, 2000);
             }else {
-                localStorage.setItem("pseudo", pseudo.value)
+                //localStorage.setItem("pseudo", pseudo.value)
 
-                let params = new URLSearchParams({ route: "player", pseudo: pseudo.value});
+                let params = new URLSearchParams({ route: "player", pseudo: pseudo.value, password: pwd.value});
                 let urlAvecParametres = `${apiURL}?${params}`;
                 axios.get(urlAvecParametres)
                 .then(response => {
-                    console.log(response)
+                    console.log(response.data)
+
+                    if(response.data == "Identifiant ou mot de passe incorrect"){
+                        pseudo.style.border  = "red 1px solid"
+                        pwd.style.border  = "red 1px solid"
+                        setTimeout(() => {
+                            pseudo.style.border  = ""
+                            pwd.style.border  = ""
+                        }, 2000);
+                    }
                     if(response.data != ""){
                         localStorage.setItem("player_id", response.data[0]["id"])
                         let play = document.getElementById("playButton")
+                        pwd.value = ""
                         play.disabled = false
-                        
                     }else {
-                        let params = new URLSearchParams({ route: "login", pseudo: pseudo.value });
+                        let params = new URLSearchParams({ route: "login", pseudo: pseudo.value, password: pwd.value });
                         let urlAvecParametres = `${apiURL}?${params}`;
 
                         axios.get(urlAvecParametres)
                         .then(response => {
                             localStorage.setItem("player_id", response.data[0])
                             let play = document.getElementById("playButton")
+                            pwd.value = ""
                             play.disabled = false
                         })
                         .catch(error => {
