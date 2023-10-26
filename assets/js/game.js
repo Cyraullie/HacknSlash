@@ -6,8 +6,10 @@ import { createMonster } from './monster.js';
 import { checkCollisionWithMonsters, startShooting } from './projectile.js';
 import { displayGameOver, displayUpgrade, createUpgradeDialog, createGameOverDialog, createEchapDialog, createOptionsDialog, displayEscape, activeButton, createStartDialog, createSuccessDialog } from './menu.js';
 import { Howl } from 'howler';
-
 import axios from 'axios';
+
+const packageJson = require('../../package.json');
+
 let bossSound
 let backgroundSound;
 
@@ -56,7 +58,18 @@ let isPaused = false;
 
 let bossTime = false;
 
-export function initializeGameData() {    
+export function initializeGameData() {
+    
+    // Vérifie si c'est la première installation
+    if (localStorage.getItem('version') != packageJson.version) {
+        // Supprime toutes les données du localStorage
+        localStorage.clear();
+
+        // Marque que l'installation a eu lieu
+        localStorage.setItem('version', packageJson.version);
+    }
+
+  
     game.dataset.isGamePaused = false; 
     game.dataset.isUpdated = false;
     if(localStorage.getItem("theme") != null){

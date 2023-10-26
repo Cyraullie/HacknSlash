@@ -1,10 +1,10 @@
 {
   "name": "hacknslash",
-  "version": "1.0.0",
+  "version": "1.5.5",
   "description": "little game on JS",
   "main": "main.js",
   "scripts": {
-    "build": "electron-builder",
+    "build": "npx webpack --config webpack.config.js && electron-builder",
     "start": "npx webpack --config webpack.config.js && electron ."
   },
   "repository": {

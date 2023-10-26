@@ -684,11 +684,19 @@ export function createStartDialog (){
     customDialog = document.getElementById("start");
     let div1 = document.createElement("div")
     let titleElement = document.createElement("h1");
-
     titleElement.textContent = "The Game";
 
-    customDialog.appendChild(div1)
     div1.appendChild(titleElement)
+    customDialog.appendChild(div1)
+    let welcome = document.createElement("h3");
+    welcome.id = "welcome"
+    
+    div1.appendChild(welcome)
+
+    if(localStorage.getItem("player_name") != null){
+        welcome.textContent = "Bienvenue " + localStorage.getItem("player_name");
+    }
+   
     
     let div4 = document.createElement("div")
     div4.id = "menuDiv";
@@ -1034,10 +1042,16 @@ export function activeButton(){
 
                         axios.get(urlAvecParametres)
                         .then(response => {
+                            localStorage.setItem("player_name", pseudo.value)
                             localStorage.setItem("player_id", response.data[0])
                             let play = document.getElementById("playButton")
                             pwd.value = ""
                             play.disabled = false
+
+                            let welcome = document.getElementById("welcome")
+                            if(localStorage.getItem("player_name") != null){
+                                welcome.textContent = "Bienvenue " + localStorage.getItem("player_name");
+                            }
                         })
                         .catch(error => {
                             console.log("ertet")
@@ -1045,9 +1059,15 @@ export function activeButton(){
 
                     }else {
                         localStorage.setItem("player_id", response.data[0]["id"])
+                        localStorage.setItem("player_name", pseudo.value)
                         let play = document.getElementById("playButton")
                         pwd.value = ""
                         play.disabled = false
+
+                        let welcome = document.getElementById("welcome")
+                        if(localStorage.getItem("player_name") != null){
+                            welcome.textContent = "Bienvenue " + localStorage.getItem("player_name");
+                        }
                     }
                 })
                 .catch(error => {
@@ -1131,6 +1151,8 @@ function updateSuccess () {
                                     successImg.classList.add("successNotAchieved")
                                 }
                             })
+                        } else {
+                            successImg.classList.add("successNotAchieved")
                         }
                         
                         successDiv.appendChild(successImg)
