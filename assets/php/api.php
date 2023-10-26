@@ -159,9 +159,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $p_id = $_GET["player_id"];
             //$s_id = $_GET["success_id"];
 
-            $result = mysqli_query($mysqli, "SELECT success.name, success.description password FROM `advancements` INNER JOIN success ON advancements.success_id = success.id WHERE players_id = '".$p_id."'");
+            $result = mysqli_query($mysqli, "SELECT id, success.name, success.description password FROM `advancements` INNER JOIN success ON advancements.success_id = success.id WHERE players_id = '".$p_id."'");
             //$result = mysqli_query($mysqli, "SELECT pseudo, score FROM `scores` INNER JOIN players ON scores.players_id = players.id ORDER BY score DESC LIMIT 5");
         
+            $response[0] = "";
+            if ($result) {
+                $i = 0;
+                while ($row = mysqli_fetch_assoc($result)) {
+                    $response[$i] = $row;
+                    $i++;
+                }
+        
+                mysqli_free_result($result);
+            }
+            mysqli_close($mysqli);
+
+            header('Content-Type: application/json');
+            echo json_encode($response);
+            break;
+
+        case "all_success" :
+            $mysqli = mysqli_connect("localhost:3306", "gamer", "gamer", "game");
+
+            if (!$mysqli) {
+                die("Erreur de connexion : " . mysqli_connect_error());
+            }
+
+            $result = mysqli_query($mysqli, "SELECT id, success.name, success.description, success.img_path FROM `success` ");
+
             $response[0] = "";
             if ($result) {
                 $i = 0;

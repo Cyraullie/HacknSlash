@@ -282,6 +282,12 @@ export function createEchapDialog (){
     options.textContent = "Options"
     div4.appendChild(options)
 
+    
+    let success = document.createElement("button")
+    success.id = "successButton"
+    success.textContent = "Succès"
+    div4.appendChild(success)
+
     customDialog.style.width = "250px"
 
     game.appendChild(customDialog);
@@ -308,6 +314,36 @@ export function createEchapDialog (){
     resumeText.style.left = "150px";
     resumeText.style.top = (windowHeight - 40) + "px";
     resumeDiv.appendChild(resumeText)
+
+    customDialog.style.display = "none";
+}
+
+
+export function createSuccessDialog (){
+    customDialog = document.getElementById("success");
+    let div1 = document.createElement("div")
+    let titleElement = document.createElement("h1");
+
+    titleElement.textContent = "Succès";
+    let cross = document.createElement("img");
+    cross.id = "crossSuccess"
+    cross.src = "./assets/images/cross.png";
+
+    customDialog.appendChild(div1)
+    div1.appendChild(titleElement)
+    div1.appendChild(cross)
+    
+
+    let div4 = document.createElement("div")
+    div4.id = "successDiv";
+    div4.style.height = "400px"
+    div4.style.overflow = "auto";
+
+    customDialog.appendChild(div4)
+
+    customDialog.style.width = "630px"
+
+    game.appendChild(customDialog);
 
     customDialog.style.display = "none";
 }
@@ -671,6 +707,11 @@ export function createStartDialog (){
     options.textContent = "Options"
     div4.appendChild(options)
 
+    let success = document.createElement("button")
+    success.id = "successStartButton"
+    success.textContent = "Succès"
+    div4.appendChild(success)
+
     let loginDiv = document.createElement("div")
     loginDiv.id = "loginDiv";
     loginDiv.style.marginTop = "10px";
@@ -682,22 +723,6 @@ export function createStartDialog (){
     loginInput.style.width = "190px"
     loginInput.style.marginTop = "20px"
     loginInput.placeholder = "Pseudo"
-    /*if(localStorage.getItem("pseudo") != null){
-        loginInput.value = localStorage.getItem("pseudo")
-
-        let params = new URLSearchParams({ route: "player", pseudo: localStorage.getItem("pseudo")});
-        let urlAvecParametres = `${apiURL}?${params}`;
-        axios.get(urlAvecParametres)
-        .then(response => {
-            console.log(response)
-            if(response.data != ""){
-                localStorage.setItem("player_id", response.data[0]["id"])
-            }
-        })
-        .catch(error => {
-            console.error('Erreur :', error);
-        });
-    }*/
 
     loginDiv.appendChild(loginInput)
 
@@ -707,22 +732,6 @@ export function createStartDialog (){
     passwordInput.style.width = "190px"
     passwordInput.style.marginTop = "10px"
     passwordInput.placeholder = "Mot de passe"
-    /*if(localStorage.getItem("pseudo") != null){
-        loginInput.value = localStorage.getItem("pseudo")
-
-        let params = new URLSearchParams({ route: "player", pseudo: localStorage.getItem("pseudo")});
-        let urlAvecParametres = `${apiURL}?${params}`;
-        axios.get(urlAvecParametres)
-        .then(response => {
-            console.log(response)
-            if(response.data != ""){
-                localStorage.setItem("player_id", response.data[0]["id"])
-            }
-        })
-        .catch(error => {
-            console.error('Erreur :', error);
-        });
-    }*/
 
     loginDiv.appendChild(passwordInput)
 
@@ -777,8 +786,11 @@ export function activeButton(){
     let playButton = document.getElementById("playButton")
     let optionStartButton = document.getElementById("optionStartButton")
     let crossButton = document.getElementById("cross")
+    let crossSuccessButton = document.getElementById("crossSuccess")
     let loginButton = document.getElementById("loginButton")
     let resumeRealButton = document.getElementById("resumeRealButton")
+    let successStartButton = document.getElementById("successStartButton")
+    let successButton = document.getElementById("successButton")
 
     if(logButton !== null){
         logButton.addEventListener("click", () => {         
@@ -967,17 +979,22 @@ export function activeButton(){
     if(crossButton !== null){
         crossButton.addEventListener("click", () => {
             let dialog = document.getElementById("options")
-            let upButton = document.getElementById("upButton");
-            let downButton = document.getElementById("downButton");
-            let leftButton = document.getElementById("leftButton");
-            let rightButton = document.getElementById("rightButton");
+            dialog.style.display = "none"
+        });
+    }
+
+    if(crossSuccessButton !== null){
+        crossSuccessButton.addEventListener("click", () => {
+            let dialog = document.getElementById("success")
+            
+            let divSuccess = document.getElementById("successDiv")
+            divSuccess.remove()
+
+            let successDiv = document.createElement("div")
+            successDiv.id = "successDiv"
+            dialog.appendChild(successDiv)
 
             dialog.style.display = "none"
-
-            upButton.disabled = false;
-            downButton.disabled = false;
-            leftButton.disabled = false;
-            rightButton.disabled = false;
         });
     }
 
@@ -1041,5 +1058,92 @@ export function activeButton(){
         });
     }
 
+    if(successButton !== null){
+        successButton.addEventListener("click", () => {
+            let customDialog = document.getElementById("success");
+            updateSuccess()
+            customDialog.style.display = "block";
+        });
+    }
 
+    if(successStartButton !== null){
+        successStartButton.addEventListener("click", () => {
+            let customDialog = document.getElementById("success");
+            updateSuccess()
+            customDialog.style.display = "block";
+        });
+    }
+
+}
+
+function updateSuccess () {
+
+    let divSuccess = document.getElementById("successDiv")
+    let params = new URLSearchParams({ route: "all_success" });
+    let urlAvecParametres = `${apiURL}?${params}`;
+
+    axios.get(urlAvecParametres)
+    .then(response => {
+        if(Array.isArray(response.data)){
+            let allSuccess = response.data;
+            console.log(allSuccess)
+            if(allSuccess != ""){
+                let params = new URLSearchParams({ route: "success", player_id: localStorage.getItem("player_id")});
+                let urlAvecParametres = `${apiURL}?${params}`;
+                axios.get(urlAvecParametres)
+                .then(response => {
+                    console.log(response.data)
+                    console.log("response.data")
+                    allSuccess.forEach(success => {
+                        let successDiv = document.createElement("div")
+                        successDiv.id = "success"+success["id"];
+                        successDiv.classList.add("successDiv");
+                        
+                        divSuccess.appendChild(successDiv)
+
+                        let successImg = document.createElement("img")
+                        successImg.id = "successImg"+success["id"];
+                        successImg.classList.add("successImg")
+                        successImg.src = "./assets/images/" + success["img_path"];
+
+                        let successTextDiv = document.createElement("div")
+                        successTextDiv.classList.add("successText")
+
+                        let successTitle = document.createElement("p")
+                        successTitle.id = "successTitle"+success["id"];
+                        successTitle.textContent = success["name"]
+                        successTitle.style.fontSize = "1.5em"
+                        successTitle.style.fontWeight = "bold"
+                        successTitle.style.textAlign = "left"
+
+                        
+
+                        let successDescription = document.createElement("p")
+                        successDescription.id = "successDescription"+success["id"];
+                        successDescription.textContent = success["description"]
+                        
+                        if(response.data != ""){
+                            response.data.forEach(successAchieved => {
+                                if(successAchieved["id"] == success["id"]){
+                                    successImg.classList.add("successAchieved")
+                                }
+                                else{
+                                    successImg.classList.add("successNotAchieved")
+                                }
+                            })
+                        }
+                        
+                        successDiv.appendChild(successImg)
+                        successDiv.appendChild(successTextDiv)
+                        successTextDiv.appendChild(successTitle)
+                        successTextDiv.appendChild(successDescription)
+                       
+                    })                    
+                })
+                .catch(error => {
+                    console.error('Erreur :', error);
+                });
+            }
+        }
+    })
 }

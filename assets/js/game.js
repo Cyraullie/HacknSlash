@@ -4,7 +4,7 @@ import { apiURL, windowHeight, windowWidth } from './data.js';
 import { createPlayer, } from './player.js';
 import { createMonster } from './monster.js';
 import { checkCollisionWithMonsters, startShooting } from './projectile.js';
-import { displayGameOver, displayUpgrade, createUpgradeDialog, createGameOverDialog, createEchapDialog, createOptionsDialog, displayEscape, activeButton, createStartDialog } from './menu.js';
+import { displayGameOver, displayUpgrade, createUpgradeDialog, createGameOverDialog, createEchapDialog, createOptionsDialog, displayEscape, activeButton, createStartDialog, createSuccessDialog } from './menu.js';
 import { Howl } from 'howler';
 
 import axios from 'axios';
@@ -114,6 +114,8 @@ export function initializeGameData() {
     createStartDialog();
 
     createGameOverDialog();
+
+    createSuccessDialog();
 
     createUpgradeDialog();
 
@@ -446,7 +448,7 @@ function checkSuccess() {
     
                 axios.get(urlAvecParametres)
                 .then(response => {
-                    achivement.textContent = "Tourelle Diff 1"
+                    achivement.textContent = "Tourelle Diff " + noMove
                     achivement.style.display = "block"
                     achivement.classList.add("achivement-animation");
     
