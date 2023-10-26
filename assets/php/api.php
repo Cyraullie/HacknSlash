@@ -39,13 +39,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
             header('Content-Type: application/json');
 
-            echo json_encode($response);
-            /*if($response[0]["password"] == $pwd_enc){
-                echo json_encode($response);
+            //echo json_encode($response);
+            if($response[0] != "") {
+                if($response[0]["password"] == $pwd_enc){
+                    echo json_encode($response);
+                } else {
+                    $response[0] = "Identifiant ou mot de passe incorrect";
+                    echo json_encode($response);
+                }
             } else {
-                $response[0] = "Identifiant ou mot de passe incorrect";
+                $response[0] = "Le compte n'existe pas encore";
                 echo json_encode($response);
-            }*/
+            }
 
             break;
 
@@ -142,6 +147,80 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             }
 
             mysqli_close($mysqli);
+            break;
+
+        case "success" :
+            $mysqli = mysqli_connect("localhost:3306", "gamer", "gamer", "game");
+
+            if (!$mysqli) {
+                die("Erreur de connexion : " . mysqli_connect_error());
+            }
+
+            $p_id = $_GET["player_id"];
+            //$s_id = $_GET["success_id"];
+
+            $result = mysqli_query($mysqli, "SELECT success.name, success.description password FROM `advancements` INNER JOIN success ON advancements.success_id = success.id WHERE players_id = '".$p_id."'");
+            //$result = mysqli_query($mysqli, "SELECT pseudo, score FROM `scores` INNER JOIN players ON scores.players_id = players.id ORDER BY score DESC LIMIT 5");
+        
+            $response[0] = "";
+            if ($result) {
+                $i = 0;
+                while ($row = mysqli_fetch_assoc($result)) {
+                    $response[$i] = $row;
+                    $i++;
+                }
+        
+                mysqli_free_result($result);
+            }
+            mysqli_close($mysqli);
+
+            header('Content-Type: application/json');
+            echo json_encode($response);
+            break;
+
+        case "achivement" :
+            $mysqli = mysqli_connect("localhost:3306", "gamer", "gamer", "game");
+
+            if (!$mysqli) {
+                die("Erreur de connexion : " . mysqli_connect_error());
+            }
+            $p_id = $_GET["player_id"];
+            $s_id = $_GET["success_id"];
+            //$result = mysqli_query($mysqli, "SELECT pseudo, score FROM `scores` INNER JOIN players ON scores.players_id = players.id ORDER BY score DESC LIMIT 5");
+            
+            $stmt = $mysqli->prepare("INSERT INTO `advancements` (`players_id`, `success_id`) VALUES (?, ?)");
+
+            if ($stmt) {
+                // Lier la variable $pseudo à la requête
+                $stmt->bind_param("ii", $p_id, $s_id );
+            
+                // Exécuter la requête
+                if ($stmt->execute()) {
+                    echo "Enregistrement inséré avec succès.";
+                } else {
+                    echo "Erreur lors de l'exécution de la requête : " . $stmt->error;
+                }
+            
+                // Fermer la requête préparée
+                $stmt->close();
+            } else {
+                echo "Erreur de préparation de la requête : " . $mysqli->error;
+            }
+
+            /*$response[0] = "";
+            if ($result) {
+                $i = 0;
+                while ($row = mysqli_fetch_assoc($result)) {
+                    $response[$i] = $row;
+                    $i++;
+                }
+        
+                mysqli_free_result($result);
+            }
+            mysqli_close($mysqli);
+
+            header('Content-Type: application/json');
+            echo json_encode($response);*/
             break;
     };
 } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {

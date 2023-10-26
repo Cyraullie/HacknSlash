@@ -1,12 +1,13 @@
 // game.js
 
-import { windowHeight, windowWidth } from './data.js';
+import { apiURL, windowHeight, windowWidth } from './data.js';
 import { createPlayer, } from './player.js';
 import { createMonster } from './monster.js';
 import { checkCollisionWithMonsters, startShooting } from './projectile.js';
 import { displayGameOver, displayUpgrade, createUpgradeDialog, createGameOverDialog, createEchapDialog, createOptionsDialog, displayEscape, activeButton, createStartDialog } from './menu.js';
 import { Howl } from 'howler';
 
+import axios from 'axios';
 let bossSound
 let backgroundSound;
 
@@ -24,15 +25,16 @@ let backgroundSound;
 //TODO ajouter un bouton pour voir ses succès qui seront stocké dans la base de donnée
 //TODO creer des succés (db ?)
 
-//TODO inscriptions complète ? login + password ?
 //TODO bug d'attack speed
 //TODO mettre des paterne pour des boss ()
+//TODO pouvoir se déconnecter 
 
 //BUG ralentissement vers la vagues 450 environs et toujours plus xD
 
 let nbBoss = 1; //nombre de boss fait
 let numMonstersAtStart = 3;
 var numVague = 1;
+var numVagueNoMove = 49;
 let player;
 var map = document.getElementById("map");
 var game = document.getElementById("game");
@@ -252,6 +254,7 @@ export function checkTheme() {
     let damageText = document.getElementById("damageText");
     let tabContent = Array.from(document.getElementsByClassName("tab-content"))
     let tabControl = Array.from(document.getElementsByClassName("tab-button"))
+    let achivement = document.getElementById("achivement");
 
     if(localStorage.getItem("theme") != null){
         game.dataset.theme = localStorage.getItem("theme")
@@ -265,6 +268,7 @@ export function checkTheme() {
         resumeText.style.color = "white"
         damageText.style.color = "white"
         pvText.style.color = "white"
+        achivement.style.color = "white"
 
         Array.from(dialogs).forEach(dialog => {
             dialog.style.backgroundColor = "#666666"
@@ -296,6 +300,7 @@ export function checkTheme() {
         resumeText.style.color = "black"
         damageText.style.color = "black"
         pvText.style.color = "black"
+        achivement.style.color = "black"
 
         Array.from(dialogs).forEach(dialog => {
             dialog.style.backgroundColor = "#ffffff"
@@ -424,6 +429,47 @@ function spawnMonsters() {
     
 }
 
+function checkSuccess() {
+    let achivement = document.getElementById("achivement");
+    let noMove = numVagueNoMove / 50
+    
+    if(noMove < 5){
+        let params = new URLSearchParams({ route: "success", player_id: localStorage.getItem("player_id")});
+        let urlAvecParametres = `${apiURL}?${params}`;
+        axios.get(urlAvecParametres)
+        .then(response => {
+            console.log(response.data)
+    
+            if(response.data == ""){
+                let params = new URLSearchParams({ route: "achivement", player_id: localStorage.getItem("player_id"), success_id: noMove });
+                let urlAvecParametres = `${apiURL}?${params}`;
+    
+                axios.get(urlAvecParametres)
+                .then(response => {
+                    achivement.textContent = "Tourelle Diff 1"
+                    achivement.style.display = "block"
+                    achivement.classList.add("achivement-animation");
+    
+    
+                    setTimeout(() => {
+                        achivement.style.display = "none"
+                    }, 5000);
+                    console.log(response.data)
+                })
+                .catch(error => {
+                    console.log("ertet")
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Erreur :', error);
+        });
+    }
+    
+            
+    
+}
+
 function spawnBoss() {
     
     backgroundSound.stop();
@@ -481,9 +527,16 @@ function gameLoop() {
             let vagues = document.getElementById("vagues");
             vagues.textContent = "Vagues " + (numVague);              
         }
+
+        if(JSON.parse(player.dataset.movingUp) || JSON.parse(player.dataset.movingRight) || JSON.parse(player.dataset.movingLeft) || JSON.parse(player.dataset.movingDown)){
+            numVagueNoMove = 0;
+        }
         
         if (monsters.length === 0 && !isUpdated) {
             numVague++;
+            numVagueNoMove++;
+            checkSuccess()
+            console.log("nombre de vague sans bouger : " + numVagueNoMove)
             let projectiles = document.querySelectorAll(".projectile")
 
             projectiles.forEach(projectile => {

@@ -43,31 +43,32 @@ CREATE TABLE IF NOT EXISTS `game`.`scores` (
 ENGINE = InnoDB;
 
 -- -----------------------------------------------------
--- Table `game`.`Sucess`
+-- Table `game`.`success`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `game`.`sucess` (
+CREATE TABLE IF NOT EXISTS `game`.`success` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(255) NOT NULL,
   `description` TEXT NOT NULL,
-  `objectif` INT NOT NULL,
+  `objectif` VARCHAR(255) NOT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
+
 -- -----------------------------------------------------
--- Table `game`.`Advancements`
+-- Table `game`.`advancements`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `game`.`advancements` (
-  `sucess_id` INT NOT NULL,
+  `success_id` INT NOT NULL,
   `players_id` INT NOT NULL,
-  PRIMARY KEY (`Sucess_id`, `players_id`),
-  INDEX `fk_sucess_has_players_players1_idx` (`players_id` ASC) VISIBLE,
-  INDEX `fk_sucess_has_players_sucess1_idx` (`sucess_id` ASC) VISIBLE,
-  CONSTRAINT `fk_sucess_has_players_sucess1`
-    FOREIGN KEY (`sucess_id`)
-    REFERENCES `game`.`sucess` (`id`)
+  PRIMARY KEY (`success_id`, `players_id`),
+  INDEX `fk_Sucess_has_players_players1_idx` (`players_id` ASC) VISIBLE,
+  INDEX `fk_Sucess_has_players_Sucess1_idx` (`success_id` ASC) VISIBLE,
+  CONSTRAINT `fk_Sucess_has_players_Sucess1`
+    FOREIGN KEY (`success_id`)
+    REFERENCES `game`.`success` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_sucess_has_players_players1`
+  CONSTRAINT `fk_Sucess_has_players_players1`
     FOREIGN KEY (`players_id`)
     REFERENCES `game`.`players` (`id`)
     ON DELETE NO ACTION
@@ -78,10 +79,10 @@ ENGINE = InnoDB;
 -- Insertition de succès
 -- -----------------------------------------------------
 
-INSERT INTO `Sucess` (`id`, `name`, `description`, `objectif`) VALUES (NULL, 'Tourelle diff 1', 'Passer 50 vagues sans bouger', '50');
-INSERT INTO `Sucess` (`id`, `name`, `description`, `objectif`) VALUES (NULL, 'Tourelle diff 2', 'Passer 100 vagues sans bouger', '100');
-INSERT INTO `Sucess` (`id`, `name`, `description`, `objectif`) VALUES (NULL, 'Tourelle diff 3', 'Passer 150 vagues sans bouger', '150');
-INSERT INTO `Sucess` (`id`, `name`, `description`, `objectif`) VALUES (NULL, 'Tourelle diff 4', 'Passer 200 vagues sans bouger', '200');
+INSERT INTO `success` (`id`, `name`, `description`, `objectif`) VALUES (NULL, 'Tourelle diff 1', 'Passer 50 vagues sans bouger', '50');
+INSERT INTO `success` (`id`, `name`, `description`, `objectif`) VALUES (NULL, 'Tourelle diff 2', 'Passer 100 vagues sans bouger', '100');
+INSERT INTO `success` (`id`, `name`, `description`, `objectif`) VALUES (NULL, 'Tourelle diff 3', 'Passer 150 vagues sans bouger', '150');
+INSERT INTO `success` (`id`, `name`, `description`, `objectif`) VALUES (NULL, 'Tourelle diff 4', 'Passer 200 vagues sans bouger', '200');
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

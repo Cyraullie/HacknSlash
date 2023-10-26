@@ -37,7 +37,6 @@ export function displayUpgrade() {
         buttonsToDisplay = [lifeButton, damageButton, regenButton, moveSpeedButton];
     }
         while (upgradesShown < upgradesToDisplay) {
-            console.log(upgradesShown)
             let randomUpgrade = Math.floor(Math.random() * buttonsToDisplay.length);
 
             if (buttonsToDisplay[randomUpgrade].hidden) {
@@ -1012,12 +1011,7 @@ export function activeButton(){
                             pwd.style.border  = ""
                         }, 2000);
                     }
-                    if(response.data != ""){
-                        localStorage.setItem("player_id", response.data[0]["id"])
-                        let play = document.getElementById("playButton")
-                        pwd.value = ""
-                        play.disabled = false
-                    }else {
+                    if(response.data == "Le compte n'existe pas encore"){
                         let params = new URLSearchParams({ route: "login", pseudo: pseudo.value, password: pwd.value });
                         let urlAvecParametres = `${apiURL}?${params}`;
 
@@ -1031,6 +1025,12 @@ export function activeButton(){
                         .catch(error => {
                             console.log("ertet")
                         });
+
+                    }else {
+                        localStorage.setItem("player_id", response.data[0]["id"])
+                        let play = document.getElementById("playButton")
+                        pwd.value = ""
+                        play.disabled = false
                     }
                 })
                 .catch(error => {
