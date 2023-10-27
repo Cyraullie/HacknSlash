@@ -723,6 +723,7 @@ export function createStartDialog (){
     let loginDiv = document.createElement("div")
     loginDiv.id = "loginDiv";
     loginDiv.style.marginTop = "10px";
+    loginDiv.style.display = "none"
     div4.appendChild(loginDiv)
 
     let loginInput = document.createElement("input")
@@ -747,6 +748,23 @@ export function createStartDialog (){
     loginButton.id = "loginButton"
     loginButton.textContent = "S'inscrire / Se connecter"
     loginDiv.appendChild(loginButton)
+
+    let logoutDiv = document.createElement("div")
+    logoutDiv.id = "logoutDiv";
+    logoutDiv.style.marginTop = "10px";
+    logoutDiv.style.display = "none"
+    div4.appendChild(logoutDiv)
+
+    let logoutButton = document.createElement("button")
+    logoutButton.id = "logoutButton"
+    logoutButton.textContent = "Se déconnecter"
+    logoutDiv.appendChild(logoutButton)
+
+    if(localStorage.getItem("player_id") == null){
+        loginDiv.style.display = "block"
+    } else {
+        logoutDiv.style.display = "block"
+    }
 
     let params = new URLSearchParams({ route: "scoreboard" });
     let urlAvecParametres = `${apiURL}?${params}`;
@@ -799,6 +817,28 @@ export function activeButton(){
     let resumeRealButton = document.getElementById("resumeRealButton")
     let successStartButton = document.getElementById("successStartButton")
     let successButton = document.getElementById("successButton")
+    let logoutButton = document.getElementById("logoutButton")
+
+    if(logoutButton !== null){
+        logoutButton.addEventListener("click", () => {         
+            localStorage.removeItem("player_name")      
+            localStorage.removeItem("player_id")
+
+            let loginDiv = document.getElementById("loginDiv")
+            let logoutDiv = document.getElementById("logoutDiv")
+            let welcome = document.getElementById("welcome")
+
+            if(localStorage.getItem("player_id") == null){
+                loginDiv.style.display = "block"
+                logoutDiv.style.display = "none"
+                welcome.style.display = "none"
+            } else {
+                logoutDiv.style.display = "block"
+                loginDiv.style.display = "none"
+                welcome.style.display = "block"
+            }
+        });
+    }
 
     if(logButton !== null){
         logButton.addEventListener("click", () => {         
@@ -1052,6 +1092,17 @@ export function activeButton(){
                             if(localStorage.getItem("player_name") != null){
                                 welcome.textContent = "Bienvenue " + localStorage.getItem("player_name");
                             }
+
+                            let loginDiv = document.getElementById("loginDiv")
+                            let logoutDiv = document.getElementById("logoutDiv")
+
+                            if(localStorage.getItem("player_id") == null){
+                                loginDiv.style.display = "block"
+                                logoutDiv.style.display = "none"
+                            } else {
+                                logoutDiv.style.display = "block"
+                                loginDiv.style.display = "none"
+                            }
                         })
                         .catch(error => {
                             console.log("ertet")
@@ -1067,6 +1118,17 @@ export function activeButton(){
                         let welcome = document.getElementById("welcome")
                         if(localStorage.getItem("player_name") != null){
                             welcome.textContent = "Bienvenue " + localStorage.getItem("player_name");
+                        }
+
+                        let loginDiv = document.getElementById("loginDiv")
+                        let logoutDiv = document.getElementById("logoutDiv")
+
+                        if(localStorage.getItem("player_id") == null){
+                            loginDiv.style.display = "block"
+                            logoutDiv.style.display = "none"
+                        } else {
+                            logoutDiv.style.display = "block"
+                            loginDiv.style.display = "none"
                         }
                     }
                 })

@@ -80,10 +80,10 @@ ENGINE = InnoDB;
 -- Insertition de succès
 -- -----------------------------------------------------
 
-INSERT INTO `success` (`id`, `name`, `description`, `objectif`, `img_path`) VALUES (NULL, 'Tourelle diff 1', 'Passer 50 vagues sans bouger', '50', 'full_heart.png');
-INSERT INTO `success` (`id`, `name`, `description`, `objectif`, `img_path`) VALUES (NULL, 'Tourelle diff 2', 'Passer 100 vagues sans bouger', '100', 'full_heart.png');
-INSERT INTO `success` (`id`, `name`, `description`, `objectif`, `img_path`) VALUES (NULL, 'Tourelle diff 3', 'Passer 150 vagues sans bouger', '150', 'full_heart.png');
-INSERT INTO `success` (`id`, `name`, `description`, `objectif`, `img_path`) VALUES (NULL, 'Tourelle diff 4', 'Passer 200 vagues sans bouger', '200', 'full_heart.png');
+INSERT INTO `success` (`id`, `name`, `description`, `objectif`, `img_path`) VALUES (NULL, 'Tourelle diff 1', 'Passer 50 vagues sans bouger', '50', 'Achivements/NoMove/turret1.png');
+INSERT INTO `success` (`id`, `name`, `description`, `objectif`, `img_path`) VALUES (NULL, 'Tourelle diff 2', 'Passer 100 vagues sans bouger', '100', 'Achivements/NoMove/turret2.png');
+INSERT INTO `success` (`id`, `name`, `description`, `objectif`, `img_path`) VALUES (NULL, 'Tourelle diff 3', 'Passer 150 vagues sans bouger', '150', 'Achivements/NoMove/turret3.png');
+INSERT INTO `success` (`id`, `name`, `description`, `objectif`, `img_path`) VALUES (NULL, 'Tourelle diff 4', 'Passer 200 vagues sans bouger', '200', 'Achivements/NoMove/turret4.png');
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
