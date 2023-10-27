@@ -1,15 +1,19 @@
 // game.js
 
-import { windowHeight, windowWidth } from './data.js';
+import { apiURL, windowHeight, windowWidth } from './data.js';
 import { createPlayer, } from './player.js';
 import { createMonster } from './monster.js';
 import { checkCollisionWithMonsters, startShooting } from './projectile.js';
-import { displayGameOver, displayUpgrade, createUpgradeDialog, createGameOverDialog, createEchapDialog, createOptionsDialog, displayEscape, activeButton, createStartDialog } from './menu.js';
+import { displayGameOver, displayUpgrade, createUpgradeDialog, createGameOverDialog, createEchapDialog, createOptionsDialog, displayEscape, activeButton, createStartDialog, createSuccessDialog } from './menu.js';
 import { Howl } from 'howler';
+import axios from 'axios';
+
+const packageJson = require('../../package.json');
 
 let bossSound
 let backgroundSound;
 
+//TODO mettre une vrai image pour les monstres et le joueur
 //TODO bille multi color :)
 //TODO booster le boss au hormone
 //TODO upgrade damage/hp/speed of monster
@@ -18,22 +22,24 @@ let backgroundSound;
 //TODO ajouter des sons
 //TODO add difficulty
 //TODO install phaser ?????
+
 //TODO ajout de succés (no move challenge (si tu bouge une fois le défi n'est plus réalisabel))
 //TODO ajouter un bouton pour voir ses succès qui seront stocké dans la base de donnée
 //TODO creer des succés (db ?)
-//TODO empecher de rentrer des scores a la mains tel que les deux glands
-//TODO inscriptions complète ? login + password ?
-//TODO ajout de l'upgrade de la vitesse du perso
-//TODO remette a false les movement quand il y a un echap
-//TODO bug d'attack speed
+
 //TODO mettre des paterne pour des boss ()
-//TODO mettre les hp avec une barre de pv
-//TODO ralentissement vers la vagues 450 environs et toujours plus xD
-//TODO voir s'il est possible que les gens puissent jouer depuis l'app a distance !!!
+
+//TODO mettre les succès dans le changement de thème :)
+
+//TODO voir pour pouvoir faire une maj depuis l'app (utiliser le serveur docker pour ça ?)
+
+//BUG ralentissement vers la vagues 450 environs et toujours plus xD
+//BUG d'attack speed
 
 let nbBoss = 1; //nombre de boss fait
 let numMonstersAtStart = 3;
 var numVague = 1;
+var numVagueNoMove = 0;
 let player;
 var map = document.getElementById("map");
 var game = document.getElementById("game");
@@ -55,7 +61,18 @@ let isPaused = false;
 
 let bossTime = false;
 
-export function initializeGameData() {    
+export function initializeGameData() {
+    
+    // Vérifie si c'est la première installation
+    if (localStorage.getItem('version') != packageJson.version) {
+        // Supprime toutes les données du localStorage
+        localStorage.clear();
+
+        // Marque que l'installation a eu lieu
+        localStorage.setItem('version', packageJson.version);
+    }
+
+  
     game.dataset.isGamePaused = false; 
     game.dataset.isUpdated = false;
     if(localStorage.getItem("theme") != null){
@@ -113,6 +130,8 @@ export function initializeGameData() {
     createStartDialog();
 
     createGameOverDialog();
+
+    createSuccessDialog();
 
     createUpgradeDialog();
 
@@ -253,6 +272,8 @@ export function checkTheme() {
     let damageText = document.getElementById("damageText");
     let tabContent = Array.from(document.getElementsByClassName("tab-content"))
     let tabControl = Array.from(document.getElementsByClassName("tab-button"))
+    let successDivs = Array.from(document.getElementsByClassName("successDiv"))
+    let achivement = document.getElementById("achivement");
 
     if(localStorage.getItem("theme") != null){
         game.dataset.theme = localStorage.getItem("theme")
@@ -266,11 +287,17 @@ export function checkTheme() {
         resumeText.style.color = "white"
         damageText.style.color = "white"
         pvText.style.color = "white"
+        achivement.style.color = "white"
 
         Array.from(dialogs).forEach(dialog => {
             dialog.style.backgroundColor = "#666666"
             dialog.style.color = "#ffffff"
         })
+
+        /*successDivs.forEach(successDiv => {
+            successDiv.style.backgroundColor = "#666666"
+            successDiv.style.color = "#ffffff"
+        })*/
 
         buttons.forEach(button => {
             button.style.backgroundColor = "#444444"
@@ -297,11 +324,17 @@ export function checkTheme() {
         resumeText.style.color = "black"
         damageText.style.color = "black"
         pvText.style.color = "black"
+        achivement.style.color = "black"
 
         Array.from(dialogs).forEach(dialog => {
             dialog.style.backgroundColor = "#ffffff"
             dialog.style.color = "black"
         })
+
+        /*successDivs.forEach(successDiv => {
+            successDiv.style.backgroundColor = "#ffffff"
+            successDiv.style.color = "black"
+        })*/
 
         buttons.forEach(button => {
             button.style.backgroundColor = "white"
@@ -425,6 +458,47 @@ function spawnMonsters() {
     
 }
 
+function checkSuccess() {
+    let achivement = document.getElementById("achivement");
+    let noMove = numVagueNoMove / 50
+    
+    if(noMove < 5){
+        let params = new URLSearchParams({ route: "success", player_id: localStorage.getItem("player_id")});
+        let urlAvecParametres = `${apiURL}?${params}`;
+        axios.get(urlAvecParametres)
+        .then(response => {
+            console.log(response.data)
+    
+            if(response.data == ""){
+                let params = new URLSearchParams({ route: "achivement", player_id: localStorage.getItem("player_id"), success_id: noMove });
+                let urlAvecParametres = `${apiURL}?${params}`;
+    
+                axios.get(urlAvecParametres)
+                .then(response => {
+                    achivement.textContent = "Tourelle Diff " + noMove
+                    achivement.style.display = "block"
+                    achivement.classList.add("achivement-animation");
+    
+    
+                    setTimeout(() => {
+                        achivement.style.display = "none"
+                    }, 5000);
+                    console.log(response.data)
+                })
+                .catch(error => {
+                    console.log("ertet")
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Erreur :', error);
+        });
+    }
+    
+            
+    
+}
+
 function spawnBoss() {
     
     backgroundSound.stop();
@@ -482,10 +556,16 @@ function gameLoop() {
             let vagues = document.getElementById("vagues");
             vagues.textContent = "Vagues " + (numVague);              
         }
+
+        if(JSON.parse(player.dataset.movingUp) || JSON.parse(player.dataset.movingRight) || JSON.parse(player.dataset.movingLeft) || JSON.parse(player.dataset.movingDown)){
+            numVagueNoMove = 0;
+        }
         
         if (monsters.length === 0 && !isUpdated) {
-            console.log("newVague")
             numVague++;
+            numVagueNoMove++;
+            checkSuccess()
+            console.log("nombre de vague sans bouger : " + numVagueNoMove)
             let projectiles = document.querySelectorAll(".projectile")
 
             projectiles.forEach(projectile => {

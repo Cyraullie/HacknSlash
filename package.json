@@ -4,7 +4,7 @@
   "description": "little game on JS",
   "main": "main.js",
   "scripts": {
-    "build": "electron-builder",
+    "build": "npx webpack --config webpack.config.js && electron-builder",
     "start": "npx webpack --config webpack.config.js && electron ."
   },
   "repository": {
@@ -26,10 +26,11 @@
   },
   "dependencies": {
     "axios": "^1.5.1",
+    "electron-updater": "^6.1.4",
     "howler": "^2.2.4"
   },
   "build": {
-    "appId": "com.example.myapp",
+    "appId": "com.mineteck.game",
     "productName": "game",
     "directories": {
       "output": "dist"
@@ -40,8 +41,10 @@
     },
     "files": [
       "**/*",
-      "!node_modules/**/*",
       "!db"
-    ]
+    ],
+    "squirrelWindows": {
+      "remoteReleases": "http://178.211.245.23:8180/dist/latest.yml"
+    }
   }
 }

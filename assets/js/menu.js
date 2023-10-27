@@ -21,40 +21,30 @@ export function displayUpgrade() {
     let regenButton = document.getElementById("regenButton")
     let damageButton = document.getElementById("damageButton")
     let lifeButton = document.getElementById("lifeButton")
-    let upgrade = 0
-    if(player.dataset.fireRate > 100){
-        upgrade = Math.floor(Math.random() * 4)
-    }
-    
+    let moveSpeedButton = document.getElementById("moveSpeedButton")
+    let upgradesToDisplay = 3; // Nombre d'améliorations à afficher
+    let upgradesShown = 0; // Nombre d'améliorations actuellement affichées
+    let buttonsToDisplay = [];
+    let buttonsToDisplayToHidden = [lifeButton, damageButton, regenButton, fireRateButton, moveSpeedButton];
 
-    switch (upgrade) {
-        case 0 : 
-            lifeButton.hidden = false;
-            damageButton.hidden = false;
-            regenButton.hidden = false;
-            fireRateButton.hidden = true;
-            break;
-        case 1 : 
-            lifeButton.hidden = false;
-            damageButton.hidden = false;
-            regenButton.hidden = true;
-            fireRateButton.hidden = false;
-            break;
-        case 2 : 
-            lifeButton.hidden = false;
-            damageButton.hidden = true;
-            regenButton.hidden = false;
-            fireRateButton.hidden = false;
-            break;
-        case 3 : 
-            lifeButton.hidden = true;
-            damageButton.hidden = false;
-            regenButton.hidden = false;
-            fireRateButton.hidden = false;
-            break;
-
+    for(let i = 0; i < buttonsToDisplayToHidden.length; i++){
+        buttonsToDisplayToHidden[i].hidden = true;
     }
 
+    if (parseInt(player.dataset.fireRate) > 100) {
+        buttonsToDisplay = [lifeButton, damageButton, regenButton, fireRateButton, moveSpeedButton];
+    } else {
+        buttonsToDisplay = [lifeButton, damageButton, regenButton, moveSpeedButton];
+    }
+        while (upgradesShown < upgradesToDisplay) {
+            let randomUpgrade = Math.floor(Math.random() * buttonsToDisplay.length);
+
+            if (buttonsToDisplay[randomUpgrade].hidden) {
+                // Cette amélioration n'est pas déjà affichée, on l'affiche
+                buttonsToDisplay[randomUpgrade].hidden = false;
+                upgradesShown++;
+            }
+        }
 
     dialog.style.display = "block";
 }
@@ -177,6 +167,7 @@ export function createUpgradeDialog (){
     buttonLife.id = "lifeButton"
     buttonLife.classList.add("upgradeButton")
     buttonLife.textContent = "+1 vie"
+    buttonLife.hidden = true
     buttonLife.setAttribute("data-selected", "false");
     buttonLife.appendChild(imgLife)
     div4.appendChild(buttonLife)  
@@ -187,6 +178,7 @@ export function createUpgradeDialog (){
     buttonDamage.id = "damageButton"
     buttonDamage.classList.add("upgradeButton")
     buttonDamage.textContent = "+1 dégat"
+    buttonDamage.hidden = true
     buttonDamage.setAttribute("data-selected", "false");
     buttonDamage.appendChild(imgDamage)
     div4.appendChild(buttonDamage)
@@ -197,21 +189,34 @@ export function createUpgradeDialog (){
     buttonRegen.id = "regenButton"
     buttonRegen.classList.add("upgradeButton")
     buttonRegen.textContent = "full regen"
+    buttonRegen.hidden = true
     buttonRegen.setAttribute("data-selected", "false");
     buttonRegen.appendChild(imgRegen)
     div4.appendChild(buttonRegen)
 
     let buttonFireRate = document.createElement("button")
     var imgFireRate = document.createElement("img");
-    imgFireRate.src = "./assets/images/fireRate.png";
+    imgFireRate.src = "./assets/images/fire_rate.png";
     buttonFireRate.id = "fireRateButton"
     buttonFireRate.classList.add("upgradeButton")
     buttonFireRate.textContent = "amélio cadence"
+    buttonFireRate.hidden = true
     buttonFireRate.setAttribute("data-selected", "false");
     buttonFireRate.appendChild(imgFireRate)
     div4.appendChild(buttonFireRate)
 
-    let buttons = [buttonLife, buttonDamage, buttonRegen, buttonFireRate];
+    let buttonMoveSpeed = document.createElement("button")
+    var imgMoveSpeed = document.createElement("img");
+    imgMoveSpeed.src = "./assets/images/move_speed.png";
+    buttonMoveSpeed.id = "moveSpeedButton"
+    buttonMoveSpeed.classList.add("upgradeButton")
+    buttonMoveSpeed.textContent = "amélio ms"
+    buttonMoveSpeed.hidden = true
+    buttonMoveSpeed.setAttribute("data-selected", "false");
+    buttonMoveSpeed.appendChild(imgMoveSpeed)
+    div4.appendChild(buttonMoveSpeed)
+
+    let buttons = [buttonLife, buttonDamage, buttonRegen, buttonFireRate, buttonMoveSpeed];
 
     buttons.forEach((button) => {
         button.addEventListener("click", () => {
@@ -277,6 +282,12 @@ export function createEchapDialog (){
     options.textContent = "Options"
     div4.appendChild(options)
 
+    
+    let success = document.createElement("button")
+    success.id = "successButton"
+    success.textContent = "Succès"
+    div4.appendChild(success)
+
     customDialog.style.width = "250px"
 
     game.appendChild(customDialog);
@@ -303,6 +314,37 @@ export function createEchapDialog (){
     resumeText.style.left = "150px";
     resumeText.style.top = (windowHeight - 40) + "px";
     resumeDiv.appendChild(resumeText)
+
+    customDialog.style.display = "none";
+}
+
+export function createSuccessDialog (){
+    customDialog = document.getElementById("success");
+    let div1 = document.createElement("div")
+    let titleElement = document.createElement("h1");
+
+    titleElement.textContent = "Succès";
+    let cross = document.createElement("img");
+    cross.id = "crossSuccess"
+    cross.src = "./assets/images/cross.png";
+
+    customDialog.appendChild(div1)
+    div1.appendChild(titleElement)
+    div1.appendChild(cross)
+    
+
+    let div4 = document.createElement("div")
+    div4.id = "successDiv";
+    div4.style.height = "400px"
+    div4.style.width = "500px"
+    div4.style.overflow = "auto";
+    div4.style.margin = "auto"
+
+    customDialog.appendChild(div4)
+
+    customDialog.style.width = "630px"
+
+    game.appendChild(customDialog);
 
     customDialog.style.display = "none";
 }
@@ -643,11 +685,19 @@ export function createStartDialog (){
     customDialog = document.getElementById("start");
     let div1 = document.createElement("div")
     let titleElement = document.createElement("h1");
-
     titleElement.textContent = "The Game";
 
-    customDialog.appendChild(div1)
     div1.appendChild(titleElement)
+    customDialog.appendChild(div1)
+    let welcome = document.createElement("h3");
+    welcome.id = "welcome"
+    
+    div1.appendChild(welcome)
+
+    if(localStorage.getItem("player_name") != null){
+        welcome.textContent = "Bienvenue " + localStorage.getItem("player_name");
+    }
+   
     
     let div4 = document.createElement("div")
     div4.id = "menuDiv";
@@ -666,9 +716,15 @@ export function createStartDialog (){
     options.textContent = "Options"
     div4.appendChild(options)
 
+    let success = document.createElement("button")
+    success.id = "successStartButton"
+    success.textContent = "Succès"
+    div4.appendChild(success)
+
     let loginDiv = document.createElement("div")
     loginDiv.id = "loginDiv";
     loginDiv.style.marginTop = "10px";
+    loginDiv.style.display = "none"
     div4.appendChild(loginDiv)
 
     let loginInput = document.createElement("input")
@@ -677,29 +733,44 @@ export function createStartDialog (){
     loginInput.style.width = "190px"
     loginInput.style.marginTop = "20px"
     loginInput.placeholder = "Pseudo"
-    if(localStorage.getItem("pseudo") != null){
-        loginInput.value = localStorage.getItem("pseudo")
-
-        let params = new URLSearchParams({ route: "player", pseudo: localStorage.getItem("pseudo")});
-        let urlAvecParametres = `${apiURL}?${params}`;
-        axios.get(urlAvecParametres)
-        .then(response => {
-            console.log(response)
-            if(response.data != ""){
-                localStorage.setItem("player_id", response.data[0]["id"])
-            }
-        })
-        .catch(error => {
-            console.error('Erreur :', error);
-        });
-    }
 
     loginDiv.appendChild(loginInput)
 
+    let passwordInput = document.createElement("input")
+    passwordInput.id = "passwordInput"
+    passwordInput.type = "password"
+    passwordInput.style.width = "190px"
+    passwordInput.style.marginTop = "10px"
+    passwordInput.placeholder = "Mot de passe"
+
+    loginDiv.appendChild(passwordInput)
+
     let loginButton = document.createElement("button")
     loginButton.id = "loginButton"
-    loginButton.textContent = "S'inscrire / Se connecter"
+    loginButton.textContent = "Se connecter"
     loginDiv.appendChild(loginButton)
+
+    let registerButton = document.createElement("button")
+    registerButton.id = "registerButton"
+    registerButton.textContent = "S'inscrire"
+    loginDiv.appendChild(registerButton)
+
+    let logoutDiv = document.createElement("div")
+    logoutDiv.id = "logoutDiv";
+    logoutDiv.style.marginTop = "10px";
+    logoutDiv.style.display = "none"
+    div4.appendChild(logoutDiv)
+
+    let logoutButton = document.createElement("button")
+    logoutButton.id = "logoutButton"
+    logoutButton.textContent = "Se déconnecter"
+    logoutDiv.appendChild(logoutButton)
+
+    if(localStorage.getItem("player_id") == null){
+        loginDiv.style.display = "block"
+    } else {
+        logoutDiv.style.display = "block"
+    }
 
     let params = new URLSearchParams({ route: "scoreboard" });
     let urlAvecParametres = `${apiURL}?${params}`;
@@ -747,8 +818,34 @@ export function activeButton(){
     let playButton = document.getElementById("playButton")
     let optionStartButton = document.getElementById("optionStartButton")
     let crossButton = document.getElementById("cross")
+    let crossSuccessButton = document.getElementById("crossSuccess")
     let loginButton = document.getElementById("loginButton")
+    let registerButton = document.getElementById("registerButton")
     let resumeRealButton = document.getElementById("resumeRealButton")
+    let successStartButton = document.getElementById("successStartButton")
+    let successButton = document.getElementById("successButton")
+    let logoutButton = document.getElementById("logoutButton")
+
+    if(logoutButton !== null){
+        logoutButton.addEventListener("click", () => {         
+            localStorage.removeItem("player_name")      
+            localStorage.removeItem("player_id")
+
+            let loginDiv = document.getElementById("loginDiv")
+            let logoutDiv = document.getElementById("logoutDiv")
+            let welcome = document.getElementById("welcome")
+
+            if(localStorage.getItem("player_id") == null){
+                loginDiv.style.display = "block"
+                logoutDiv.style.display = "none"
+                welcome.style.display = "none"
+            } else {
+                logoutDiv.style.display = "block"
+                loginDiv.style.display = "none"
+                welcome.style.display = "block"
+            }
+        });
+    }
 
     if(logButton !== null){
         logButton.addEventListener("click", () => {         
@@ -824,7 +921,8 @@ export function activeButton(){
             let damageButton = document.getElementById("damageButton")
             let regenButton = document.getElementById("regenButton")
             let fireRateButton = document.getElementById("fireRateButton")
-
+            let moveSpeedButton = document.getElementById("moveSpeedButton")
+            
             if (lifeButton.getAttribute("data-selected") === "true") {
                 let player = document.getElementById("player")
  
@@ -866,6 +964,17 @@ export function activeButton(){
                 
                 regenButton.setAttribute("data-selected", "false");
                 regenButton.classList.remove("selected");
+                game.dataset.isGamePaused = false;
+                document.getElementById("upgrade").style.display = "none";
+            }
+
+            if (moveSpeedButton.getAttribute("data-selected") === "true") {
+                let player = document.getElementById("player")
+
+                player.dataset.speed = parseInt(player.dataset.speed) + 1;
+                
+                moveSpeedButton.setAttribute("data-selected", "false");
+                moveSpeedButton.classList.remove("selected");
                 game.dataset.isGamePaused = false;
                 document.getElementById("upgrade").style.display = "none";
             }
@@ -925,17 +1034,27 @@ export function activeButton(){
     if(crossButton !== null){
         crossButton.addEventListener("click", () => {
             let dialog = document.getElementById("options")
-            let upButton = document.getElementById("upButton");
-            let downButton = document.getElementById("downButton");
-            let leftButton = document.getElementById("leftButton");
-            let rightButton = document.getElementById("rightButton");
+            dialog.style.display = "none"
+        });
+    }
+
+    if(crossSuccessButton !== null){
+        crossSuccessButton.addEventListener("click", () => {
+            let dialog = document.getElementById("success")
+            
+            let divSuccess = document.getElementById("successDiv")
+            divSuccess.remove()
+
+            let successDiv = document.createElement("div")
+            successDiv.id = "successDiv"
+            
+            successDiv.style.height = "400px"
+            successDiv.style.width = "500px"
+            successDiv.style.overflow = "auto";
+            successDiv.style.margin = "auto"
+            dialog.appendChild(successDiv)
 
             dialog.style.display = "none"
-
-            upButton.disabled = false;
-            downButton.disabled = false;
-            leftButton.disabled = false;
-            rightButton.disabled = false;
         });
     }
 
@@ -943,38 +1062,56 @@ export function activeButton(){
         loginButton.addEventListener("click", () => {
             
             let pseudo = document.getElementById("loginInput");
-
-            if(pseudo.value == ""){
-                pseudo.style.color  = "red"
+            let pwd = document.getElementById("passwordInput");
+            
+            if(pseudo.value == "" || pwd.value == ""){
+                pseudo.style.border  = "red 1px solid"
+                pwd.style.border  = "red 1px solid"
                 setTimeout(() => {
-                    pseudo.style.color  = "gray"
+                    pseudo.style.border  = ""
+                    pwd.style.border  = ""
                 }, 2000);
             }else {
-                localStorage.setItem("pseudo", pseudo.value)
+                //localStorage.setItem("pseudo", pseudo.value)
 
-                let params = new URLSearchParams({ route: "player", pseudo: pseudo.value});
+                let params = new URLSearchParams({ route: "login", pseudo: pseudo.value, password: pwd.value});
                 let urlAvecParametres = `${apiURL}?${params}`;
                 axios.get(urlAvecParametres)
                 .then(response => {
-                    console.log(response)
-                    if(response.data != ""){
-                        localStorage.setItem("player_id", response.data[0]["id"])
-                        let play = document.getElementById("playButton")
-                        play.disabled = false
-                        
-                    }else {
-                        let params = new URLSearchParams({ route: "login", pseudo: pseudo.value });
-                        let urlAvecParametres = `${apiURL}?${params}`;
+                    console.log(response.data)
 
-                        axios.get(urlAvecParametres)
-                        .then(response => {
-                            localStorage.setItem("player_id", response.data[0])
-                            let play = document.getElementById("playButton")
-                            play.disabled = false
-                        })
-                        .catch(error => {
-                            console.log("ertet")
-                        });
+                    if(response.data == "Identifiant ou mot de passe incorrect"){
+                        pseudo.style.border  = "red 1px solid"
+                        pwd.style.border  = "red 1px solid"
+                        setTimeout(() => {
+                            pseudo.style.border  = ""
+                            pwd.style.border  = ""
+                        }, 2000);
+                    }
+                    if(response.data != "Le compte n'existe pas encore"){
+                        localStorage.setItem("player_id", response.data[0]["id"])
+                        localStorage.setItem("player_name", pseudo.value)
+                        let play = document.getElementById("playButton")
+                        pwd.value = ""
+                        play.disabled = false
+
+                        let welcome = document.getElementById("welcome")
+                        if(localStorage.getItem("player_name") != null){
+                            welcome.textContent = "Bienvenue " + localStorage.getItem("player_name");
+                        }
+
+                        let loginDiv = document.getElementById("loginDiv")
+                        let logoutDiv = document.getElementById("logoutDiv")
+
+                        if(localStorage.getItem("player_id") == null){
+                            loginDiv.style.display = "block"
+                            logoutDiv.style.display = "none"
+                            welcome.style.display = "none"
+                        } else {
+                            logoutDiv.style.display = "block"
+                            loginDiv.style.display = "none"
+                            welcome.style.display = "block"
+                        }
                     }
                 })
                 .catch(error => {
@@ -985,5 +1122,137 @@ export function activeButton(){
         });
     }
 
+    if(registerButton !== null){
+        registerButton.addEventListener("click", () => {
+            let params = new URLSearchParams({ route: "register", pseudo: pseudo.value, password: pwd.value });
+            let urlAvecParametres = `${apiURL}?${params}`;
 
+            axios.get(urlAvecParametres)
+            .then(response => {
+                localStorage.setItem("player_name", pseudo.value)
+                localStorage.setItem("player_id", response.data[0])
+                let play = document.getElementById("playButton")
+                pwd.value = ""
+                play.disabled = false
+
+                let welcome = document.getElementById("welcome")
+                if(localStorage.getItem("player_name") != null){
+                    welcome.textContent = "Bienvenue " + localStorage.getItem("player_name");
+                }
+
+                let loginDiv = document.getElementById("loginDiv")
+                let logoutDiv = document.getElementById("logoutDiv")
+
+                if(localStorage.getItem("player_id") == null){
+                    loginDiv.style.display = "block"
+                    logoutDiv.style.display = "none"
+                    welcome.style.display = "none"
+                } else {
+                    logoutDiv.style.display = "block"
+                    loginDiv.style.display = "none"
+                    welcome.style.display = "block"
+                }
+            })
+            .catch(error => {
+                console.log("ertet")
+            });
+        })
+    }
+
+    if(successButton !== null){
+        successButton.addEventListener("click", () => {
+            let customDialog = document.getElementById("success");
+            updateSuccess()
+            customDialog.style.display = "block";
+        });
+    }
+
+    if(successStartButton !== null){
+        successStartButton.addEventListener("click", () => {
+            let customDialog = document.getElementById("success");
+            updateSuccess()
+            customDialog.style.display = "block";
+        });
+    }
+
+}
+
+function updateSuccess () {
+
+    let divSuccess = document.getElementById("successDiv")
+    let params = new URLSearchParams({ route: "all_success" });
+    let urlAvecParametres = `${apiURL}?${params}`;
+
+    axios.get(urlAvecParametres)
+    .then(response => {
+        if(Array.isArray(response.data)){
+            let allSuccess = response.data;
+            console.log(allSuccess)
+            if(allSuccess != ""){
+                let params = new URLSearchParams({ route: "success", player_id: localStorage.getItem("player_id")});
+                let urlAvecParametres = `${apiURL}?${params}`;
+                axios.get(urlAvecParametres)
+                .then(response => {
+                    console.log(response.data)
+                    console.log("response.data")
+                    allSuccess.forEach(success => {
+                        let successDiv = document.createElement("div")
+                        successDiv.id = "success"+success["id"];
+                        successDiv.classList.add("successDiv");
+                        
+                        divSuccess.appendChild(successDiv)
+
+                        if(localStorage.getItem("theme") == "light" || localStorage.getItem("theme") == null){
+                            successDiv.style.backgroundColor = "#f0f0f0"
+                        } else if(localStorage.getItem("theme") == "dark"){
+                            successDiv.style.backgroundColor = "#333"
+                        }
+
+                        let successImg = document.createElement("img")
+                        successImg.id = "successImg"+success["id"];
+                        successImg.classList.add("successImg")
+                        successImg.src = "./assets/images/" + success["img_path"];
+
+                        let successTextDiv = document.createElement("div")
+                        successTextDiv.classList.add("successText")
+
+                        let successTitle = document.createElement("p")
+                        successTitle.id = "successTitle"+success["id"];
+                        successTitle.textContent = success["name"]
+                        successTitle.style.fontSize = "1.5em"
+                        successTitle.style.fontWeight = "bold"
+                        successTitle.style.textAlign = "left"
+
+                        
+
+                        let successDescription = document.createElement("p")
+                        successDescription.id = "successDescription"+success["id"];
+                        successDescription.textContent = success["description"]
+                        
+                        if(response.data != ""){
+                            response.data.forEach(successAchieved => {
+                                if(successAchieved["id"] == success["id"]){
+                                    successImg.classList.add("successAchieved")
+                                }
+                                else{
+                                    successImg.classList.add("successNotAchieved")
+                                }
+                            })
+                        } else {
+                            successImg.classList.add("successNotAchieved")
+                        }
+                        
+                        successDiv.appendChild(successImg)
+                        successDiv.appendChild(successTextDiv)
+                        successTextDiv.appendChild(successTitle)
+                        successTextDiv.appendChild(successDescription)
+                       
+                    })                    
+                })
+                .catch(error => {
+                    console.error('Erreur :', error);
+                });
+            }
+        }
+    })
 }

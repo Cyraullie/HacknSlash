@@ -1,20 +1,24 @@
-const { app, BrowserWindow, Menu, screen  } = require('electron');
-const path = require('path');
 
-app.on('ready', () => {
+const { app, BrowserWindow, Menu, screen, dialog, ipcMain, autoUpdater  } = require('electron');
+
+const path = require('path');
+//autoUpdater.setFeedURL('http://178.211.245.23:8180/dist/latest.yml')
+let mainWindow;
+
+function createWindow () {
   const primaryDisplay = screen.getPrimaryDisplay();
   const { width, height } = primaryDisplay.workAreaSize;
 
-  let mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: width,
     height: height,
     resizable: false,
     icon: path.join(__dirname, 'Logo_M.ico'), 
     webPreferences: {
-      nodeIntegration: true
+      nodeIntegration: true,
+      contextIsolation: false,
     }
   });
-
   mainWindow.webContents.session.webRequest.onBeforeSendHeaders((details, callback) => {
     details.requestHeaders['Origin'] = '*';
     callback({ cancel: false, requestHeaders: details.requestHeaders });
@@ -28,41 +32,31 @@ app.on('ready', () => {
   mainWindow.on('will-move', (e) => {
     e.preventDefault();
   });
-  
-  // pour le dev
+
+  //pour le dev
   //mainWindow.webContents.openDevTools();
-  let customMenu = Menu.buildFromTemplate([
-    /*{
-      label: 'Custom Menu', // Vous pouvez personnaliser le nom du menu
-      submenu: [
-        {
-          label: 'Item 1',
-          click: () => {
-            // Action à effectuer lorsque "Item 1" est cliqué
-          },
-        },
-        {
-          label: 'Item 2',
-          click: () => {
-            // Action à effectuer lorsque "Item 2" est cliqué
-          },
-        },
-      ],
-    },*/
-  ]);
+  let customMenu = Menu.buildFromTemplate([]);
 
   Menu.setApplicationMenu(customMenu);
-
   // Gérez l'événement de fermeture de la fenêtre
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
+}
+
+app.on('ready', () => {
+  createWindow();
 });
 
-  //mainWindow.maximize();
-
   
+app.on('window-all-closed', function () {
+  if (process.platform !== 'darwin') {
+    app.quit();
+  }
+});
 
-
-
-
+app.on('activate', function () {
+  if (mainWindow === null) {
+    createWindow();
+  }
+});
