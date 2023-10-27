@@ -29,7 +29,10 @@ let backgroundSound;
 
 //TODO bug d'attack speed
 //TODO mettre des paterne pour des boss ()
-//TODO pouvoir se déconnecter 
+
+//TODO mettre les succès dans le changement de thème :)
+
+//TODO voir pour pouvoir faire une maj depuis l'app (utiliser le serveur docker pour ça ?)
 
 //BUG ralentissement vers la vagues 450 environs et toujours plus xD
 
