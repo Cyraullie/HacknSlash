@@ -1,53 +1,60 @@
 
-const { app, BrowserWindow, Menu, screen, dialog, ipcMain, autoUpdater  } = require('electron');
-
+const { app, BrowserWindow, Menu, screen, ipcMain, ipcRenderer  } = require('electron');
+const { autoUpdater, AppUpdater } = require("electron-updater")
+const MainScreen = require("./mainScreen");
 const path = require('path');
+
+
+
 //autoUpdater.setFeedURL('http://178.211.245.23:8180/dist/latest.yml')
 let mainWindow;
 
+autoUpdater.autoDownload = false;
+autoUpdater.autoInstallOnAppQuit = true;
+
 function createWindow () {
-  const primaryDisplay = screen.getPrimaryDisplay();
-  const { width, height } = primaryDisplay.workAreaSize;
-
-  mainWindow = new BrowserWindow({
-    width: width,
-    height: height,
-    resizable: false,
-    icon: path.join(__dirname, 'Logo_M.ico'), 
-    webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false,
-    }
-  });
-  mainWindow.webContents.session.webRequest.onBeforeSendHeaders((details, callback) => {
-    details.requestHeaders['Origin'] = '*';
-    callback({ cancel: false, requestHeaders: details.requestHeaders });
-  });
-
-  // Chargez votre contenu web
-  mainWindow.loadFile('index.html');
-
-  mainWindow.maximize();
-
-  mainWindow.on('will-move', (e) => {
-    e.preventDefault();
-  });
-
-  //pour le dev
-  //mainWindow.webContents.openDevTools();
-  let customMenu = Menu.buildFromTemplate([]);
-
-  Menu.setApplicationMenu(customMenu);
-  // Gérez l'événement de fermeture de la fenêtre
-  mainWindow.on('closed', () => {
-    mainWindow = null;
-  });
+  mainWindow = new MainScreen();
 }
 
-app.on('ready', () => {
+app.whenReady().then(() => {
   createWindow();
+
+  app.on('activate', function () {
+    if (mainWindow === null) {
+      createWindow();
+    }
+  });
+
+  /*autoUpdater.checkForUpdates();
+  mainWindow.showMessage(`Checking for updates. Current version ${app.getVersion()}`);*/
 });
 
+/*New Update Available*/
+/*autoUpdater.on("update-available", (info) => {
+  mainWindow.showMessage(`Update available. Current version ${app.getVersion()}`);
+  let pth = autoUpdater.downloadUpdate();
+  mainWindow.showMessage(pth);
+});
+
+autoUpdater.on("update-not-available", (info) => {
+  mainWindow.showMessage(`No update available. Current version ${app.getVersion()}`);
+});*/
+
+/*Download Completion Message*/
+/*autoUpdater.on("update-downloaded", (info) => {
+  mainWindow.showMessage(`Update downloaded. Current version ${app.getVersion()}`);
+});
+
+autoUpdater.on("error", (info) => {
+  mainWindow.showMessage(info);
+});*/
+
+
+
+
+process.on("uncaughtException", function (err) {
+  console.log(err);
+});
   
 app.on('window-all-closed', function () {
   if (process.platform !== 'darwin') {
@@ -55,8 +62,4 @@ app.on('window-all-closed', function () {
   }
 });
 
-app.on('activate', function () {
-  if (mainWindow === null) {
-    createWindow();
-  }
-});
+

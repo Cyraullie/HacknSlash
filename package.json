@@ -1,15 +1,11 @@
 {
   "name": "hacknslash",
-  "version": "1.0.0",
+  "version": "1.5.5",
   "description": "little game on JS",
   "main": "main.js",
   "scripts": {
     "build": "npx webpack --config webpack.config.js && electron-builder",
     "start": "npx webpack --config webpack.config.js && electron ."
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Cyraullie/HacknSlash.git"
   },
   "author": "CyrilGoldenschue",
   "license": "ISC",
@@ -28,6 +24,11 @@
     "axios": "^1.5.1",
     "electron-updater": "^6.1.4",
     "howler": "^2.2.4"
+  },
+  "repository": "https://github.com/Cyraullie/HacknSlash",
+  "publish" : {
+    "provider" : "github",
+    "releaseType" : "release"
   },
   "build": {
     "appId": "com.mineteck.game",
