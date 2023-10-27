@@ -26,10 +26,12 @@ let backgroundSound;
 //TODO ajout de succés (no move challenge (si tu bouge une fois le défi n'est plus réalisabel))
 //TODO ajouter un bouton pour voir ses succès qui seront stocké dans la base de donnée
 //TODO creer des succés (db ?)
+//TODO le screen d'affichage apparait derriere le menu quand on clique depuis le menu echap
+//TODO erreur sur la route achivement a chaque vague passée ?
 
 //TODO mettre des paterne pour des boss ()
 
-//TODO mettre les succès dans le changement de thème :)
+//TODO faire un check de tout les pseudos en minuscule ou en maj 
 
 //TODO voir pour pouvoir faire une maj depuis l'app (utiliser le serveur docker pour ça ?)
 
@@ -460,9 +462,11 @@ function spawnMonsters() {
 
 function checkSuccess() {
     let achivement = document.getElementById("achivement");
-    let noMove = numVagueNoMove / 50
+    let noMove = Math.floor(numVagueNoMove / 50)
     
-    if(noMove < 5){
+    if(noMove < 5 && noMove != 0){
+        console.log(noMove)
+        console.log("bsnfos")
         let params = new URLSearchParams({ route: "success", player_id: localStorage.getItem("player_id")});
         let urlAvecParametres = `${apiURL}?${params}`;
         axios.get(urlAvecParametres)

@@ -1124,6 +1124,11 @@ export function activeButton(){
 
     if(registerButton !== null){
         registerButton.addEventListener("click", () => {
+
+            
+            let pseudo = document.getElementById("loginInput");
+            let pwd = document.getElementById("passwordInput");
+            
             let params = new URLSearchParams({ route: "register", pseudo: pseudo.value, password: pwd.value });
             let urlAvecParametres = `${apiURL}?${params}`;
 
