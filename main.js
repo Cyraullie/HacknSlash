@@ -1,11 +1,15 @@
-const { app, BrowserWindow, Menu, screen, dialog } = require('electron');
-const path = require('path');
 
-app.on('ready', () => {
+const { app, BrowserWindow, Menu, screen, dialog, ipcMain, autoUpdater  } = require('electron');
+
+const path = require('path');
+//autoUpdater.setFeedURL('http://178.211.245.23:8180/dist/latest.yml')
+let mainWindow;
+
+function createWindow () {
   const primaryDisplay = screen.getPrimaryDisplay();
   const { width, height } = primaryDisplay.workAreaSize;
 
-  let mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: width,
     height: height,
     resizable: false,
@@ -15,7 +19,6 @@ app.on('ready', () => {
       contextIsolation: false,
     }
   });
-
   mainWindow.webContents.session.webRequest.onBeforeSendHeaders((details, callback) => {
     details.requestHeaders['Origin'] = '*';
     callback({ cancel: false, requestHeaders: details.requestHeaders });
@@ -29,54 +32,31 @@ app.on('ready', () => {
   mainWindow.on('will-move', (e) => {
     e.preventDefault();
   });
-  
-  // pour le dev
+
+  //pour le dev
   //mainWindow.webContents.openDevTools();
-  let customMenu = Menu.buildFromTemplate([
-    /*{
-      label: 'Custom Menu', // Vous pouvez personnaliser le nom du menu
-      submenu: [
-        {
-          label: 'Item 1',
-          click: () => {
-            // Action à effectuer lorsque "Item 1" est cliqué
-          },
-        },
-        {
-          label: 'Item 2',
-          click: () => {
-            // Action à effectuer lorsque "Item 2" est cliqué
-          },
-        },
-      ],
-    },*/
-  ]);
-
-  
-  // Vérifiez s'il y a des mises à jour au démarrage
-  /*autoUpdater.checkForUpdates();
-
-  autoUpdater.on('update-available', () => {
-    // Une mise à jour est disponible, vous pouvez afficher un message à l'utilisateur
-    dialog.showMessageBox({
-      type: 'info',
-      title: 'Mise à jour disponible',
-      message: 'Une mise à jour est disponible. Voulez-vous la télécharger maintenant ?',
-      buttons: ['Télécharger', 'Plus tard'],
-    }, (buttonIndex) => {
-      if (buttonIndex === 0) {
-        // Si l'utilisateur clique sur "Télécharger", vous pouvez commencer le processus de téléchargement
-        autoUpdater.downloadUpdate();
-      }
-    });
-  });*/
-
-  
+  let customMenu = Menu.buildFromTemplate([]);
 
   Menu.setApplicationMenu(customMenu);
-
   // Gérez l'événement de fermeture de la fenêtre
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
+}
+
+app.on('ready', () => {
+  createWindow();
+});
+
+  
+app.on('window-all-closed', function () {
+  if (process.platform !== 'darwin') {
+    app.quit();
+  }
+});
+
+app.on('activate', function () {
+  if (mainWindow === null) {
+    createWindow();
+  }
 });

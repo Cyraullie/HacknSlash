@@ -1,6 +1,6 @@
 {
   "name": "hacknslash",
-  "version": "1.5.5",
+  "version": "1.0.0",
   "description": "little game on JS",
   "main": "main.js",
   "scripts": {
@@ -30,7 +30,7 @@
     "howler": "^2.2.4"
   },
   "build": {
-    "appId": "com.example.myapp",
+    "appId": "com.mineteck.game",
     "productName": "game",
     "directories": {
       "output": "dist"
@@ -41,8 +41,10 @@
     },
     "files": [
       "**/*",
-      "!node_modules/**/*",
       "!db"
-    ]
+    ],
+    "squirrelWindows": {
+      "remoteReleases": "http://178.211.245.23:8180/dist/latest.yml"
+    }
   }
 }
