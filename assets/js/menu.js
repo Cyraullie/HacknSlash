@@ -747,8 +747,13 @@ export function createStartDialog (){
 
     let loginButton = document.createElement("button")
     loginButton.id = "loginButton"
-    loginButton.textContent = "S'inscrire / Se connecter"
+    loginButton.textContent = "Se connecter"
     loginDiv.appendChild(loginButton)
+
+    let registerButton = document.createElement("button")
+    registerButton.id = "registerButton"
+    registerButton.textContent = "S'inscrire"
+    loginDiv.appendChild(registerButton)
 
     let logoutDiv = document.createElement("div")
     logoutDiv.id = "logoutDiv";
@@ -815,6 +820,7 @@ export function activeButton(){
     let crossButton = document.getElementById("cross")
     let crossSuccessButton = document.getElementById("crossSuccess")
     let loginButton = document.getElementById("loginButton")
+    let registerButton = document.getElementById("registerButton")
     let resumeRealButton = document.getElementById("resumeRealButton")
     let successStartButton = document.getElementById("successStartButton")
     let successButton = document.getElementById("successButton")
@@ -1068,7 +1074,7 @@ export function activeButton(){
             }else {
                 //localStorage.setItem("pseudo", pseudo.value)
 
-                let params = new URLSearchParams({ route: "player", pseudo: pseudo.value, password: pwd.value});
+                let params = new URLSearchParams({ route: "login", pseudo: pseudo.value, password: pwd.value});
                 let urlAvecParametres = `${apiURL}?${params}`;
                 axios.get(urlAvecParametres)
                 .then(response => {
@@ -1082,39 +1088,7 @@ export function activeButton(){
                             pwd.style.border  = ""
                         }, 2000);
                     }
-                    if(response.data == "Le compte n'existe pas encore"){
-                        let params = new URLSearchParams({ route: "login", pseudo: pseudo.value, password: pwd.value });
-                        let urlAvecParametres = `${apiURL}?${params}`;
-
-                        axios.get(urlAvecParametres)
-                        .then(response => {
-                            localStorage.setItem("player_name", pseudo.value)
-                            localStorage.setItem("player_id", response.data[0])
-                            let play = document.getElementById("playButton")
-                            pwd.value = ""
-                            play.disabled = false
-
-                            let welcome = document.getElementById("welcome")
-                            if(localStorage.getItem("player_name") != null){
-                                welcome.textContent = "Bienvenue " + localStorage.getItem("player_name");
-                            }
-
-                            let loginDiv = document.getElementById("loginDiv")
-                            let logoutDiv = document.getElementById("logoutDiv")
-
-                            if(localStorage.getItem("player_id") == null){
-                                loginDiv.style.display = "block"
-                                logoutDiv.style.display = "none"
-                            } else {
-                                logoutDiv.style.display = "block"
-                                loginDiv.style.display = "none"
-                            }
-                        })
-                        .catch(error => {
-                            console.log("ertet")
-                        });
-
-                    }else {
+                    if(response.data != "Le compte n'existe pas encore"){
                         localStorage.setItem("player_id", response.data[0]["id"])
                         localStorage.setItem("player_name", pseudo.value)
                         let play = document.getElementById("playButton")
@@ -1132,9 +1106,11 @@ export function activeButton(){
                         if(localStorage.getItem("player_id") == null){
                             loginDiv.style.display = "block"
                             logoutDiv.style.display = "none"
+                            welcome.style.display = "none"
                         } else {
                             logoutDiv.style.display = "block"
                             loginDiv.style.display = "none"
+                            welcome.style.display = "block"
                         }
                     }
                 })
@@ -1144,6 +1120,43 @@ export function activeButton(){
 
             }
         });
+    }
+
+    if(registerButton !== null){
+        registerButton.addEventListener("click", () => {
+            let params = new URLSearchParams({ route: "register", pseudo: pseudo.value, password: pwd.value });
+            let urlAvecParametres = `${apiURL}?${params}`;
+
+            axios.get(urlAvecParametres)
+            .then(response => {
+                localStorage.setItem("player_name", pseudo.value)
+                localStorage.setItem("player_id", response.data[0])
+                let play = document.getElementById("playButton")
+                pwd.value = ""
+                play.disabled = false
+
+                let welcome = document.getElementById("welcome")
+                if(localStorage.getItem("player_name") != null){
+                    welcome.textContent = "Bienvenue " + localStorage.getItem("player_name");
+                }
+
+                let loginDiv = document.getElementById("loginDiv")
+                let logoutDiv = document.getElementById("logoutDiv")
+
+                if(localStorage.getItem("player_id") == null){
+                    loginDiv.style.display = "block"
+                    logoutDiv.style.display = "none"
+                    welcome.style.display = "none"
+                } else {
+                    logoutDiv.style.display = "block"
+                    loginDiv.style.display = "none"
+                    welcome.style.display = "block"
+                }
+            })
+            .catch(error => {
+                console.log("ertet")
+            });
+        })
     }
 
     if(successButton !== null){

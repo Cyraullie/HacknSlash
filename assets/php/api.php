@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $route = $_GET["route"];
     
     switch ($route) {
-        case "player" :
+        case "login" :
             $mysqli = mysqli_connect("localhost:3306", "gamer", "gamer", "game");
 
             if (!$mysqli) {
@@ -54,32 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
             break;
 
-        case "scoreboard" :
-            $mysqli = mysqli_connect("localhost:3306", "gamer", "gamer", "game");
-
-            if (!$mysqli) {
-                die("Erreur de connexion : " . mysqli_connect_error());
-            }
-        
-            $result = mysqli_query($mysqli, "SELECT pseudo, score FROM `scores` INNER JOIN players ON scores.players_id = players.id ORDER BY score DESC LIMIT 5");
-        
-            $response[0] = "";
-            if ($result) {
-                $i = 0;
-                while ($row = mysqli_fetch_assoc($result)) {
-                    $response[$i] = $row;
-                    $i++;
-                }
-        
-                mysqli_free_result($result);
-            }
-            mysqli_close($mysqli);
-
-            header('Content-Type: application/json');
-            echo json_encode($response);
-            break;
-
-        case "login" :
+        case "register" :
             $mysqli = mysqli_connect("localhost:3306", "gamer", "gamer", "game");
 
             if (!$mysqli) {
@@ -116,6 +91,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             header('Content-Type: application/json');
             echo json_encode($response);
             break;
+
+        case "scoreboard" :
+            $mysqli = mysqli_connect("localhost:3306", "gamer", "gamer", "game");
+
+            if (!$mysqli) {
+                die("Erreur de connexion : " . mysqli_connect_error());
+            }
+        
+            $result = mysqli_query($mysqli, "SELECT pseudo, score FROM `scores` INNER JOIN players ON scores.players_id = players.id ORDER BY score DESC LIMIT 5");
+        
+            $response[0] = "";
+            if ($result) {
+                $i = 0;
+                while ($row = mysqli_fetch_assoc($result)) {
+                    $response[$i] = $row;
+                    $i++;
+                }
+        
+                mysqli_free_result($result);
+            }
+            mysqli_close($mysqli);
+
+            header('Content-Type: application/json');
+            echo json_encode($response);
+            break;
+
+        
         
         case "score" :
             $mysqli = mysqli_connect("localhost:3306", "gamer", "gamer", "game");
