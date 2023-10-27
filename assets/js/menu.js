@@ -318,7 +318,6 @@ export function createEchapDialog (){
     customDialog.style.display = "none";
 }
 
-
 export function createSuccessDialog (){
     customDialog = document.getElementById("success");
     let div1 = document.createElement("div")
@@ -337,7 +336,9 @@ export function createSuccessDialog (){
     let div4 = document.createElement("div")
     div4.id = "successDiv";
     div4.style.height = "400px"
+    div4.style.width = "500px"
     div4.style.overflow = "auto";
+    div4.style.margin = "auto"
 
     customDialog.appendChild(div4)
 
@@ -1040,6 +1041,11 @@ export function activeButton(){
 
             let successDiv = document.createElement("div")
             successDiv.id = "successDiv"
+            
+            successDiv.style.height = "400px"
+            successDiv.style.width = "500px"
+            successDiv.style.overflow = "auto";
+            successDiv.style.margin = "auto"
             dialog.appendChild(successDiv)
 
             dialog.style.display = "none"
@@ -1182,6 +1188,12 @@ function updateSuccess () {
                         successDiv.classList.add("successDiv");
                         
                         divSuccess.appendChild(successDiv)
+
+                        if(localStorage.getItem("theme") == "light" || localStorage.getItem("theme") == null){
+                            successDiv.style.backgroundColor = "#f0f0f0"
+                        } else if(localStorage.getItem("theme") == "dark"){
+                            successDiv.style.backgroundColor = "#333"
+                        }
 
                         let successImg = document.createElement("img")
                         successImg.id = "successImg"+success["id"];

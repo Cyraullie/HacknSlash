@@ -27,7 +27,6 @@ let backgroundSound;
 //TODO ajouter un bouton pour voir ses succès qui seront stocké dans la base de donnée
 //TODO creer des succés (db ?)
 
-//TODO bug d'attack speed
 //TODO mettre des paterne pour des boss ()
 
 //TODO mettre les succès dans le changement de thème :)
@@ -35,6 +34,7 @@ let backgroundSound;
 //TODO voir pour pouvoir faire une maj depuis l'app (utiliser le serveur docker pour ça ?)
 
 //BUG ralentissement vers la vagues 450 environs et toujours plus xD
+//BUG d'attack speed
 
 let nbBoss = 1; //nombre de boss fait
 let numMonstersAtStart = 3;
@@ -272,6 +272,7 @@ export function checkTheme() {
     let damageText = document.getElementById("damageText");
     let tabContent = Array.from(document.getElementsByClassName("tab-content"))
     let tabControl = Array.from(document.getElementsByClassName("tab-button"))
+    let successDivs = Array.from(document.getElementsByClassName("successDiv"))
     let achivement = document.getElementById("achivement");
 
     if(localStorage.getItem("theme") != null){
@@ -292,6 +293,11 @@ export function checkTheme() {
             dialog.style.backgroundColor = "#666666"
             dialog.style.color = "#ffffff"
         })
+
+        /*successDivs.forEach(successDiv => {
+            successDiv.style.backgroundColor = "#666666"
+            successDiv.style.color = "#ffffff"
+        })*/
 
         buttons.forEach(button => {
             button.style.backgroundColor = "#444444"
@@ -324,6 +330,11 @@ export function checkTheme() {
             dialog.style.backgroundColor = "#ffffff"
             dialog.style.color = "black"
         })
+
+        /*successDivs.forEach(successDiv => {
+            successDiv.style.backgroundColor = "#ffffff"
+            successDiv.style.color = "black"
+        })*/
 
         buttons.forEach(button => {
             button.style.backgroundColor = "white"
