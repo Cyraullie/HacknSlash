@@ -28,12 +28,19 @@ let backgroundSound;
 //TODO creer des succés (db ?)
 //TODO le screen d'affichage apparait derriere le menu quand on clique depuis le menu echap
 //TODO erreur sur la route achivement a chaque vague passée ?
+//TODO faire une liste de mob toucher pour en toucher qu'un seul a la fois
 
 //TODO mettre des paterne pour des boss ()
 
+//TODO empecher de clicker plusieurs fois sur enregister le score
+//TODO Faire en sorte de vraiment rejouer en cliquant dessus et non pas reload la page 
+
+//TODO empecher les pseudo vide !important 
 //TODO faire un check de tout les pseudos en minuscule ou en maj 
 
 //TODO voir pour pouvoir faire une maj depuis l'app (utiliser le serveur docker pour ça ?)
+
+//TODO voir pour améliorer la cadence de tire :) pour benji
 
 //BUG ralentissement vers la vagues 450 environs et toujours plus xD
 //BUG d'attack speed
@@ -211,19 +218,25 @@ export function initializeGame() {
 }
 
 function handleMouseClickDown(event){
+    let X = event.clientX
+    let Y = event.clientY
+    localStorage.setItem("clientX", X)
+    localStorage.setItem("clientY", Y)
     handleClick = true;
-    if(handleClick){
-        handleMouseClick(event)
-    }
 }
 
 function handleMouseClickUp(){
     handleClick = false;
+    localStorage.removeItem("clientX")
+    localStorage.removeItem("clientY")
 }
 
 function handleMouseClickMove(event){
     if(handleClick){
-        handleMouseClick(event)
+        let X = event.clientX
+        let Y = event.clientY
+        localStorage.setItem("clientX", X)
+        localStorage.setItem("clientY", Y)
     }
 }
 
@@ -373,11 +386,12 @@ export function togglePauseGame() {
     displayEscape(isPaused);
 }
 
-function handleMouseClick(event) {
-
+function handleMouseClick() {
+    let x = localStorage.getItem("clientX")
+    let y = localStorage.getItem("clientY")
     if (!player.hasAttribute('data-firing')) {
-        startShooting(event.clientX, event.clientY, player);
         player.setAttribute('data-firing', 'true');
+        startShooting(x, y, player);
         
         setTimeout(function() {
           player.removeAttribute('data-firing');
@@ -544,7 +558,9 @@ function gameLoop() {
     
     // Mettre à jour la logique du jeu (mouvement, collisions, etc.)
     // Gestionnaire d'événement pour déclencher le tir (par exemple, un clic de souris)
-   
+    if(handleClick){
+        handleMouseClick()
+    }
     checkHP();
     checkMonsterAlive();
 

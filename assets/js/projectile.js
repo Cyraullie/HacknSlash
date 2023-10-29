@@ -63,8 +63,8 @@ function moveProjectile(projectileX, projectileY, targetX, targetY, projectile) 
             if (
                 projHitBox.left > limitMin &&
                 projHitBox.top > 30 &&
-                projHitBox.right < windowWidth - playerWidth - 10 &&
-                projHitBox.bottom < windowHeight  - playerHeight - 10
+                projHitBox.right < windowWidth + 10 &&
+                projHitBox.bottom < windowHeight  + 10
             ) {
                 
                 if(!JSON.parse(game.dataset.isGamePaused)) {
