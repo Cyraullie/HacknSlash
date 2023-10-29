@@ -8,10 +8,9 @@ const game = document.getElementById("game");
 export function displayGameOver(text1, text2) {
     let dialog = document.getElementById("gameOver");
     let scoreText = document.getElementById("score");
-    let logButton = document.getElementById("logButton");
+    
     scoreText.textContent = text1 + sessionStorage.getItem("vagues") + text2;
 
-    logButton.disabled = false
     dialog.style.display = "block";
 }
 
@@ -848,10 +847,9 @@ export function activeButton(){
     }
 
     if(logButton !== null){
-        logButton.addEventListener("click", () => {         
-            let score = document.getElementById("score").dataset.score;
-
-
+        logButton.addEventListener("click", () => {  
+            logButton.disabled = true
+            logButton.style.pointerEvents  = "none"
             let params = new URLSearchParams({ route: "score", player_id: localStorage.getItem("player_id"), score: sessionStorage.getItem("vagues")});
             let urlAvecParametres = `${apiURL}?${params}`;
             
@@ -861,7 +859,6 @@ export function activeButton(){
                     sessionStorage.removeItem("vagues")
                     let params = new URLSearchParams({ route: "scoreboard" });
                     let urlAvecParametres = `${apiURL}?${params}`;
-                    logButton.disabled = true
                     axios.get(urlAvecParametres)
                     .then(response => {
                         if(Array.isArray(response.data)){
@@ -1078,8 +1075,6 @@ export function activeButton(){
                 let urlAvecParametres = `${apiURL}?${params}`;
                 axios.get(urlAvecParametres)
                 .then(response => {
-                    console.log(response.data)
-
                     if(response.data == "Identifiant ou mot de passe incorrect"){
                         pseudo.style.border  = "red 1px solid"
                         pwd.style.border  = "red 1px solid"

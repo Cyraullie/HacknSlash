@@ -26,13 +26,10 @@ let backgroundSound;
 //TODO ajout de succés (no move challenge (si tu bouge une fois le défi n'est plus réalisabel))
 //TODO ajouter un bouton pour voir ses succès qui seront stocké dans la base de donnée
 //TODO creer des succés (db ?)
-//TODO le screen d'affichage apparait derriere le menu quand on clique depuis le menu echap
-//TODO erreur sur la route achivement a chaque vague passée ?
 //TODO faire une liste de mob toucher pour en toucher qu'un seul a la fois
 
 //TODO mettre des paterne pour des boss ()
 
-//TODO empecher de clicker plusieurs fois sur enregister le score
 //TODO Faire en sorte de vraiment rejouer en cliquant dessus et non pas reload la page 
 
 //TODO empecher les pseudo vide !important 
@@ -67,7 +64,8 @@ let handleClick = false;
 var isEnded = false;
 var isUpdated = false;
 let isPaused = false;
-
+let xMouse;
+let yMouse;
 let bossTime = false;
 
 export function initializeGameData() {
@@ -75,7 +73,13 @@ export function initializeGameData() {
     // Vérifie si c'est la première installation
     if (localStorage.getItem('version') != packageJson.version) {
         // Supprime toutes les données du localStorage
+        let theme = localStorage.getItem("theme");
+        let volume = localStorage.getItem("volume");
+
         localStorage.clear();
+
+        localStorage.setItem("theme", theme);
+        localStorage.setItem("volume", volume);
 
         // Marque que l'installation a eu lieu
         localStorage.setItem('version', packageJson.version);
@@ -140,13 +144,13 @@ export function initializeGameData() {
 
     createGameOverDialog();
 
-    createSuccessDialog();
-
     createUpgradeDialog();
 
     createEchapDialog();
 
     createOptionsDialog();
+
+    createSuccessDialog();
 
     activeButton();
 
@@ -202,7 +206,7 @@ export function initializeGame() {
     
     document.addEventListener("keyup", handleKeyUp);
 
-    game.addEventListener('mouseleave', () => {
+    /*game.addEventListener('mouseleave', () => {
         if(game.dataset.isGamePaused){
             isPaused = true; // Inversez l'état de la pause
             player.dataset.movingUp = false;
@@ -212,32 +216,22 @@ export function initializeGame() {
             displayEscape(isPaused);
         }
       });
-
+*/
     // Boucle de jeu principale
     requestAnimationFrame(gameLoop);
 }
 
-function handleMouseClickDown(event){
-    let X = event.clientX
-    let Y = event.clientY
-    localStorage.setItem("clientX", X)
-    localStorage.setItem("clientY", Y)
+function handleMouseClickDown(){
     handleClick = true;
 }
 
 function handleMouseClickUp(){
     handleClick = false;
-    localStorage.removeItem("clientX")
-    localStorage.removeItem("clientY")
 }
 
 function handleMouseClickMove(event){
-    if(handleClick){
-        let X = event.clientX
-        let Y = event.clientY
-        localStorage.setItem("clientX", X)
-        localStorage.setItem("clientY", Y)
-    }
+    xMouse = event.clientX
+    yMouse = event.clientY
 }
 
 function handleKeyDown(event) {
@@ -387,11 +381,9 @@ export function togglePauseGame() {
 }
 
 function handleMouseClick() {
-    let x = localStorage.getItem("clientX")
-    let y = localStorage.getItem("clientY")
     if (!player.hasAttribute('data-firing')) {
         player.setAttribute('data-firing', 'true');
-        startShooting(x, y, player);
+        startShooting(xMouse, yMouse, player);
         
         setTimeout(function() {
           player.removeAttribute('data-firing');
@@ -585,7 +577,6 @@ function gameLoop() {
             numVague++;
             numVagueNoMove++;
             checkSuccess()
-            console.log("nombre de vague sans bouger : " + numVagueNoMove)
             let projectiles = document.querySelectorAll(".projectile")
 
             projectiles.forEach(projectile => {
