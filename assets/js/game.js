@@ -27,11 +27,10 @@ let backgroundSound;
 //TODO ajout de succés (no move challenge (si tu bouge une fois le défi n'est plus réalisabel))
 
 
-//TODO faire une liste de mob toucher pour en toucher qu'un seul a la fois
+//TODO ajouter du percage ?
 
 //TODO mettre des paterne pour des boss ()
 
-//TODO faire un check de tout les pseudos en minuscule ou en maj 
 
 //TODO voir pour pouvoir faire une maj depuis l'app (utiliser le serveur docker pour ça ?)
 

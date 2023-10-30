@@ -97,7 +97,9 @@ function stopShooting(projectile) {
 export function checkCollisionWithMonsters () {
     const projectiles = document.querySelectorAll(".projectile");
     const monsters = document.querySelectorAll(".monster");
-
+    let monstersHit = [""];
+    let projectileHit;
+    let nbMonsterHit = 0;
     projectiles.forEach((projectile) => {
         const projectileRect = projectile.getBoundingClientRect();
 
@@ -112,18 +114,26 @@ export function checkCollisionWithMonsters () {
                 projectileRect.top < monsterRect.bottom
             ) {
                 // Collision détectée, supprimez le projectile et le monstre
-                monster.dataset.life = monster.dataset.life - projectile.dataset.damage;
-                monster.textContent = monster.dataset.life;
-                projectile.remove();
-                isShooting = false;
-                if(monster.dataset.life <= 0){
-                    monster.remove();
-                }
+                monstersHit[nbMonsterHit] = monster;
+                projectileHit = projectile;
+                nbMonsterHit++;
+                
 
                 // Ajoutez ici la logique de jeu liée à la collision (par exemple, augmentez le score du joueur)
             }
         });
     });
+
+    if(monstersHit[0] != ""){
+        monstersHit[0].dataset.life = monstersHit[0].dataset.life - projectileHit.dataset.damage;
+        monstersHit[0].textContent = monstersHit[0].dataset.life;
+        projectileHit.remove();
+        isShooting = false;
+        if(monstersHit[0].dataset.life <= 0){
+            monstersHit[0].remove();
+        }
+    }
+   
 }
 
 
