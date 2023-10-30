@@ -22,12 +22,17 @@ let backgroundSound;
 //TODO ajouter des sons
 //TODO add difficulty
 //TODO install phaser ?????
-//TODO trouver un thème pour les image tout ça :)
+
+//TODO trouver un thème pour les image tout ça :) (Mythologie nordique)
+//TODO player = viking ?
+//TODO bosses = les monstres principaux du ragnarok ?
+//TODO monstres de base = jothun et autre ?
 
 //TODO ajout de succés (no move challenge (si tu bouge une fois le défi n'est plus réalisabel))
+//TODO succès : [ne pas prendre de dégat]
 
-
-//TODO ajouter du percage ?
+//TODO ajout d'item pour améliorer le perso ?
+//TODO ajouter du percage (stats de percage de base a 1 avec un pourcentage de change monte a 2) (quand ça touche un monstre enleve 1 de percage au projectile et continue ça route)?
 
 //TODO mettre des paterne pour des boss ()
 
@@ -37,7 +42,6 @@ let backgroundSound;
 //TODO voir pour améliorer la cadence de tire :) pour benji
 
 //BUG ralentissement vers la vagues 450 environs et toujours plus xD
-//BUG d'attack speed
 
 let nbBoss = 1; //nombre de boss fait
 let numMonstersAtStart = 3;
