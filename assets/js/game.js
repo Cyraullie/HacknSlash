@@ -22,17 +22,15 @@ let backgroundSound;
 //TODO ajouter des sons
 //TODO add difficulty
 //TODO install phaser ?????
+//TODO trouver un thème pour les image tout ça :)
 
 //TODO ajout de succés (no move challenge (si tu bouge une fois le défi n'est plus réalisabel))
-//TODO ajouter un bouton pour voir ses succès qui seront stocké dans la base de donnée
-//TODO creer des succés (db ?)
+
+
 //TODO faire une liste de mob toucher pour en toucher qu'un seul a la fois
 
 //TODO mettre des paterne pour des boss ()
 
-//TODO Faire en sorte de vraiment rejouer en cliquant dessus et non pas reload la page 
-
-//TODO empecher les pseudo vide !important 
 //TODO faire un check de tout les pseudos en minuscule ou en maj 
 
 //TODO voir pour pouvoir faire une maj depuis l'app (utiliser le serveur docker pour ça ?)
@@ -194,8 +192,7 @@ export function initializeGameData() {
 }
 
 export function initializeGame() {
-
-
+  
     game.addEventListener("mousedown", handleMouseClickDown);
 
     game.addEventListener("mouseup", handleMouseClickUp);
@@ -219,7 +216,10 @@ export function initializeGame() {
 */
     // Boucle de jeu principale
     requestAnimationFrame(gameLoop);
+    
 }
+
+
 
 function handleMouseClickDown(){
     handleClick = true;

@@ -22,9 +22,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
             $pseudo = $_GET["pseudo"];
             $pwd = $_GET["password"];
+            $pwd_enc = openssl_encrypt($pwd, 'AES-256-CBC', $key_enc, 0);
+
             $result = mysqli_query($mysqli, "SELECT id, pseudo, password FROM `players` WHERE pseudo = '".$pseudo."'");
 
-            $pwd_enc = openssl_encrypt($pwd, 'AES-256-CBC', $key_enc, 0);
             $response[0] = "";
             if ($result) {
                 $i = 0;

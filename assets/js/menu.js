@@ -134,7 +134,7 @@ export function createGameOverDialog (){
 
     let button2 = document.createElement("button")
     button2.id = "restartButton"
-    button2.textContent = "Rejouer"
+    button2.textContent = "Retour au menu"
     div4.appendChild(button2)
 
     game.appendChild(customDialog);
@@ -726,6 +726,13 @@ export function createStartDialog (){
     loginDiv.style.display = "none"
     div4.appendChild(loginDiv)
 
+
+    let loginStatus = document.createElement("p")
+    loginStatus.id = "loginStatus"
+    loginStatus.style.color = "red";
+
+    loginDiv.appendChild(loginStatus)
+
     let loginInput = document.createElement("input")
     loginInput.id = "loginInput"
     loginInput.type = "text"
@@ -809,6 +816,7 @@ export function createStartDialog (){
 }
 
 export function activeButton(){
+    let loginStatus = document.getElementById("loginStatus");
     let logButton = document.getElementById("logButton")
     let restartButton = document.getElementById("restartButton")
     let validButton = document.getElementById("validButton")
@@ -1057,17 +1065,20 @@ export function activeButton(){
 
     if(loginButton !== null){
         loginButton.addEventListener("click", () => {
-            
+
             let pseudo = document.getElementById("loginInput");
             let pwd = document.getElementById("passwordInput");
             
             if(pseudo.value == "" || pwd.value == ""){
                 pseudo.style.border  = "red 1px solid"
                 pwd.style.border  = "red 1px solid"
+                loginStatus.textContent = "Identifiant ou mot de passe vide"
+
                 setTimeout(() => {
                     pseudo.style.border  = ""
                     pwd.style.border  = ""
-                }, 2000);
+                    loginStatus.textContent = ""
+                }, 5000);
             }else {
                 //localStorage.setItem("pseudo", pseudo.value)
 
@@ -1075,15 +1086,26 @@ export function activeButton(){
                 let urlAvecParametres = `${apiURL}?${params}`;
                 axios.get(urlAvecParametres)
                 .then(response => {
+                    console.log(response.data)
                     if(response.data == "Identifiant ou mot de passe incorrect"){
+                        loginStatus.textContent = "Identifiant ou mot de passe incorrect"
                         pseudo.style.border  = "red 1px solid"
                         pwd.style.border  = "red 1px solid"
                         setTimeout(() => {
                             pseudo.style.border  = ""
                             pwd.style.border  = ""
-                        }, 2000);
-                    }
-                    if(response.data != "Le compte n'existe pas encore"){
+                            loginStatus.textContent = ""
+                        }, 5000);
+                    } else if(response.data == "Le compte n'existe pas encore"){
+                        loginStatus.textContent = "Cet identifiant n'existe pas"
+                        pseudo.style.border  = "red 1px solid"
+                        pwd.style.border  = "red 1px solid"
+                        setTimeout(() => {
+                            pseudo.style.border  = ""
+                            pwd.style.border  = ""
+                            loginStatus.textContent = ""
+                        }, 5000);
+                    } else {
                         localStorage.setItem("player_id", response.data[0]["id"])
                         localStorage.setItem("player_name", pseudo.value)
                         let play = document.getElementById("playButton")
@@ -1111,6 +1133,7 @@ export function activeButton(){
                 })
                 .catch(error => {
                     console.error('Erreur :', error);
+                    console.log("test")
                 });
 
             }
@@ -1124,38 +1147,58 @@ export function activeButton(){
             let pseudo = document.getElementById("loginInput");
             let pwd = document.getElementById("passwordInput");
             
-            let params = new URLSearchParams({ route: "register", pseudo: pseudo.value, password: pwd.value });
-            let urlAvecParametres = `${apiURL}?${params}`;
+            if(pseudo.value == "" || pwd.value == ""){
+                pseudo.style.border  = "red 1px solid"
+                pwd.style.border  = "red 1px solid"
+                loginStatus.textContent = "Identifiant ou mot de passe vide"
+                setTimeout(() => {
+                    pseudo.style.border  = ""
+                    pwd.style.border  = ""
+                    loginStatus.textContent = ""
+                }, 5000);
+            }else {
 
-            axios.get(urlAvecParametres)
-            .then(response => {
-                localStorage.setItem("player_name", pseudo.value)
-                localStorage.setItem("player_id", response.data[0])
-                let play = document.getElementById("playButton")
-                pwd.value = ""
-                play.disabled = false
+                let params = new URLSearchParams({ route: "register", pseudo: pseudo.value, password: pwd.value });
+                let urlAvecParametres = `${apiURL}?${params}`;
 
-                let welcome = document.getElementById("welcome")
-                if(localStorage.getItem("player_name") != null){
-                    welcome.textContent = "Bienvenue " + localStorage.getItem("player_name");
-                }
+                axios.get(urlAvecParametres)
+                .then(response => {
+                    localStorage.setItem("player_name", pseudo.value)
+                    localStorage.setItem("player_id", response.data[0])
+                    let play = document.getElementById("playButton")
+                    pwd.value = ""
+                    play.disabled = false
 
-                let loginDiv = document.getElementById("loginDiv")
-                let logoutDiv = document.getElementById("logoutDiv")
+                    let welcome = document.getElementById("welcome")
+                    if(localStorage.getItem("player_name") != null){
+                        welcome.textContent = "Bienvenue " + localStorage.getItem("player_name");
+                    }
 
-                if(localStorage.getItem("player_id") == null){
-                    loginDiv.style.display = "block"
-                    logoutDiv.style.display = "none"
-                    welcome.style.display = "none"
-                } else {
-                    logoutDiv.style.display = "block"
-                    loginDiv.style.display = "none"
-                    welcome.style.display = "block"
-                }
-            })
-            .catch(error => {
-                console.log("ertet")
-            });
+                    let loginDiv = document.getElementById("loginDiv")
+                    let logoutDiv = document.getElementById("logoutDiv")
+
+                    if(localStorage.getItem("player_id") == null){
+                        loginDiv.style.display = "block"
+                        logoutDiv.style.display = "none"
+                        welcome.style.display = "none"
+                    } else {
+                        logoutDiv.style.display = "block"
+                        loginDiv.style.display = "none"
+                        welcome.style.display = "block"
+                    }
+                })
+                .catch(error => {
+                    console.log("cet identifiant est déjà utilisé")
+                    pseudo.style.border  = "red 1px solid"
+                    pwd.style.border  = "red 1px solid"
+                    loginStatus.textContent = "L'identifiant est déjà utilisé"
+                    setTimeout(() => {
+                        pseudo.style.border  = ""
+                        pwd.style.border  = ""
+                        loginStatus.textContent = ""
+                    }, 5000);
+                });
+            }
         })
     }
 
