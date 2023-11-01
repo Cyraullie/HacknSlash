@@ -1,6 +1,6 @@
 import { apiURL, windowHeight } from './data.js';
 import axios from 'axios';
-import { checkTheme, initializeGame, togglePauseGame } from './game.js';
+import { checkHP, checkTheme, initializeGame, togglePauseGame } from './game.js';
 
 var customDialog;
 const game = document.getElementById("game");
@@ -849,18 +849,41 @@ export function activeButton(){
 
     if(difficultyButton !== null){
         difficultyButton.addEventListener("click", () => {
-            switch (localStorage.getItem("difficulty")) {
-                case "0":
-                    localStorage.setItem("difficulty", 1);
-                    difficultyButton.textContent = "Difficulté : normal"
-                    break;
-                case "1":
-                    localStorage.setItem("difficulty", 2);
-                    difficultyButton.textContent = "Difficulté : difficile"
-                    break;
-                case "2":
-                    localStorage.setItem("difficulty", 0);
+            let damageText = document.getElementById("damageText")
+            if(localStorage.getItem("difficulty") < 2){
+                localStorage.setItem("difficulty", parseInt(localStorage.getItem("difficulty")) + 1)
+            }else {
+                localStorage.setItem("difficulty", 0);
+            }
+            switch (parseInt(localStorage.getItem("difficulty"))) {
+                case 0:
                     difficultyButton.textContent = "Difficulté : facile"
+                    player.dataset.initialLife = 4;
+                    player.dataset.life = 4;
+                    player.dataset.damage  = 3
+                    damageText.textContent = player.dataset.damage + "x"
+                    game.dataset.lifeMod  = 1;
+                    checkHP();
+                    break;
+                    
+                case 1:
+                    difficultyButton.textContent = "Difficulté : normal"
+                    player.dataset.initialLife = 3;
+                    player.dataset.life = 3;
+                    player.dataset.damage  = 2
+                    damageText.textContent = player.dataset.damage + "x"
+                    game.dataset.lifeMod  = 1.5;
+                    checkHP();
+                    break;
+                    
+                case 2:
+                    difficultyButton.textContent = "Difficulté : difficile"
+                    player.dataset.initialLife = 2;
+                    player.dataset.life = 2;
+                    player.dataset.damage  = 1
+                    damageText.textContent = player.dataset.damage + "x"
+                    game.dataset.lifeMod  = 2;
+                    checkHP();
                     break;
             }
         })

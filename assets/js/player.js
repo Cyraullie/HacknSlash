@@ -4,7 +4,7 @@ let map = document.getElementById("map");
 let game = document.getElementById("game");
 
 let life = 4;
-let damage = 2;
+let damage = 3;
 let speed = 5; // Vitesse de déplacement
 let fireRate = 400;
 

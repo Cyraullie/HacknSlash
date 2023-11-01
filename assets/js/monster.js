@@ -17,10 +17,10 @@ export function createMonster(life, monsterSpeed, damage, nbBoss = 1) {
     monster.className = "monster"; // Appliquez des styles CSS pour le monstre
     monster.style.height = monsterHeight + "px";
     monster.style.width = monsterWidth + "px";
-    monster.dataset.life = monsterLife;
+    monster.dataset.life = monsterLife * parseFloat(game.dataset.lifeMod);
     monster.dataset.damage = damage;
     monster.dataset.speed = monsterSpeed;
-    monster.textContent = monsterLife;
+    monster.textContent = monsterLife * parseFloat(game.dataset.lifeMod);
     monster.style.color = "white";
     map.appendChild(monster);
 

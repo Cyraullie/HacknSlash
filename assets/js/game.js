@@ -20,6 +20,7 @@ let backgroundSound;
 //TODO ajouter des sons
 
 //TODO add difficulty
+//TODO hardcore mode au bout d'un nombre de vague réussi
 //TODO booster le boss au hormone
 //TODO upgrade damage/hp/speed of monster
 
@@ -31,7 +32,9 @@ let backgroundSound;
 
 //TODO ajout de succés (no move challenge (si tu bouge une fois le défi n'est plus réalisabel))
 //TODO succès : [ne pas prendre de dégat, Joueur Novice (atteindre la vague 10), ]
+//TODO novice, intermediaire, expert, spécialiste ? (pour chaque type de difficulté)
 //TODO faire les succès pour chaque difficulté ?
+//TODO afficher le pourcentage d'obtention par rapport au nombre de joueur
 
 //TODO ajouter du percage (stats de percage de base a 1 avec un pourcentage de change monte a 2) (quand ça touche un monstre enleve 1 de percage au projectile et continue ça route)?
 
@@ -96,6 +99,7 @@ export function initializeGameData() {
     }
 
   
+    game.dataset.lifeMod  = 1;
     game.dataset.isGamePaused = false; 
     game.dataset.isUpdated = false;
     if(localStorage.getItem("theme") != null){
@@ -134,8 +138,7 @@ export function initializeGameData() {
         game.dataset.keyLeft = "a"
     }
 
-    localStorage.setItem("difficulty", 0);
-
+    
     // Initialisation du jeu
     bossSound = new Howl({
         src: ['assets/sounds/boss.mp3'],
@@ -200,8 +203,46 @@ export function initializeGameData() {
     imageDamage.id = "sword";
     damageDiv.appendChild(imageDamage);
 
-    checkTheme()
+    if(localStorage.getItem("difficulty") == null){
+        console.log("test")
+        localStorage.setItem("difficulty", 0);
+    } else {
+        let difficultyButton = document.getElementById("difficultyButton")
+        switch (parseInt(localStorage.getItem("difficulty"))) {
+            case 0:
+                difficultyButton.textContent = "Difficulté : facile"
+                player.dataset.initialLife = 4;
+                player.dataset.life = 4;
+                player.dataset.damage  = 3
+                damageText.textContent = player.dataset.damage + "x"
+                game.dataset.lifeMod  = 1;
+                checkHP();
+                break;
+                
+            case 1:
+                difficultyButton.textContent = "Difficulté : normal"
+                player.dataset.initialLife = 3;
+                player.dataset.life = 3;
+                player.dataset.damage  = 2
+                damageText.textContent = player.dataset.damage + "x"
+                game.dataset.lifeMod  = 1.5;
+                checkHP();
+                break;
+                
+            case 2:
+                difficultyButton.textContent = "Difficulté : difficile"
+                player.dataset.initialLife = 2;
+                player.dataset.life = 2;
+                player.dataset.damage  = 1
+                damageText.textContent = player.dataset.damage + "x"
+                game.dataset.lifeMod  = 2;
+                checkHP();
+                break;
+        }
+    }
 
+
+    checkTheme()
 
 }
 
@@ -405,7 +446,7 @@ function handleMouseClick() {
     }
 }
 
-function checkHP() {
+export function checkHP() {
 
     let barrePVRemplis = document.getElementById('pvFull');
     let textePV = document.getElementById('pvText');
