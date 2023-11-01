@@ -106,12 +106,16 @@ function handlePlayerMovement() {
 
             if(
                 targetY > 30 &&
-                targetY < windowHeight - playerHeight - 10 &&
+                targetY < windowHeight - playerHeight - 10
+            ) {
+                player.style.top = targetY + "px";
+            }
+
+            if(
                 targetX > 10 &&
                 targetX < windowWidth - playerWidth - 10
             ) { 
                 player.style.left = targetX + "px";
-                player.style.top = targetY + "px";
             }
         } 
       requestAnimationFrame(handlePlayerMovement);
