@@ -409,24 +409,6 @@ export function createOptionsDialog (){
     generalContainer.id = "generalContainer"
     divGeneral.appendChild(generalContainer)
 
-    let difficulty = document.createElement("button")
-    difficulty.id = "difficultyButton"
-    difficulty.textContent = "Difficulté : "
-
-    switch (localStorage.getItem("difficulty")){
-        case "0":
-            difficulty.textContent = difficulty.textContent + "facile"
-            break;
-        case "1":
-            difficulty.textContent = difficulty.textContent + "normal"
-            break;
-        case "2":
-            difficulty.textContent = difficulty.textContent + "difficile"
-            break;
-    }
-
-    generalContainer.appendChild(difficulty)
-
     let theme = document.createElement("button")
     theme.id = "themeButton"
     theme.textContent = "Thème : " + game.dataset.theme;
@@ -723,6 +705,24 @@ export function createStartDialog (){
     }
     div4.appendChild(play)
 
+    let difficulty = document.createElement("button")
+    difficulty.id = "difficultyButton"
+    difficulty.textContent = "Difficulté : "
+
+    switch (localStorage.getItem("difficulty")){
+        case "0":
+            difficulty.textContent = difficulty.textContent + "facile"
+            break;
+        case "1":
+            difficulty.textContent = difficulty.textContent + "normal"
+            break;
+        case "2":
+            difficulty.textContent = difficulty.textContent + "difficile"
+            break;
+    }
+
+    div4.appendChild(difficulty)
+
     let options = document.createElement("button")
     options.id = "optionStartButton"
     options.textContent = "Options"
@@ -863,6 +863,7 @@ export function activeButton(){
                     player.dataset.damage  = 3
                     damageText.textContent = player.dataset.damage + "x"
                     game.dataset.lifeMod  = 1;
+                    game.dataset.damageMod  = 1;
                     checkHP();
                     break;
                     
@@ -873,6 +874,7 @@ export function activeButton(){
                     player.dataset.damage  = 2
                     damageText.textContent = player.dataset.damage + "x"
                     game.dataset.lifeMod  = 1.5;
+                    game.dataset.damageMod  = 2;
                     checkHP();
                     break;
                     
@@ -883,6 +885,7 @@ export function activeButton(){
                     player.dataset.damage  = 1
                     damageText.textContent = player.dataset.damage + "x"
                     game.dataset.lifeMod  = 2;
+                    game.dataset.damageMod  = 3;
                     checkHP();
                     break;
             }
@@ -1032,7 +1035,7 @@ export function activeButton(){
             if (moveSpeedButton.getAttribute("data-selected") === "true") {
                 let player = document.getElementById("player")
 
-                player.dataset.speed = parseInt(player.dataset.speed) + 1;
+                player.dataset.speed = parseInt(player.dataset.speed) + 0.5;
                 
                 moveSpeedButton.setAttribute("data-selected", "false");
                 moveSpeedButton.classList.remove("selected");
@@ -1043,7 +1046,7 @@ export function activeButton(){
             if (fireRateButton.getAttribute("data-selected") === "true") {
                 let player = document.getElementById("player")
 
-                player.dataset.fireRate = parseInt(player.dataset.fireRate) - 25;
+                player.dataset.fireRate = parseInt(player.dataset.fireRate) - 50;
                 
                 fireRateButton.setAttribute("data-selected", "false");
                 fireRateButton.classList.remove("selected");

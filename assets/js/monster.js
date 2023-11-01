@@ -18,7 +18,7 @@ export function createMonster(life, monsterSpeed, damage, nbBoss = 1) {
     monster.style.height = monsterHeight + "px";
     monster.style.width = monsterWidth + "px";
     monster.dataset.life = monsterLife * parseFloat(game.dataset.lifeMod);
-    monster.dataset.damage = damage;
+    monster.dataset.damage = damage * parseInt(game.dataset.damageMod);
     monster.dataset.speed = monsterSpeed;
     monster.textContent = monsterLife * parseFloat(game.dataset.lifeMod);
     monster.style.color = "white";
@@ -90,7 +90,11 @@ export function createMonster(life, monsterSpeed, damage, nbBoss = 1) {
             if(!JSON.parse(game.dataset.isGamePaused)){
                 if(!JSON.parse(player.dataset.invincible)){
                     // Le monstre a atteint le joueur, vous pouvez ajouter votre logique de jeu ici (par exemple, réduire la santé du joueur)
-                    player.dataset.life = player.dataset.life - monster.dataset.damage
+                    if(player.dataset.life - monster.dataset.damage >= 0){
+                        player.dataset.life = player.dataset.life - monster.dataset.damage
+                    } else {
+                        player.dataset.life = 0;
+                    }
                     let  imagePlayer = document.getElementById("imagePlayer");
                     
                     imagePlayer.src = "./assets/images/player_hurt.png";
