@@ -411,7 +411,20 @@ export function createOptionsDialog (){
 
     let difficulty = document.createElement("button")
     difficulty.id = "difficultyButton"
-    difficulty.textContent = "Difficulté"
+    difficulty.textContent = "Difficulté : "
+
+    switch (localStorage.getItem("difficulty")){
+        case "0":
+            difficulty.textContent = difficulty.textContent + "facile"
+            break;
+        case "1":
+            difficulty.textContent = difficulty.textContent + "normal"
+            break;
+        case "2":
+            difficulty.textContent = difficulty.textContent + "difficile"
+            break;
+    }
+
     generalContainer.appendChild(difficulty)
 
     let theme = document.createElement("button")
@@ -832,6 +845,26 @@ export function activeButton(){
     let successStartButton = document.getElementById("successStartButton")
     let successButton = document.getElementById("successButton")
     let logoutButton = document.getElementById("logoutButton")
+    let difficultyButton = document.getElementById("difficultyButton")
+
+    if(difficultyButton !== null){
+        difficultyButton.addEventListener("click", () => {
+            switch (localStorage.getItem("difficulty")) {
+                case "0":
+                    localStorage.setItem("difficulty", 1);
+                    difficultyButton.textContent = "Difficulté : normal"
+                    break;
+                case "1":
+                    localStorage.setItem("difficulty", 2);
+                    difficultyButton.textContent = "Difficulté : difficile"
+                    break;
+                case "2":
+                    localStorage.setItem("difficulty", 0);
+                    difficultyButton.textContent = "Difficulté : facile"
+                    break;
+            }
+        })
+    }
 
     if(logoutButton !== null){
         logoutButton.addEventListener("click", () => {         
@@ -1015,6 +1048,8 @@ export function activeButton(){
     if(playButton !== null){
         playButton.addEventListener("click", () => {
             let dialog = document.getElementById("start")
+            difficultyButton.disabled = true;
+            difficultyButton.style.pointerEvents  = "none"
             dialog.style.display = "none"
             initializeGame();
         });

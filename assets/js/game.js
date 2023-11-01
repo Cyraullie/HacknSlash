@@ -13,33 +13,42 @@ const packageJson = require('../../package.json');
 let bossSound
 let backgroundSound;
 
-//TODO mettre une vrai image pour les monstres et le joueur
-//TODO bille multi color :)
-//TODO booster le boss au hormone
-//TODO upgrade damage/hp/speed of monster
-//TODO add different type of audio so a onglet for that ?
+//TODO install phaser ????? (pas vraiment utile pour le moment) (pour utiliser la manette)
+//TODO trouver une manière d'utiliser la manette sur le navigateur
+
 //TODO ajouter la gestion d'autre type de son
 //TODO ajouter des sons
+
 //TODO add difficulty
-//TODO install phaser ?????
+//TODO booster le boss au hormone
+//TODO upgrade damage/hp/speed of monster
 
 //TODO trouver un thème pour les image tout ça :) (Mythologie nordique)
 //TODO player = viking ?
 //TODO bosses = les monstres principaux du ragnarok ?
 //TODO monstres de base = jothun et autre ?
+//TODO ducoup limite du nombre de boss et vague?
 
 //TODO ajout de succés (no move challenge (si tu bouge une fois le défi n'est plus réalisabel))
-//TODO succès : [ne pas prendre de dégat]
+//TODO succès : [ne pas prendre de dégat, Joueur Novice (atteindre la vague 10), ]
+//TODO faire les succès pour chaque difficulté ?
 
-//TODO ajout d'item pour améliorer le perso ?
 //TODO ajouter du percage (stats de percage de base a 1 avec un pourcentage de change monte a 2) (quand ça touche un monstre enleve 1 de percage au projectile et continue ça route)?
 
-//TODO mettre des paterne pour des boss ()
+//TODO systeme de monnaie ?
+//TODO upgrade de pourcentage de loot de monnaie
+//TODO à la place de l'upgrade un magasin après chaque boss ou de manière aleatoire ? ou un magasin qui pop de manière aleatoire ?
+//TODO ajout d'item pour améliorer le perso ?
 
+//TODO mettre des paterne pour des boss (plusieurs phases ? avec phase d'invinciblité ?)
+//TODO mettre des paterne pour des monstres ?
 
 //TODO voir pour pouvoir faire une maj depuis l'app (utiliser le serveur docker pour ça ?)
 
 //TODO voir pour améliorer la cadence de tire :) pour benji
+
+//TODO mettre une vrai image pour les monstres et le joueur
+//TODO bille multi color :)
 
 //BUG ralentissement vers la vagues 450 environs et toujours plus xD
 
@@ -124,6 +133,8 @@ export function initializeGameData() {
     }else{
         game.dataset.keyLeft = "a"
     }
+
+    localStorage.setItem("difficulty", 0);
 
     // Initialisation du jeu
     bossSound = new Howl({
