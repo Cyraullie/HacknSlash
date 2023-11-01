@@ -22,7 +22,7 @@ let backgroundSound;
 //TODO add difficulty
 //TODO hardcore mode au bout d'un nombre de vague réussi
 //TODO booster le boss au hormone
-//TODO upgrade damage/hp/speed of monster
+//TODO upgrade speed of monster (too much ? a faire tester)
 
 //TODO trouver un thème pour les image tout ça :) (Mythologie nordique)
 //TODO player = viking ?
