@@ -86,8 +86,19 @@ export function initializeGameData() {
     // Vérifie si c'est la première installation
     if (localStorage.getItem('version') != packageJson.version) {
         // Supprime toutes les données du localStorage
-        let theme = localStorage.getItem("theme");
-        let volume = localStorage.getItem("volume");
+        let theme; 
+        let volume;
+        if(localStorage.getItem("theme") != null){
+            theme = localStorage.getItem("theme")
+        }else{
+            theme = "light"
+        }
+        
+        if(localStorage.getItem("volume") != null){
+            volume = localStorage.getItem("volume")
+        }else{
+            volume = 0.5;
+        }
 
         localStorage.clear();
 
@@ -216,6 +227,7 @@ export function initializeGameData() {
                 player.dataset.damage  = 3
                 damageText.textContent = player.dataset.damage + "x"
                 game.dataset.lifeMod  = 1;
+                game.dataset.damageMod  = 1;
                 checkHP();
                 break;
                 
@@ -226,6 +238,7 @@ export function initializeGameData() {
                 player.dataset.damage  = 2
                 damageText.textContent = player.dataset.damage + "x"
                 game.dataset.lifeMod  = 1.5;
+                game.dataset.damageMod  = 2;
                 checkHP();
                 break;
                 
@@ -236,6 +249,7 @@ export function initializeGameData() {
                 player.dataset.damage  = 1
                 damageText.textContent = player.dataset.damage + "x"
                 game.dataset.lifeMod  = 2;
+                game.dataset.damageMod  = 3;
                 checkHP();
                 break;
         }
