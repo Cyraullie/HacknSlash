@@ -32,9 +32,8 @@ let backgroundSound;
 
 //TODO ajout de succés (no move challenge (si tu bouge une fois le défi n'est plus réalisabel))
 //TODO succès : [ne pas prendre de dégat, Joueur Novice (atteindre la vague 10), ]
-//TODO novice, intermediaire, expert, spécialiste ? (pour chaque type de difficulté)
+//TODO novice, intermediaire, expert, spécialiste ? (pour chaque succes)
 //TODO faire les succès pour chaque difficulté ?
-//TODO afficher le pourcentage d'obtention par rapport au nombre de joueur
 
 //TODO ajouter du percage (stats de percage de base a 1 avec un pourcentage de change monte a 2) (quand ça touche un monstre enleve 1 de percage au projectile et continue ça route)?
 

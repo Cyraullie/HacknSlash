@@ -80,10 +80,16 @@ ENGINE = InnoDB;
 -- Insertition de succès
 -- -----------------------------------------------------
 
-INSERT INTO `success` (`id`, `name`, `description`, `objectif`, `img_path`) VALUES (NULL, 'Tourelle diff 1', 'Passer 50 vagues sans bouger', '50', 'Achivements/NoMove/turret1.png');
-INSERT INTO `success` (`id`, `name`, `description`, `objectif`, `img_path`) VALUES (NULL, 'Tourelle diff 2', 'Passer 100 vagues sans bouger', '100', 'Achivements/NoMove/turret2.png');
-INSERT INTO `success` (`id`, `name`, `description`, `objectif`, `img_path`) VALUES (NULL, 'Tourelle diff 3', 'Passer 150 vagues sans bouger', '150', 'Achivements/NoMove/turret3.png');
-INSERT INTO `success` (`id`, `name`, `description`, `objectif`, `img_path`) VALUES (NULL, 'Tourelle diff 4', 'Passer 200 vagues sans bouger', '200', 'Achivements/NoMove/turret4.png');
+INSERT INTO `success` (`id`, `name`, `description`, `objectif`, `img_path`) VALUES (NULL, 'Tourelle diff Novice', 'Passer 50 vagues sans bouger', '50', 'Achivements/NoMove/novice.png');
+INSERT INTO `success` (`id`, `name`, `description`, `objectif`, `img_path`) VALUES (NULL, 'Tourelle diff Intermédiaire', 'Passer 100 vagues sans bouger', '100', 'Achivements/NoMove/intermediate.png');
+INSERT INTO `success` (`id`, `name`, `description`, `objectif`, `img_path`) VALUES (NULL, 'Tourelle diff Expert', 'Passer 150 vagues sans bouger', '150', 'Achivements/NoMove/expert.png');
+INSERT INTO `success` (`id`, `name`, `description`, `objectif`, `img_path`) VALUES (NULL, 'Tourelle diff Spécialiste', 'Passer 200 vagues sans bouger', '200', 'Achivements/NoMove/specialist.png');
+
+INSERT INTO `success` (`id`, `name`, `description`, `objectif`, `img_path`) VALUES (NULL, 'Invincible Novice', 'Passer 50 vagues sans prendre de dégat', '50', 'Achivements/Invicible/novice.png');
+INSERT INTO `success` (`id`, `name`, `description`, `objectif`, `img_path`) VALUES (NULL, 'Invincible Intermédiaire', 'Passer 100 vagues sans prendre de dégat', '100', 'Achivements/Invicible/intermediate.png');
+INSERT INTO `success` (`id`, `name`, `description`, `objectif`, `img_path`) VALUES (NULL, 'Invincible Expert', 'Passer 150 vagues  sans prendre de dégat', '150', 'Achivements/Invicible/expert.png');
+INSERT INTO `success` (`id`, `name`, `description`, `objectif`, `img_path`) VALUES (NULL, 'Invincible Spécialiste', 'Passer 200 vagues  sans prendre de dégat', '200', 'Achivements/Invicible/specialist.png');
+
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
