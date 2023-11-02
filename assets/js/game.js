@@ -57,7 +57,7 @@ let backgroundSound;
 
 let nbBoss = 1; //nombre de boss fait
 let numMonstersAtStart = 3;
-var numVague = 1;
+var numVague = 10;
 var numVagueNoMove = 0;
 let player;
 var map = document.getElementById("map");
@@ -287,8 +287,6 @@ export function initializeGame() {
     requestAnimationFrame(gameLoop);
     
 }
-
-
 
 function handleMouseClickDown(){
     handleClick = true;
@@ -530,7 +528,7 @@ function spawnMonsters() {
 
     for(let i = 0; i < numMonstersAtStart; i++){
         let lifeMonster = (Math.floor(Math.random() * (monsterLifeMax)));
-        createMonster(lifeMonster, 2, 1, nbBoss);
+        createMonster(lifeMonster, 2, 1, nbBoss, false);
     }
     
 }
@@ -588,7 +586,7 @@ function spawnBoss() {
     monsterLifeMax = 6;
     numMonstersAtStart = 5;
     nbBoss++;
-    createMonster(numVague, 4, 1);  
+    createMonster(numVague, 4, 1, 1, true);  
 }
 
 function endGame() {

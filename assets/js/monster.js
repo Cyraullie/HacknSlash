@@ -5,7 +5,7 @@ var monsterLife;
 const map = document.getElementById("map");
 var game = document.getElementById("game");
 
-export function createMonster(life, monsterSpeed, damage, nbBoss = 1) {
+export function createMonster(life, monsterSpeed, damage, nbBoss = 1, isBoss = false) {
     if(life == 0){
         monsterLife = 1 * nbBoss;
     }else{
@@ -19,8 +19,14 @@ export function createMonster(life, monsterSpeed, damage, nbBoss = 1) {
     monster.style.width = monsterWidth + "px";
     monster.dataset.life = monsterLife * parseFloat(game.dataset.lifeMod);
     monster.dataset.damage = damage * parseInt(game.dataset.damageMod);
-    monster.dataset.speed = monsterSpeed * parseFloat(game.dataset.lifeMod);
     monster.textContent = monsterLife * parseFloat(game.dataset.lifeMod);
+
+    if(isBoss){
+        monster.dataset.speed = monsterSpeed + (parseFloat(game.dataset.lifeMod) / 2);
+    } else {
+        monster.dataset.speed = monsterSpeed * parseFloat(game.dataset.lifeMod);
+    }
+
     monster.style.color = "white";
     map.appendChild(monster);
 
