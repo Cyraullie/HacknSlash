@@ -250,7 +250,60 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             header('Content-Type: application/json');
             echo json_encode($response);*/
             break;
-    };
+        case "count_player" :
+            $mysqli = mysqli_connect("localhost:3306", "gamer", "gamer", "game");
+
+            if (!$mysqli) {
+                die("Erreur de connexion : " . mysqli_connect_error());
+            }
+
+            $result = mysqli_query($mysqli, "SELECT COUNT(*) AS nb_players FROM `players` ");
+
+            $response[0] = "";
+            if ($result) {
+                $i = 0;
+                while ($row = mysqli_fetch_assoc($result)) {
+                    $response[$i] = $row;
+                    $i++;
+                }
+        
+                mysqli_free_result($result);
+            }
+            mysqli_close($mysqli);
+
+            header('Content-Type: application/json');
+            echo json_encode($response);
+            break;
+
+        case "count_playerBySuccess" :
+            $mysqli = mysqli_connect("localhost:3306", "gamer", "gamer", "game");
+
+            if (!$mysqli) {
+                die("Erreur de connexion : " . mysqli_connect_error());
+            }
+
+            $success = $_GET["success_id"];
+            $result = mysqli_query($mysqli, "SELECT COUNT(*) AS nb_players_by_success FROM `advancements` WHERE success_id = '".$success."'");
+
+            $response[0] = "";
+            if ($result) {
+                $i = 0;
+                while ($row = mysqli_fetch_assoc($result)) {
+                    $response[$i] = $row;
+                    $i++;
+                }
+        
+                mysqli_free_result($result);
+            }
+            mysqli_close($mysqli);
+
+            header('Content-Type: application/json');
+            echo json_encode($response);
+            break;
+
+
+
+        };
 } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 

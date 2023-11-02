@@ -19,8 +19,8 @@ let backgroundSound;
 //TODO ajouter la gestion d'autre type de son
 //TODO ajouter des sons
 
-//TODO add difficulty
-//TODO hardcore mode au bout d'un nombre de vague réussi
+//TODO difficulty :
+//TODO hardcore mode au bout d'un nombre de vague réussi ?
 //TODO booster le boss au hormone
 //TODO upgrade speed of monster (too much ? a faire tester)
 

@@ -1147,7 +1147,7 @@ export function activeButton(){
                 let urlAvecParametres = `${apiURL}?${params}`;
                 axios.get(urlAvecParametres)
                 .then(response => {
-                    console.log(response.data)
+                    
                     if(response.data == "Identifiant ou mot de passe incorrect"){
                         loginStatus.textContent = "Identifiant ou mot de passe incorrect"
                         pseudo.style.border  = "red 1px solid"
@@ -1194,7 +1194,6 @@ export function activeButton(){
                 })
                 .catch(error => {
                     console.error('Erreur :', error);
-                    console.log("test")
                 });
 
             }
@@ -1284,79 +1283,102 @@ export function activeButton(){
 function updateSuccess () {
 
     let divSuccess = document.getElementById("successDiv")
-    let params = new URLSearchParams({ route: "all_success" });
-    let urlAvecParametres = `${apiURL}?${params}`;
 
-    axios.get(urlAvecParametres)
+    let paramsPlayer = new URLSearchParams({ route: "count_player"});
+    let urlAvecParametresPlayer = `${apiURL}?${paramsPlayer}`;
+    axios.get(urlAvecParametresPlayer)
     .then(response => {
-        if(Array.isArray(response.data)){
-            let allSuccess = response.data;
-            console.log(allSuccess)
-            if(allSuccess != ""){
-                let params = new URLSearchParams({ route: "success", player_id: localStorage.getItem("player_id")});
-                let urlAvecParametres = `${apiURL}?${params}`;
-                axios.get(urlAvecParametres)
-                .then(response => {
-                    console.log(response.data)
-                    console.log("response.data")
-                    allSuccess.forEach(success => {
-                        let successDiv = document.createElement("div")
-                        successDiv.id = "success"+success["id"];
-                        successDiv.classList.add("successDiv");
-                        
-                        divSuccess.appendChild(successDiv)
+        let nbPlayer = response.data[0]["nb_players"];
 
-                        if(localStorage.getItem("theme") == "light" || localStorage.getItem("theme") == null){
-                            successDiv.style.backgroundColor = "#f0f0f0"
-                        } else if(localStorage.getItem("theme") == "dark"){
-                            successDiv.style.backgroundColor = "#333"
-                        }
+        let params = new URLSearchParams({ route: "all_success" });
+        let urlAvecParametres = `${apiURL}?${params}`;
+        axios.get(urlAvecParametres)
+        .then(response => {
+            if(Array.isArray(response.data)){
+                let allSuccess = response.data;
+                if(allSuccess != ""){
+                    let params = new URLSearchParams({ route: "success", player_id: localStorage.getItem("player_id")});
+                    let urlAvecParametres = `${apiURL}?${params}`;
+                    axios.get(urlAvecParametres)
+                    .then(response => {
+                        allSuccess.forEach(success => {
+                            let successDiv = document.createElement("div")
+                            successDiv.id = "success"+success["id"];
+                            successDiv.classList.add("successDiv");
+                            
+                            divSuccess.appendChild(successDiv)
 
-                        let successImg = document.createElement("img")
-                        successImg.id = "successImg"+success["id"];
-                        successImg.classList.add("successImg")
-                        successImg.src = "./assets/images/" + success["img_path"];
+                            if(localStorage.getItem("theme") == "light" || localStorage.getItem("theme") == null){
+                                successDiv.style.backgroundColor = "#f0f0f0"
+                            } else if(localStorage.getItem("theme") == "dark"){
+                                successDiv.style.backgroundColor = "#333"
+                            }
 
-                        let successTextDiv = document.createElement("div")
-                        successTextDiv.classList.add("successText")
+                            let successImg = document.createElement("img")
+                            successImg.id = "successImg"+success["id"];
+                            successImg.classList.add("successImg")
+                            successImg.src = "./assets/images/" + success["img_path"];
 
-                        let successTitle = document.createElement("p")
-                        successTitle.id = "successTitle"+success["id"];
-                        successTitle.textContent = success["name"]
-                        successTitle.style.fontSize = "1.5em"
-                        successTitle.style.fontWeight = "bold"
-                        successTitle.style.textAlign = "left"
+                            let successTextDiv = document.createElement("div")
+                            successTextDiv.classList.add("successText")
 
-                        
+                            let successTitle = document.createElement("p")
+                            successTitle.id = "successTitle"+success["id"];
+                            successTitle.textContent = success["name"]
+                            successTitle.style.fontSize = "1.5em"
+                            successTitle.style.fontWeight = "bold"
+                            successTitle.style.textAlign = "left"
 
-                        let successDescription = document.createElement("p")
-                        successDescription.id = "successDescription"+success["id"];
-                        successDescription.textContent = success["description"]
-                        
-                        if(response.data != ""){
-                            response.data.forEach(successAchieved => {
-                                if(successAchieved["id"] == success["id"]){
-                                    successImg.classList.add("successAchieved")
-                                }
-                                else{
-                                    successImg.classList.add("successNotAchieved")
-                                }
+                            
+
+                           
+                            if(response.data != ""){
+                                response.data.forEach(successAchieved => {
+                                    if(successAchieved["id"] == success["id"]){
+                                        successImg.classList.add("successAchieved")
+                                    }
+                                    else{
+                                        successImg.classList.add("successNotAchieved")
+                                    }
+                                })
+                            } else {
+                                successImg.classList.add("successNotAchieved")
+                            }
+                            
+                            let successDescription = document.createElement("p")
+                            successDescription.id = "successDescription"+success["id"];
+                            successDescription.textContent = success["description"]
+                            
+                            let paramsPercent = new URLSearchParams({ route: "count_playerBySuccess", success_id: success["id"]});
+                            let urlAvecParametresPercent = `${apiURL}?${paramsPercent}`;
+                            axios.get(urlAvecParametresPercent)
+                            .then(response => {
+                                let playerBySuccess = response.data[0]["nb_players_by_success"]
+                                let percent = playerBySuccess / nbPlayer * 100
+                                let successPercent = document.createElement("p")
+                                successPercent.id = "successPercent"+success["id"];
+                                successPercent.textContent = percent.toFixed(2) + "% des joueurs on obtenu ce succès"
+                                successTextDiv.appendChild(successPercent)
                             })
-                        } else {
-                            successImg.classList.add("successNotAchieved")
-                        }
+                            .catch(error => {
+                                console.error('Erreur :', error);
+                            });
+
+                            successDiv.appendChild(successImg)
+                            successDiv.appendChild(successTextDiv)
+                            successTextDiv.appendChild(successTitle)
+                            successTextDiv.appendChild(successDescription)
                         
-                        successDiv.appendChild(successImg)
-                        successDiv.appendChild(successTextDiv)
-                        successTextDiv.appendChild(successTitle)
-                        successTextDiv.appendChild(successDescription)
-                       
-                    })                    
-                })
-                .catch(error => {
-                    console.error('Erreur :', error);
-                });
+                        })                    
+                    })
+                    .catch(error => {
+                        console.error('Erreur :', error);
+                    });
+                }
             }
-        }
+        })
     })
+    .catch(error => {
+        console.error('Erreur :', error);
+    });
 }
