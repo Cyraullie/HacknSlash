@@ -145,12 +145,23 @@ export function createGameOverDialog (){
 export function createUpgradeDialog (){
     customDialog = document.getElementById("upgrade");
     let div1 = document.createElement("div")
+    let imgElement = document.createElement("img");
     let titleElement = document.createElement("h1");
     let textElement = document.createElement("p");
+
+    imgElement.id = "imageUpgrade"
+    imgElement.src = "./assets/images/mage.png";
+    
+    imgElement.style.width = "200px";
+
+    imgElement.style.position = "absolute";
+    imgElement.style.top = "-170px";
+    imgElement.style.left = "37%";
 
     titleElement.textContent = "Upgrade";
     textElement.textContent = "Veuillez choisir votre améloration";
 
+    customDialog.appendChild(imgElement)
     customDialog.appendChild(div1)
 
     div1.appendChild(titleElement)

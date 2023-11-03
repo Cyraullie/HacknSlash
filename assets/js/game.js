@@ -56,8 +56,10 @@ let backgroundSound;
 
 let nbBoss = 1; //nombre de boss fait
 let numMonstersAtStart = 3;
-var numVague = 10;
+var numVague = 1;
 var numVagueNoMove = 0;
+var numVagueNoHit = 0;
+
 let player;
 var map = document.getElementById("map");
 var game = document.getElementById("game");
@@ -535,18 +537,60 @@ function spawnMonsters() {
 function checkSuccess() {
     let achivement = document.getElementById("achivement");
     let noMove = Math.floor(numVagueNoMove / 50)
+    let noHit = Math.floor(numVagueNoHit / 50) + 4
     
     if(noMove < 5 && noMove != 0){
-        console.log(noMove)
-        console.log("bsnfos")
-        let params = new URLSearchParams({ route: "success", player_id: localStorage.getItem("player_id")});
+        let params = new URLSearchParams({ route: "success", player_id: localStorage.getItem("player_id"), success_id: noMove});
         let urlAvecParametres = `${apiURL}?${params}`;
         axios.get(urlAvecParametres)
         .then(response => {
-            console.log(response.data)
-    
-            if(response.data == ""){
+            let successes_id = [];
+            let i = 0;
+
+            response.data.forEach((success) => {
+                successes_id[i] = success.id;
+                i++;
+            })
+
+            if(!successes_id.includes(noHit)){
                 let params = new URLSearchParams({ route: "achivement", player_id: localStorage.getItem("player_id"), success_id: noMove });
+                let urlAvecParametres = `${apiURL}?${params}`;
+    
+                axios.get(urlAvecParametres)
+                .then(response => {
+                    achivement.textContent = "Tourelle Diff " + noMove
+                    achivement.style.display = "block"
+                    achivement.classList.add("achivement-animation");
+    
+    
+                    setTimeout(() => {
+                        achivement.style.display = "none"
+                    }, 5000);
+                    console.log(response.data)
+                })
+                .catch(error => {
+                    console.log("ertet")
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Erreur :', error);
+        });
+    } else if(noHit < 9 && noHit > 4 && noHit != 0){
+        let params = new URLSearchParams({ route: "success", player_id: localStorage.getItem("player_id"), success_id: noMove});
+        let urlAvecParametres = `${apiURL}?${params}`;
+        axios.get(urlAvecParametres)
+        .then(response => {
+            let successes_id = [];
+            let i = 0;
+
+            response.data.forEach((success) => {
+                successes_id[i] = success.id;
+                i++;
+            })
+
+            if(!successes_id.includes(noHit)){
+                let params = new URLSearchParams({ route: "achivement", player_id: localStorage.getItem("player_id"), success_id: noHit });
                 let urlAvecParametres = `${apiURL}?${params}`;
     
                 axios.get(urlAvecParametres)
@@ -638,10 +682,15 @@ function gameLoop() {
         if(JSON.parse(player.dataset.movingUp) || JSON.parse(player.dataset.movingRight) || JSON.parse(player.dataset.movingLeft) || JSON.parse(player.dataset.movingDown)){
             numVagueNoMove = 0;
         }
+
+        if(player.dataset.life < player.dataset.initialLife){
+            numVagueNoHit = 0;
+        }
         
         if (monsters.length === 0 && !isUpdated) {
             numVague++;
             numVagueNoMove++;
+            numVagueNoHit++;
             checkSuccess()
             let projectiles = document.querySelectorAll(".projectile")
 
