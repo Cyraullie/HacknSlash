@@ -42,16 +42,36 @@ let backgroundSound;
 //TODO à la place de l'upgrade un magasin après chaque boss ou de manière aleatoire ? ou un magasin qui pop de manière aleatoire ?
 //TODO ajout d'item pour améliorer le perso ?
 
+//TODO Systeme de compétence ?
+//TODO plusieurs tir en un clique ?
+
+//TODO System de niveau ?
+//TODO pour débloquer les upgrades 
+//TODO début 50 xp + 50 a chaque levelup ?
+
+//TODO 1 compétences active sur la touche espace par défault
+//TODO la compétence est débloquer à la 5eme vagues
+
+//TODO mettre un nombre de tir possible ? qui recharge après un action ?
+
+//TODO faire en sorte que la carte soit plus grande donc plus de mob ?
+//TODO donc c'est pas le joueur qui bouge sur la petite map mais la camera qui suis le perso
+//TODO faire la map en cadriller pour voir si le déplacement de la cam fonctionne
+
 //TODO mettre des paterne pour des boss (plusieurs phases ? avec phase d'invinciblité ?)
 //TODO mettre des paterne pour des monstres ?
 
 //TODO voir pour pouvoir faire une maj depuis l'app (utiliser le serveur docker pour ça ?)
 
 //TODO voir pour améliorer la cadence de tire :) pour benji
+//TODO plutot que regen full -> regen 1pv ?
 
 //TODO mettre une vrai image pour les monstres et le joueur
 //TODO bille multi color :)
+//TODO pouvoir changer les touches pour la souris 
+//TODO Pouvoir changer la touche de tir 
 
+//BUG le change de touche pour le clique gauche refait proc l'event
 //BUG ralentissement vers la vagues 450 environs et toujours plus xD
 
 let nbBoss = 1; //nombre de boss fait
@@ -150,6 +170,17 @@ export function initializeGameData() {
         game.dataset.keyLeft = "a"
     }
 
+    if(localStorage.getItem("keyFire") != null){
+        game.dataset.keyFire = localStorage.getItem("keyFire")
+    }else{
+        game.dataset.keyFire = 0
+    }
+
+    if(localStorage.getItem("keyDash") != null){
+        game.dataset.keyDash = localStorage.getItem("keyDash")
+    }else{
+        game.dataset.keyDash = " "
+    }
     
     // Initialisation du jeu
     bossSound = new Howl({
@@ -166,6 +197,7 @@ export function initializeGameData() {
         loop: true,
         autoplay: true
     });
+
 
     createStartDialog();
 
@@ -289,8 +321,10 @@ export function initializeGame() {
     
 }
 
-function handleMouseClickDown(){
-    handleClick = true;
+function handleMouseClickDown(event){
+    if(event.button == game.dataset.keyFire){
+        handleClick = true;
+    }
 }
 
 function handleMouseClickUp(){
@@ -315,6 +349,9 @@ function handleKeyDown(event) {
             break;
         case game.dataset.keyRight:
             player.dataset.movingRight = true;
+            break;
+        case game.dataset.keyDash:
+            player.dataset.isDash = true;
             break;
         case "escape":
             togglePauseGame();

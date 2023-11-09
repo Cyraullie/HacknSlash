@@ -2,7 +2,7 @@ import { windowHeight, windowWidth, playerHeight, playerWidth} from './data.js';
 
 let map = document.getElementById("map");
 let game = document.getElementById("game");
-
+let player;
 let life = 4;
 let damage = 3;
 let speed = 5; // Vitesse de déplacement
@@ -10,12 +10,14 @@ let fireRate = 400;
 
 export function createPlayer() {
 
-    const player = document.createElement("div");
+    player = document.createElement("div");
     player.dataset.life = life;
+    player.dataset.isDash = false;
     player.dataset.invincible = false;
     player.dataset.initialLife = life;
     player.dataset.damage = damage;
     player.dataset.speed = speed;
+    player.dataset.initialSpeed = speed;
     player.dataset.fireRate = fireRate;
     player.id = "player";
 
@@ -90,42 +92,57 @@ export function createPlayer() {
     player.style.top = initialY + "px";
     
 function handlePlayerMovement() {
-        if (!JSON.parse(game.dataset.isGamePaused)) {
-            const playerRect = player.getBoundingClientRect();
-            
-            const deltaX = windowWidth * (!JSON.parse(player.dataset.movingLeft) - !JSON.parse(player.dataset.movingRight));
-            const deltaY = windowHeight * (!JSON.parse(player.dataset.movingUp) - !JSON.parse(player.dataset.movingDown));
+    if (!JSON.parse(game.dataset.isGamePaused)) {
+        const playerRect = player.getBoundingClientRect();
+        
+        const deltaX = windowWidth * (!JSON.parse(player.dataset.movingLeft) - !JSON.parse(player.dataset.movingRight));
+        const deltaY = windowHeight * (!JSON.parse(player.dataset.movingUp) - !JSON.parse(player.dataset.movingDown));
 
-            const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+        const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+        
+        let moveX;
+        let moveY;
 
-            let moveX = (deltaX / distance) * parseInt(player.dataset.speed);
-            let moveY = (deltaY / distance) * parseInt(player.dataset.speed);
+        if(JSON.parse(player.dataset.isDash)){
+            moveX = (deltaX / distance) * (20 + parseInt(player.dataset.speed));
+            moveY = (deltaY / distance) * (20 + parseInt(player.dataset.speed));
+            player.dataset.invincible = true;
 
-            var targetX = playerRect.left + moveX;
-            var targetY = playerRect.top + moveY;
+            setTimeout(() => {
+                player.dataset.isDash = false;
+                player.dataset.invincible = false;
+            }, 100);
+        } else {
+            moveX = (deltaX / distance) * parseInt(player.dataset.speed);
+            moveY = (deltaY / distance) * parseInt(player.dataset.speed);
+        }
 
-            if(
-                targetY > 30 &&
-                targetY < windowHeight - playerHeight - 10
-            ) {
-                player.style.top = targetY + "px";
-            }
+        var targetX = playerRect.left + moveX;
+        var targetY = playerRect.top + moveY;
 
-            if(
-                targetX > 10 &&
-                targetX < windowWidth - playerWidth - 10
-            ) { 
-                player.style.left = targetX + "px";
-            }
-        } 
-      requestAnimationFrame(handlePlayerMovement);
-    }
+        if(
+            targetY > 30 &&
+            targetY < windowHeight - playerHeight - 10
+        ) {
+            player.style.top = targetY + "px";
+        }
+
+        if(
+            targetX > 10 &&
+            targetX < windowWidth - playerWidth - 10
+        ) { 
+            player.style.left = targetX + "px";
+        }
+    } 
+    requestAnimationFrame(handlePlayerMovement);
+}
+
+
     
     requestAnimationFrame(handlePlayerMovement);
 
     return player;
 } 
-
 
 
 

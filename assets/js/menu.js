@@ -560,16 +560,81 @@ export function createOptionsDialog (){
         rightButton.addEventListener("keydown", keydownHandler);
     })
 
+    let dashDiv = document.createElement("div")
+    dashDiv.classList.add("keyDiv");
+    divControl.appendChild(dashDiv)
+    
+    let dashLabel = document.createElement("label")
+    dashLabel.textContent = "esquive";
+    dashLabel.for = "dashButton"
+
+    let dashButton = document.createElement("button")
+    if(game.dataset.keyDash == " "){
+        dashButton.textContent = "espace";
+    }else {
+        dashButton.textContent = game.dataset.keyDash;
+    }
+    dashButton.id = "dashButton"
+
+    dashDiv.appendChild(dashLabel)
+    dashDiv.appendChild(dashButton)
+
+    dashButton.addEventListener("click", () => {
+        dashButton.textContent = "Appuyez sur la touche"
+
+        const keydownHandler = (event) => {
+            keyChanger(event, dashButton, keydownHandler);
+        };
+    
+        dashButton.addEventListener("keydown", keydownHandler);
+    })
+
+    /*let fireDiv = document.createElement("div")
+    fireDiv.classList.add("keyDiv");
+    divControl.appendChild(fireDiv)
+    
+    let fireLabel = document.createElement("label")
+    fireLabel.textContent = "tir";
+    fireLabel.for = "fireButton"
+
+    let fireButton = document.createElement("button")
+    fireButton.textContent = "mouse" + game.dataset.keyFire;
+    fireButton.id = "fireButton"
+
+    fireDiv.appendChild(fireLabel)
+    fireDiv.appendChild(fireButton)
+
+    fireButton.addEventListener("click", () => {
+        fireButton.textContent = "Appuyez sur la touche"
+
+        const keydownHandler = (event) => {
+            keyChanger(event, fireButton, keydownHandler);
+        };
+    
+        fireButton.addEventListener("keydown", keydownHandler);
+        fireButton.addEventListener("mousedown", keydownHandler);
+    })*/
+
+
 
     function keyChanger(event, button, keydownHandler) {
-        let key = event.key.toLowerCase();
+        let key;
         
+        if(event.key != null){
+           key = event.key.toLowerCase();
+        } else if (event.button != null) {
+            key = event.button;
+        }
+
         switch (button.id) {
             case "upButton" :
-                if(!(game.dataset.keyRight == key || game.dataset.keyDown == key || game.dataset.keyLeft == key)) {
+                if(!(game.dataset.keyRight == key || game.dataset.keyDown == key || game.dataset.keyLeft == key || game.dataset.keyFire == key || game.dataset.keyDash == key)) {
                     game.dataset.keyUp = key;
                     localStorage.setItem("keyUp", key)
                     upButton.textContent = game.dataset.keyUp;
+                    if(game.dataset.keyUp == " "){
+                        upButton.textContent = "espace";
+                    }
                     upButton.removeEventListener("keydown", keydownHandler)
                 } else {
                     upButton.classList.add("shake-animation");
@@ -584,10 +649,13 @@ export function createOptionsDialog (){
                 break;
 
             case "rightButton" :
-                if(!(game.dataset.keyUp == key || game.dataset.keyDown == key || game.dataset.keyLeft == key)) {
+                if(!(game.dataset.keyUp == key || game.dataset.keyDown == key || game.dataset.keyLeft == key || game.dataset.keyFire == key || game.dataset.keyDash == key)) {
                     game.dataset.keyRight = key;
                     localStorage.setItem("keyRight", key)
                     rightButton.textContent = game.dataset.keyRight;
+                    if(game.dataset.keyRight == " "){
+                        rightButton.textContent = "espace";
+                    }
                     rightButton.removeEventListener("keydown", keydownHandler)
                 } else {
                     rightButton.classList.add("shake-animation");
@@ -602,10 +670,13 @@ export function createOptionsDialog (){
                 break;
 
             case "leftButton" :
-                if(!(game.dataset.keyRight == key || game.dataset.keyDown == key || game.dataset.keyUp == key)) {
+                if(!(game.dataset.keyRight == key || game.dataset.keyDown == key || game.dataset.keyUp == key || game.dataset.keyFire == key || game.dataset.keyDash == key)) {
                     game.dataset.keyLeft = key;
                     localStorage.setItem("keyLeft", key)
                     leftButton.textContent = game.dataset.keyLeft;
+                    if(game.dataset.keyLeft == " "){
+                        leftButton.textContent = "espace";
+                    }
                     leftButton.removeEventListener("keydown", keydownHandler)
                 } else {
                     leftButton.classList.add("shake-animation");
@@ -620,10 +691,13 @@ export function createOptionsDialog (){
                 break;
 
             case "downButton" :
-                if(!(game.dataset.keyRight == key || game.dataset.keyLeft == key || game.dataset.keyUp == key)) {
+                if(!(game.dataset.keyRight == key || game.dataset.keyLeft == key || game.dataset.keyUp == key || game.dataset.keyFire == key || game.dataset.keyDash == key)) {
                     game.dataset.keyDown = key;
                     localStorage.setItem("keyDown", key)
                     downButton.textContent = game.dataset.keyDown;
+                    if(game.dataset.keyDown == " "){
+                        downButton.textContent = "espace";
+                    }
                     downButton.removeEventListener("keydown", keydownHandler)
                 } else {
                     downButton.classList.add("shake-animation");
@@ -636,7 +710,60 @@ export function createOptionsDialog (){
                     }, 500);
                 }
                 break;
+
+            case "dashButton" :
+                if(!(game.dataset.keyRight == key || game.dataset.keyLeft == key || game.dataset.keyUp == key || game.dataset.keyFire == key || game.dataset.keyDown == key)) {
+                    game.dataset.keyDash = key;
+                    localStorage.setItem("keyDash", key)
+
+                    if(game.dataset.keyDash == " "){
+                        dashButton.textContent = "espace";
+                    } else {
+                        dashButton.textContent = game.dataset.keyDash;
+                    }
+                    dashButton.removeEventListener("keydown", keydownHandler)
+                } else {
+                    dashButton.classList.add("shake-animation");
+                    dashButton.style.color = "red";
+
+                    // Attendez 0.5 seconde et supprimez l'animation
+                    setTimeout(() => {
+                        dashButton.classList.remove("shake-animation");
+                        dashButton.style.color = upButton.style.color;
+                    }, 500);
+                }
+                break;
+
+            case "fireButton" :
+                if (event.isTrusted){
+                    if(!(game.dataset.keyRight == key || game.dataset.keyLeft == key || game.dataset.keyUp == key || game.dataset.keyDown == key || game.dataset.keyDash == key)) {
+                        game.dataset.keyFire = key;
+                        localStorage.setItem("keyFire", key)
+                        
+                        if(game.dataset.keyFire == " "){
+                            fireButton.textContent = "espace";
+                        } else if(Number.isInteger(key)){
+                            fireButton.textContent = "mouse" + game.dataset.keyFire;
+                        } else {
+                            fireButton.textContent = game.dataset.keyFire;
+                        }
+                         
+                        fireButton.removeEventListener("keydown", keydownHandler)
+                        fireButton.removeEventListener("mousedown", keydownHandler)
+                    } else {
+                        fireButton.classList.add("shake-animation");
+                        fireButton.style.color = "red";
+
+                        // Attendez 0.5 seconde et supprimez l'animation
+                        setTimeout(() => {
+                            fireButton.classList.remove("shake-animation");
+                            fireButton.style.color = upButton.style.color;
+                        }, 500);
+                    }
+                }
+                break;
         }
+        
     }
 //end controle area
 
@@ -1047,6 +1174,7 @@ export function activeButton(){
                 let player = document.getElementById("player")
 
                 player.dataset.speed = parseInt(player.dataset.speed) + 0.5;
+                player.dataset.initialSpeed = parseInt(player.dataset.initialSpeed) + 0.5;
                 
                 moveSpeedButton.setAttribute("data-selected", "false");
                 moveSpeedButton.classList.remove("selected");
