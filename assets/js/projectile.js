@@ -1,4 +1,5 @@
 import { playerHeight, playerWidth } from "./data";
+import { checkLVL } from "./game";
 
 const map = document.getElementById("map");
 var game = document.getElementById("game");
@@ -94,7 +95,7 @@ function stopShooting(projectile) {
 }
 
 // Détection de collision entre projectiles et monstres
-export function checkCollisionWithMonsters () {
+export function checkCollisionWithMonsters(player) {
     const projectiles = document.querySelectorAll(".projectile");
     const monsters = document.querySelectorAll(".monster");
     let monstersHit = [""];
@@ -130,6 +131,13 @@ export function checkCollisionWithMonsters () {
         projectileHit.remove();
         isShooting = false;
         if(monstersHit[0].dataset.life <= 0){
+            if((parseInt(player.dataset.actualXP) + parseInt(monstersHit[0].dataset.xp)) == parseInt(player.dataset.maxXp)){
+                player.dataset.maxXp = parseInt(player.dataset.maxXp) + 50;
+                player.dataset.level = parseInt(player.dataset.level) + 1;
+            } else {
+                player.dataset.actualXP =  parseInt(player.dataset.actualXP) + parseInt(monstersHit[0].dataset.xp)
+            }
+
             monstersHit[0].remove();
         }
     }

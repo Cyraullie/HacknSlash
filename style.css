@@ -58,6 +58,12 @@ section {
     font-weight: bold;
 }
 
+.lvlText {
+    margin-left: 10px;
+    font-weight: bold;
+}
+
+
 
 #damage {
     display: flex;

@@ -48,6 +48,8 @@ let backgroundSound;
 //TODO System de niveau ?
 //TODO pour débloquer les upgrades 
 //TODO début 50 xp + 50 a chaque levelup ?
+//TODO monstre apporte 5xp de base ? boss 50xp ?
+
 
 //TODO 1 compétences active sur la touche espace par défault
 //TODO la compétence est débloquer à la 5eme vagues
@@ -383,6 +385,7 @@ export function checkTheme() {
     let dialogs = document.getElementsByClassName("dialog")
     let resumeText = document.getElementById("resumeText");
     let pvText = document.getElementById("pvText");
+    let lvlText = document.getElementById("lvlText");
     let damageText = document.getElementById("damageText");
     let tabContent = Array.from(document.getElementsByClassName("tab-content"))
     let tabControl = Array.from(document.getElementsByClassName("tab-button"))
@@ -401,6 +404,7 @@ export function checkTheme() {
         resumeText.style.color = "white"
         damageText.style.color = "white"
         pvText.style.color = "white"
+        lvlText.style.color = "white"
         achivement.style.color = "white"
 
         Array.from(dialogs).forEach(dialog => {
@@ -438,6 +442,7 @@ export function checkTheme() {
         resumeText.style.color = "black"
         damageText.style.color = "black"
         pvText.style.color = "black"
+        lvlText.style.color = "black"
         achivement.style.color = "black"
 
         Array.from(dialogs).forEach(dialog => {
@@ -522,6 +527,14 @@ export function checkHP() {
     }
 }
 
+export function checkLVL() {
+
+    let textePV = document.getElementById('lvlText');
+
+    textePV.textContent = `LVL ${player.dataset.level}`;
+
+}
+
 function checkMonsterAlive() {
     let monsters = document.querySelectorAll(".monster")
     
@@ -566,7 +579,7 @@ function spawnMonsters() {
 
     for(let i = 0; i < numMonstersAtStart; i++){
         let lifeMonster = (Math.floor(Math.random() * (monsterLifeMax)));
-        createMonster(lifeMonster, 2, 1, nbBoss, false);
+        createMonster(lifeMonster, 2, 1, 5, nbBoss, false);
     }
     
 }
@@ -666,7 +679,7 @@ function spawnBoss() {
     monsterLifeMax = 6;
     numMonstersAtStart = 5;
     nbBoss++;
-    createMonster(numVague, 4, 1, 1, true);  
+    createMonster(numVague, 4, 1, 10, 1, true);  
 }
 
 function endGame() {
@@ -701,11 +714,12 @@ function gameLoop() {
         handleMouseClick()
     }
     checkHP();
+    checkLVL();
     checkMonsterAlive();
 
     //handlePlayerMovement();
    // handleMouseClick();
-    checkCollisionWithMonsters();
+    checkCollisionWithMonsters(player);
 
     // Appeler la boucle de jeu à la prochaine frame
     if(!JSON.parse(game.dataset.isGamePaused)) {

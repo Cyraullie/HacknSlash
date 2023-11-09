@@ -5,7 +5,7 @@ var monsterLife;
 const map = document.getElementById("map");
 var game = document.getElementById("game");
 
-export function createMonster(life, monsterSpeed, damage, nbBoss = 1, isBoss = false) {
+export function createMonster(life, monsterSpeed, damage, xp, nbBoss = 1, isBoss = false) {
     if(life == 0){
         monsterLife = 1 * nbBoss;
     }else{
@@ -18,6 +18,7 @@ export function createMonster(life, monsterSpeed, damage, nbBoss = 1, isBoss = f
     monster.style.height = monsterHeight + "px";
     monster.style.width = monsterWidth + "px";
     monster.dataset.life = monsterLife * parseFloat(game.dataset.lifeMod);
+    monster.dataset.xp = xp;
     monster.dataset.damage = damage * parseInt(game.dataset.damageMod);
     monster.textContent = monsterLife * parseFloat(game.dataset.lifeMod);
 

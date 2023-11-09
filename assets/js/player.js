@@ -15,6 +15,9 @@ export function createPlayer() {
     player.dataset.isDash = false;
     player.dataset.invincible = false;
     player.dataset.initialLife = life;
+    player.dataset.actualXP = 0;
+    player.dataset.maxXp = 50;
+    player.dataset.level = 1;
     player.dataset.damage = damage;
     player.dataset.speed = speed;
     player.dataset.initialSpeed = speed;
@@ -44,9 +47,14 @@ export function createPlayer() {
     pvText.textContent = `${player.dataset.life} / ${player.dataset.initialLife} PV`;
 
 
+    let lvlText = document.createElement("span")
+    lvlText.classList.add("lvlText")
+    lvlText.id = "lvlText"
+    lvlText.textContent = `LVL ${player.dataset.level}`;
 
     hp.appendChild(pvBar);
     hp.appendChild(pvText);
+    hp.appendChild(lvlText);
     pvBar.appendChild(pvFull);
 
 
