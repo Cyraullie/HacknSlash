@@ -301,7 +301,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             echo json_encode($response);
             break;
 
-        case "sendMail" :
+        case "report" :
             //TODO ajout d'une table dans la DB pour les bug reports
             $mysqli = mysqli_connect("localhost:3306", "gamer", "gamer", "game");
 
