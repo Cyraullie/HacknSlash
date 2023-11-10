@@ -134,6 +134,7 @@ export function checkCollisionWithMonsters(player) {
             if((parseInt(player.dataset.actualXP) + parseInt(monstersHit[0].dataset.xp)) == parseInt(player.dataset.maxXp)){
                 player.dataset.maxXp = parseInt(player.dataset.maxXp) + 50;
                 player.dataset.level = parseInt(player.dataset.level) + 1;
+                checkLVL();
             } else {
                 player.dataset.actualXP =  parseInt(player.dataset.actualXP) + parseInt(monstersHit[0].dataset.xp)
             }

@@ -73,6 +73,8 @@ let backgroundSound;
 //TODO pouvoir changer les touches pour la souris 
 //TODO Pouvoir changer la touche de tir 
 
+//TODO faire des mobs qui tire des projetiles ?
+
 //BUG le change de touche pour le clique gauche refait proc l'event
 //BUG ralentissement vers la vagues 450 environs et toujours plus xD
 
@@ -318,6 +320,9 @@ export function initializeGame() {
         }
       });
 */
+      //TODO display skill
+      //TODO upgrade skill dans display upgrade ? ou a chaque niveau ?
+
     // Boucle de jeu principale
     requestAnimationFrame(gameLoop);
     
@@ -533,6 +538,11 @@ export function checkLVL() {
 
     textePV.textContent = `LVL ${player.dataset.level}`;
 
+    if(!isUpdated){
+        displayUpgrade();
+        isUpdated = true;
+    }
+
 }
 
 function checkMonsterAlive() {
@@ -548,10 +558,7 @@ function checkMonsterAlive() {
             }
             
             if((numVague - 1) % 5 === 0 && (numVague - 1) != 0){
-                if(!isUpdated){
-                    displayUpgrade();
-                    isUpdated = true;
-                }
+                
                 if(bossTime){
                     bossSound.fade(parseFloat(game.dataset.volume), 0, 2000);
                     setTimeout(function () {
@@ -564,8 +571,7 @@ function checkMonsterAlive() {
         }
     }
     if (monsters.length === 0 && !isEnded) {
-        if(document.getElementById("upgrade").style.display == "none" && numVague % 10 !== 0){
-            isUpdated = false;  
+        if(numVague % 10 !== 0){
             spawnMonsters();         
         }
     }
@@ -699,6 +705,10 @@ function endGame() {
 
 function gameLoop() {
 
+    if(document.getElementById("upgrade").style.display == "none"){
+        isUpdated = false;
+    }
+
     if(isEnded || isPaused || isUpdated){
 
         game.dataset.isGamePaused = true;
@@ -714,7 +724,6 @@ function gameLoop() {
         handleMouseClick()
     }
     checkHP();
-    checkLVL();
     checkMonsterAlive();
 
     //handlePlayerMovement();
