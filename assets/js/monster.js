@@ -17,10 +17,10 @@ export function createMonster(life, monsterSpeed, damage, xp, nbBoss = 1, isBoss
     monster.className = "monster"; // Appliquez des styles CSS pour le monstre
     monster.style.height = monsterHeight + "px";
     monster.style.width = monsterWidth + "px";
-    monster.dataset.life = monsterLife * parseFloat(game.dataset.lifeMod);
+    monster.dataset.life = Math.round(monsterLife * parseFloat(game.dataset.lifeMod));
     monster.dataset.xp = xp;
     monster.dataset.damage = damage * parseInt(game.dataset.damageMod);
-    monster.textContent = monsterLife * parseFloat(game.dataset.lifeMod);
+    monster.textContent = Math.round(monsterLife * parseFloat(game.dataset.lifeMod));
 
     if(isBoss){
         monster.dataset.speed = monsterSpeed + (parseFloat(game.dataset.lifeMod) / 2);
