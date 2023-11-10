@@ -6,7 +6,7 @@ let player;
 let life = 4;
 let damage = 3;
 let speed = 5; // Vitesse de déplacement
-let fireRate = 400;
+let fireRate = 400; //400
 
 export function createPlayer() {
 
@@ -15,7 +15,8 @@ export function createPlayer() {
     player.dataset.isDash = false;
     player.dataset.invincible = false;
     player.dataset.initialLife = life;
-    player.dataset.actualXP = 0;
+    player.dataset.skillLevel = 1; // 1
+    player.dataset.actualXP = 0; //0
     player.dataset.maxXp = 50;
     player.dataset.level = 1;
     player.dataset.damage = damage;

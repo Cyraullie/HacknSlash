@@ -23,7 +23,6 @@ var targetY = 0;
 
 export function startShooting(x, y, player) {
     if(!JSON.parse(game.dataset.isGamePaused)) {
-    
         damage = player.dataset.damage;
         let playerHitbox = player.getBoundingClientRect();
 
@@ -131,7 +130,7 @@ export function checkCollisionWithMonsters(player) {
         projectileHit.remove();
         isShooting = false;
         if(monstersHit[0].dataset.life <= 0){
-            if((parseInt(player.dataset.actualXP) + parseInt(monstersHit[0].dataset.xp)) == parseInt(player.dataset.maxXp)){
+            if((parseInt(player.dataset.actualXP) + parseInt(monstersHit[0].dataset.xp)) >= parseInt(player.dataset.maxXp)){
                 player.dataset.maxXp = parseInt(player.dataset.maxXp) + 50;
                 player.dataset.level = parseInt(player.dataset.level) + 1;
                 checkLVL();

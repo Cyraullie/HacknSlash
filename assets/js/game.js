@@ -4,7 +4,7 @@ import { apiURL, windowHeight, windowWidth } from './data.js';
 import { createPlayer, } from './player.js';
 import { createMonster } from './monster.js';
 import { checkCollisionWithMonsters, startShooting } from './projectile.js';
-import { displayGameOver, displayUpgrade, createUpgradeDialog, createGameOverDialog, createEchapDialog, createOptionsDialog, displayEscape, activeButton, createStartDialog, createSuccessDialog } from './menu.js';
+import { displayGameOver, displayUpgrade, createUpgradeDialog, createGameOverDialog, createEchapDialog, createOptionsDialog, displayEscape, activeButton, createStartDialog, createSuccessDialog, displaySkill, createSkillDialog } from './menu.js';
 import { Howl } from 'howler';
 import axios from 'axios';
 
@@ -45,14 +45,9 @@ let backgroundSound;
 //TODO Systeme de compétence ?
 //TODO plusieurs tir en un clique ?
 
-//TODO System de niveau ?
-//TODO pour débloquer les upgrades 
-//TODO début 50 xp + 50 a chaque levelup ?
-//TODO monstre apporte 5xp de base ? boss 50xp ?
-
 
 //TODO 1 compétences active sur la touche espace par défault
-//TODO la compétence est débloquer à la 5eme vagues
+//TODO la compétence est débloquer au niveau 1
 
 //TODO mettre un nombre de tir possible ? qui recharge après un action ?
 
@@ -80,7 +75,7 @@ let backgroundSound;
 
 let nbBoss = 1; //nombre de boss fait
 let numMonstersAtStart = 3;
-var numVague = 1;
+var numVague = 1; //1
 var numVagueNoMove = 0;
 var numVagueNoHit = 0;
 
@@ -98,6 +93,7 @@ game.style.minWidth = windowWidth + "px";
 game.style.maxHeight = windowHeight + "px";
 game.style.maxWidth = windowWidth + "px";
 
+let isNotSkilled = true;
 let handleClick = false;
 var isEnded = false;
 var isUpdated = false;
@@ -174,18 +170,18 @@ export function initializeGameData() {
         game.dataset.keyLeft = "a"
     }
 
-    if(localStorage.getItem("keyFire") != null){
-        game.dataset.keyFire = localStorage.getItem("keyFire")
-    }else{
-        game.dataset.keyFire = 0
-    }
-
     if(localStorage.getItem("keyDash") != null){
         game.dataset.keyDash = localStorage.getItem("keyDash")
     }else{
         game.dataset.keyDash = " "
     }
-    
+
+    if(localStorage.getItem("keySkill") != null){
+        game.dataset.keySkill = localStorage.getItem("keySkill")
+    }else{
+        game.dataset.keySkill = "q"
+    }
+ 
     // Initialisation du jeu
     bossSound = new Howl({
         src: ['assets/sounds/boss.mp3'],
@@ -206,6 +202,8 @@ export function initializeGameData() {
     createStartDialog();
 
     createGameOverDialog();
+
+    createSkillDialog();
 
     createUpgradeDialog();
 
@@ -251,8 +249,27 @@ export function initializeGameData() {
     imageDamage.id = "sword";
     damageDiv.appendChild(imageDamage);
 
+    let skillKeyDiv = document.createElement("div");
+    skillKeyDiv.id = "skillKeyDiv"
+    skillKeyDiv.style.left = 30 + "px"
+    skillKeyDiv.style.top = 47 + "px"
+    skillKeyDiv.style.padding = "10px"
+    skillKeyDiv.style.backgroundColor = "grey"
+    skillKeyDiv.style.boxShadow = "0 4px 6px rgba(0, 0, 0, 0.1)";
+    skillKeyDiv.style.borderRadius = "5px"
+    skillKeyDiv.style.textAlign = "center";
+    skillKeyDiv.style.width = "30px"
+    skillKeyDiv.style.height = "30px"
+    skillKeyDiv.style.position = "absolute"
+    map.appendChild(skillKeyDiv);
+
+    let skillKeyText = document.createElement("p");
+    skillKeyText.id = "skillKeyText";
+    skillKeyText.style.fontWeight = "bold"
+    skillKeyText.textContent = game.dataset.keySkill.toUpperCase();
+    skillKeyDiv.appendChild(skillKeyText);
+
     if(localStorage.getItem("difficulty") == null){
-        console.log("test")
         localStorage.setItem("difficulty", 0);
     } else {
         let difficultyButton = document.getElementById("difficultyButton")
@@ -320,6 +337,9 @@ export function initializeGame() {
         }
       });
 */
+      displaySkill();
+      
+      isUpdated = true;
       //TODO display skill
       //TODO upgrade skill dans display upgrade ? ou a chaque niveau ?
 
@@ -329,9 +349,9 @@ export function initializeGame() {
 }
 
 function handleMouseClickDown(event){
-    if(event.button == game.dataset.keyFire){
+    //if(event.button == game.dataset.keyFire){
         handleClick = true;
-    }
+   // }
 }
 
 function handleMouseClickUp(){
@@ -359,6 +379,9 @@ function handleKeyDown(event) {
             break;
         case game.dataset.keyDash:
             player.dataset.isDash = true;
+            break;
+        case game.dataset.keySkill:
+            useSkill(player);
             break;
         case "escape":
             togglePauseGame();
@@ -390,6 +413,7 @@ export function checkTheme() {
     let dialogs = document.getElementsByClassName("dialog")
     let resumeText = document.getElementById("resumeText");
     let pvText = document.getElementById("pvText");
+    let skillKeyDiv = document.getElementById("skillKeyDiv")
     let lvlText = document.getElementById("lvlText");
     let damageText = document.getElementById("damageText");
     let tabContent = Array.from(document.getElementsByClassName("tab-content"))
@@ -411,6 +435,8 @@ export function checkTheme() {
         pvText.style.color = "white"
         lvlText.style.color = "white"
         achivement.style.color = "white"
+        skillKeyDiv.style.color = "white"
+        skillKeyDiv.style.backgroundColor = "#666666"
 
         Array.from(dialogs).forEach(dialog => {
             dialog.style.backgroundColor = "#666666"
@@ -449,6 +475,8 @@ export function checkTheme() {
         pvText.style.color = "black"
         lvlText.style.color = "black"
         achivement.style.color = "black"
+        skillKeyDiv.style.color = "black"
+        skillKeyDiv.style.backgroundColor = "#666666"
 
         Array.from(dialogs).forEach(dialog => {
             dialog.style.backgroundColor = "#ffffff"
@@ -495,7 +523,7 @@ export function togglePauseGame() {
     displayEscape(isPaused);
 }
 
-function handleMouseClick() {
+export function handleMouseClick() {
     if (!player.hasAttribute('data-firing')) {
         player.setAttribute('data-firing', 'true');
         startShooting(xMouse, yMouse, player);
@@ -503,6 +531,71 @@ function handleMouseClick() {
         setTimeout(function() {
           player.removeAttribute('data-firing');
         }, parseInt(player.dataset.fireRate));
+    }
+}
+
+function setSkill (player){
+    switch (parseInt(player.dataset.skill)) {
+        case 0 :
+            console.log("tir multiple")
+            break;
+        case 1 :
+            console.log("danse de l'épée")
+            break;
+        case 2 :
+            console.log("danse du bouclier")
+            break;
+    }
+}
+
+function useSkill (player){
+    switch (parseInt(player.dataset.skill)) {
+        case 0 :
+            let skillKeyText = document.getElementById("skillKeyText")
+            if (!player.hasAttribute('data-skilled')) {
+                player.setAttribute('data-skilled', 'true');
+
+                // Définir le temps initial à 15 secondes
+                let remainingTime = 15;
+                // Afficher le compte à rebours initial
+
+                skillKeyText.textContent = remainingTime;
+                // Définir l'intervalle pour décrémenter le temps
+                const countdownInterval = setInterval(() => {
+                    if(!JSON.parse(game.dataset.isGamePaused)) {
+                        remainingTime--;
+                        skillKeyText.textContent = remainingTime;
+
+                        // Afficher le nouveau temps restant
+
+                        // Vérifier si le temps est écoulé
+                        if (remainingTime <= 0) {
+                            clearInterval(countdownInterval); // Arrêter l'intervalle
+                            skillKeyText.textContent = game.dataset.keySkill;
+                            player.removeAttribute('data-skilled');
+                        }
+                    }
+                }, 1000);
+
+
+                for(let i = 0; i <= parseInt(player.dataset.skillLevel); i++){
+                    let yRand = (Math.floor(Math.random() * (100))) + 10;
+                    let xRand = (Math.floor(Math.random() * (100))) + 10;
+
+                    setTimeout(() => {
+                        startShooting(xMouse + xRand, yMouse + yRand, player)
+                    }, i * 100);
+                }
+                
+                
+            }
+            break;
+        case 1 :
+            console.log("danse de l'épée")
+            break;
+        case 2 :
+            console.log("danse du bouclier")
+            break;
     }
 }
 
@@ -544,7 +637,9 @@ export function checkLVL() {
     }
 
 }
-
+//TODO quand on fait le boss et qu'on passe de niveau le jeu refait faire le boss
+//TODO garder que le high score ?
+//TODO changer le system de niveau xD (jusqu'au niveau 10 50 par 50 et aprsè 100 par 100 ?)
 function checkMonsterAlive() {
     let monsters = document.querySelectorAll(".monster")
     
@@ -552,9 +647,7 @@ function checkMonsterAlive() {
         if (monsters.length === 0) {
 
             if(numVague % 10 === 0){ 
-                if(!isUpdated){
-                    spawnBoss();
-                }
+                spawnBoss();
             }
             
             if((numVague - 1) % 5 === 0 && (numVague - 1) != 0){
@@ -589,7 +682,7 @@ function spawnMonsters() {
     }
     
 }
-
+//TODO optimisation ?
 function checkSuccess() {
     let achivement = document.getElementById("achivement");
     let noMove = Math.floor(numVagueNoMove / 50)
@@ -651,7 +744,7 @@ function checkSuccess() {
     
                 axios.get(urlAvecParametres)
                 .then(response => {
-                    achivement.textContent = "Tourelle Diff " + noMove
+                    achivement.textContent = "Invincible " + (noHit - 4)
                     achivement.style.display = "block"
                     achivement.classList.add("achivement-animation");
     
@@ -704,8 +797,12 @@ function endGame() {
 }
 
 function gameLoop() {
+    if(isNotSkilled  && document.getElementById("skill").style.display == "none"){
+        setSkill(player);
+        isNotSkilled = false;
+    }
 
-    if(document.getElementById("upgrade").style.display == "none"){
+    if(document.getElementById("upgrade").style.display == "none" && document.getElementById("skill").style.display == "none"){
         isUpdated = false;
     }
 
@@ -730,9 +827,9 @@ function gameLoop() {
    // handleMouseClick();
     checkCollisionWithMonsters(player);
 
+    let monsters = document.querySelectorAll(".monster")
     // Appeler la boucle de jeu à la prochaine frame
     if(!JSON.parse(game.dataset.isGamePaused)) {
-        let monsters = document.querySelectorAll(".monster")
 
         if(document.getElementById("upgrade").style.display == "none"){
             let vagues = document.getElementById("vagues");
@@ -746,18 +843,18 @@ function gameLoop() {
         if(player.dataset.life < player.dataset.initialLife){
             numVagueNoHit = 0;
         }
-        
-        if (monsters.length === 0 && !isUpdated) {
-            numVague++;
-            numVagueNoMove++;
-            numVagueNoHit++;
-            checkSuccess()
-            let projectiles = document.querySelectorAll(".projectile")
+    }
 
-            projectiles.forEach(projectile => {
-                projectile.remove();
-            })            
-        }
+    if (monsters.length === 0) {
+        numVague++;
+        numVagueNoMove++;
+        numVagueNoHit++;
+        checkSuccess()
+        let projectiles = document.querySelectorAll(".projectile")
+
+        projectiles.forEach(projectile => {
+            projectile.remove();
+        })            
     }
     requestAnimationFrame(gameLoop); 
 }

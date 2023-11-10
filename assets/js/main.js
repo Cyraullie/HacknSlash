@@ -5,7 +5,11 @@ document.addEventListener('DOMContentLoaded', function () {
         if (event.key === " ") {
           event.preventDefault(); // Empêche le comportement par défaut de la touche Espace
         }
-      });
+    });
+
+    document.addEventListener('contextmenu', function (event) {
+      event.preventDefault();
+    });
 
     initializeGameData();
 });

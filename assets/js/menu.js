@@ -35,15 +35,45 @@ export function displayUpgrade() {
     } else {
         buttonsToDisplay = [lifeButton, damageButton, regenButton, moveSpeedButton];
     }
-        while (upgradesShown < upgradesToDisplay) {
-            let randomUpgrade = Math.floor(Math.random() * buttonsToDisplay.length);
 
-            if (buttonsToDisplay[randomUpgrade].hidden) {
-                // Cette amélioration n'est pas déjà affichée, on l'affiche
-                buttonsToDisplay[randomUpgrade].hidden = false;
+    while (upgradesShown < upgradesToDisplay) {
+        let randomUpgrade = Math.floor(Math.random() * buttonsToDisplay.length);
+        
+        if (buttonsToDisplay[randomUpgrade].hidden) {
+            // Cette amélioration n'est pas déjà affichée, on l'affiche
+            buttonsToDisplay[randomUpgrade].hidden = false;
+            if(!buttonsToDisplay[randomUpgrade].hidden){
                 upgradesShown++;
             }
         }
+    }
+
+    dialog.style.display = "block";
+}
+
+
+export function displaySkill() {
+    let dialog = document.getElementById("skill");
+
+    let multipleFireButton = document.getElementById("multipleFireButton")
+    let shieldDanceButton = document.getElementById("shieldDanceButton")
+    let swordDanceButton = document.getElementById("swordDanceButton")
+//TODO trouver 3-4 autre compétence
+//TODO Un truc qui te tourne autour et qui inflige des degats
+//TODO Un truc qui te tourne autour et protege ?
+//TODO Un boost de vitesse qui te permet de traverser les ennemies pdt 2 3 secondes ?
+
+//TODO trouver des images pour chaque compétences
+    
+    
+    let damageButton = document.getElementById("damageButton")
+    let moveSpeedButton = document.getElementById("moveSpeedButton")
+
+    let buttonsToDisplay = [multipleFireButton, swordDanceButton, shieldDanceButton];
+
+    for(let i = 0; i < buttonsToDisplay.length; i++){
+        buttonsToDisplay[i].hidden = false;
+    }
 
     dialog.style.display = "block";
 }
@@ -177,7 +207,6 @@ export function createUpgradeDialog (){
     buttonLife.id = "lifeButton"
     buttonLife.classList.add("upgradeButton")
     buttonLife.textContent = "+1 vie"
-    buttonLife.hidden = true
     buttonLife.setAttribute("data-selected", "false");
     buttonLife.appendChild(imgLife)
     div4.appendChild(buttonLife)  
@@ -188,7 +217,6 @@ export function createUpgradeDialog (){
     buttonDamage.id = "damageButton"
     buttonDamage.classList.add("upgradeButton")
     buttonDamage.textContent = "+1 dégat"
-    buttonDamage.hidden = true
     buttonDamage.setAttribute("data-selected", "false");
     buttonDamage.appendChild(imgDamage)
     div4.appendChild(buttonDamage)
@@ -199,7 +227,6 @@ export function createUpgradeDialog (){
     buttonRegen.id = "regenButton"
     buttonRegen.classList.add("upgradeButton")
     buttonRegen.textContent = "full regen"
-    buttonRegen.hidden = true
     buttonRegen.setAttribute("data-selected", "false");
     buttonRegen.appendChild(imgRegen)
     div4.appendChild(buttonRegen)
@@ -210,7 +237,6 @@ export function createUpgradeDialog (){
     buttonFireRate.id = "fireRateButton"
     buttonFireRate.classList.add("upgradeButton")
     buttonFireRate.textContent = "amélio cadence"
-    buttonFireRate.hidden = true
     buttonFireRate.setAttribute("data-selected", "false");
     buttonFireRate.appendChild(imgFireRate)
     div4.appendChild(buttonFireRate)
@@ -221,12 +247,15 @@ export function createUpgradeDialog (){
     buttonMoveSpeed.id = "moveSpeedButton"
     buttonMoveSpeed.classList.add("upgradeButton")
     buttonMoveSpeed.textContent = "amélio ms"
-    buttonMoveSpeed.hidden = true
     buttonMoveSpeed.setAttribute("data-selected", "false");
     buttonMoveSpeed.appendChild(imgMoveSpeed)
     div4.appendChild(buttonMoveSpeed)
 
     let buttons = [buttonLife, buttonDamage, buttonRegen, buttonFireRate, buttonMoveSpeed];
+
+   /* for(let i = 0; i < buttons.length; i++){
+        buttons[i].hidden = true;
+    }*/
 
     buttons.forEach((button) => {
         button.addEventListener("click", () => {
@@ -259,6 +288,107 @@ export function createUpgradeDialog (){
 
     let button1 = document.createElement("button")
     button1.id = "validButton"
+    button1.textContent = "Valider"
+    div5.appendChild(button1)
+
+    game.appendChild(customDialog);
+
+    customDialog.style.display = "none";
+}
+
+export function createSkillDialog (){
+    customDialog = document.getElementById("skill");
+    let div1 = document.createElement("div")
+    let imgElement = document.createElement("img");
+    let titleElement = document.createElement("h1");
+    let textElement = document.createElement("p");
+
+    imgElement.id = "imageUpgrade"
+    imgElement.src = "./assets/images/mage.png";
+    imgElement.style.width = "200px";
+    imgElement.style.position = "absolute";
+    imgElement.style.top = "-170px";
+    imgElement.style.left = "37%";
+
+    titleElement.textContent = "Compétences";
+    textElement.textContent = "Veuillez choisir votre compétence";
+
+    customDialog.appendChild(imgElement)
+    customDialog.appendChild(div1)
+
+    div1.appendChild(titleElement)
+    div1.appendChild(textElement)
+    
+    let div4 = document.createElement("div")
+    div4.id = "upgradeDiv";
+    customDialog.appendChild(div4)
+
+    let buttonMultipleFire = document.createElement("button")
+    //var imgLife = document.createElement("img");
+    //imgLife.src = "./assets/images/full_heart.png";
+    buttonMultipleFire.id = "multipleFireButton"
+    buttonMultipleFire.classList.add("skillButton")
+    buttonMultipleFire.textContent = "tir multiple"
+    buttonMultipleFire.setAttribute("data-selected", "false");
+    //buttonLife.appendChild(imgLife)
+    div4.appendChild(buttonMultipleFire)  
+
+    let buttonSwordDance = document.createElement("button")
+   // var imgDamage = document.createElement("img");
+   // imgDamage.src = "./assets/images/sword.png";
+   buttonSwordDance.id = "swordDanceButton"
+   buttonSwordDance.classList.add("skillButton")
+   buttonSwordDance.textContent = "danse des épées"
+   buttonSwordDance.disabled = true
+   buttonSwordDance.setAttribute("data-selected", "false");
+   // buttonDamage.appendChild(imgDamage)
+    div4.appendChild(buttonSwordDance)
+
+    let buttonShieldDance = document.createElement("button")
+   // var imgRegen = document.createElement("img");
+   // imgRegen.src = "./assets/images/full_heart.png";
+   buttonShieldDance.id = "shieldDanceButton"
+   buttonShieldDance.classList.add("skillButton")
+   buttonShieldDance.textContent = "danse des boucliers"
+   buttonShieldDance.disabled = true
+   buttonShieldDance.setAttribute("data-selected", "false");
+  //  buttonRegen.appendChild(imgRegen)
+    div4.appendChild(buttonShieldDance)
+
+    let buttons = [buttonMultipleFire, buttonShieldDance, buttonSwordDance];
+
+    buttons.forEach((button) => {
+        button.addEventListener("click", () => {
+            buttons.forEach((otherButton) => {
+                if (otherButton !== button) {
+                    otherButton.setAttribute("data-selected", "false");
+                    otherButton.classList.remove("selected");
+                }
+            });
+
+            let isSelected = button.getAttribute("data-selected");
+            if (isSelected === "false") {
+                button.setAttribute("data-selected", "true");
+                button.classList.add("selected");
+            } else {
+                button.setAttribute("data-selected", "false");
+                button.classList.remove("selected");
+            }
+        });
+    });
+
+
+   // customDialog.style.width = "1050px"
+   customDialog.style.width = "630px" 
+
+    let div5 = document.createElement("div")
+    div5.id = "buttonDiv";
+    div5.style.justifyContent = "center";
+    customDialog.appendChild(div5)
+
+
+    let button1 = document.createElement("button")
+    button1.id = "validSkillButton"
     button1.textContent = "Valider"
     div5.appendChild(button1)
 
@@ -612,23 +742,55 @@ export function createOptionsDialog (){
         };
     
         fireButton.addEventListener("keydown", keydownHandler);
-        fireButton.addEventListener("mousedown", keydownHandler);
+      //fireButton.addEventListener("mousedown", keydownHandler);
     })*/
+
+    let skillDiv = document.createElement("div")
+    skillDiv.classList.add("keyDiv");
+    divControl.appendChild(skillDiv)
+    
+    let skillLabel = document.createElement("label")
+    skillLabel.textContent = "compétence";
+    skillLabel.for = "skillButton"
+
+    let skillButton = document.createElement("button")
+    skillButton.textContent = game.dataset.keySkill;
+    skillButton.id = "skillButton"
+
+    skillDiv.appendChild(skillLabel)
+    skillDiv.appendChild(skillButton)
+
+    skillButton.addEventListener("click", () => {
+        skillButton.textContent = "Appuyez sur la touche"
+
+        const keydownHandler = (event) => {
+            keyChanger(event, skillButton, keydownHandler);
+        };
+    
+        skillButton.addEventListener("keydown", keydownHandler);
+        //skillButton.addEventListener("mousedown", keydownHandler);
+    })
 
 
 
     function keyChanger(event, button, keydownHandler) {
         let key;
-        
+
+        let dataset = game.dataset;
+        let keySet = Object.keys(game.dataset).filter((cle) => cle.includes("key"));
+        console.log(keySet)
+    
+        let valeursAvecKey = keySet.map(key => dataset[key]);
+    
         if(event.key != null){
            key = event.key.toLowerCase();
-        } else if (event.button != null) {
+        } /*else if (event.button != null) {
             key = event.button;
-        }
+        }*/
 
         switch (button.id) {
             case "upButton" :
-                if(!(game.dataset.keyRight == key || game.dataset.keyDown == key || game.dataset.keyLeft == key || game.dataset.keyFire == key || game.dataset.keyDash == key)) {
+                if(!(valeursAvecKey.includes(key)) || game.dataset.keyUp == key) {
                     game.dataset.keyUp = key;
                     localStorage.setItem("keyUp", key)
                     upButton.textContent = game.dataset.keyUp;
@@ -649,7 +811,7 @@ export function createOptionsDialog (){
                 break;
 
             case "rightButton" :
-                if(!(game.dataset.keyUp == key || game.dataset.keyDown == key || game.dataset.keyLeft == key || game.dataset.keyFire == key || game.dataset.keyDash == key)) {
+                if(!(valeursAvecKey.includes(key)) || game.dataset.keyRight == key) {
                     game.dataset.keyRight = key;
                     localStorage.setItem("keyRight", key)
                     rightButton.textContent = game.dataset.keyRight;
@@ -670,7 +832,7 @@ export function createOptionsDialog (){
                 break;
 
             case "leftButton" :
-                if(!(game.dataset.keyRight == key || game.dataset.keyDown == key || game.dataset.keyUp == key || game.dataset.keyFire == key || game.dataset.keyDash == key)) {
+                if(!(valeursAvecKey.includes(key)) || game.dataset.keyLeft == key) {
                     game.dataset.keyLeft = key;
                     localStorage.setItem("keyLeft", key)
                     leftButton.textContent = game.dataset.keyLeft;
@@ -691,7 +853,7 @@ export function createOptionsDialog (){
                 break;
 
             case "downButton" :
-                if(!(game.dataset.keyRight == key || game.dataset.keyLeft == key || game.dataset.keyUp == key || game.dataset.keyFire == key || game.dataset.keyDash == key)) {
+                if(!(valeursAvecKey.includes(key)) || game.dataset.keyDown == key) {
                     game.dataset.keyDown = key;
                     localStorage.setItem("keyDown", key)
                     downButton.textContent = game.dataset.keyDown;
@@ -712,7 +874,7 @@ export function createOptionsDialog (){
                 break;
 
             case "dashButton" :
-                if(!(game.dataset.keyRight == key || game.dataset.keyLeft == key || game.dataset.keyUp == key || game.dataset.keyFire == key || game.dataset.keyDown == key)) {
+                if(!(valeursAvecKey.includes(key)) || game.dataset.keyDash == key) {
                     game.dataset.keyDash = key;
                     localStorage.setItem("keyDash", key)
 
@@ -736,7 +898,7 @@ export function createOptionsDialog (){
 
             case "fireButton" :
                 if (event.isTrusted){
-                    if(!(game.dataset.keyRight == key || game.dataset.keyLeft == key || game.dataset.keyUp == key || game.dataset.keyDown == key || game.dataset.keyDash == key)) {
+                    if(!(valeursAvecKey.includes(key)) || game.dataset.keyFire == key) {
                         game.dataset.keyFire = key;
                         localStorage.setItem("keyFire", key)
                         
@@ -760,6 +922,27 @@ export function createOptionsDialog (){
                             fireButton.style.color = upButton.style.color;
                         }, 500);
                     }
+                }
+                break;
+
+            case "skillButton" :
+                if(!(valeursAvecKey.includes(key)) || game.dataset.keySkill == key) {
+                    game.dataset.keySkill = key;
+                    localStorage.setItem("keySkill", key)
+                    skillButton.textContent = game.dataset.keySkill;
+                    if(game.dataset.keySkill == " "){
+                        skillButton.textContent = "espace";
+                    }
+                    skillButton.removeEventListener("keydown", keydownHandler)
+                } else {
+                    skillButton.classList.add("shake-animation");
+                    skillButton.style.color = "red";
+
+                    // Attendez 0.5 seconde et supprimez l'animation
+                    setTimeout(() => {
+                        skillButton.classList.remove("shake-animation");
+                        skillButton.style.color = downButton.style.color;
+                    }, 500);
                 }
                 break;
         }
@@ -971,6 +1154,7 @@ export function activeButton(){
     let logButton = document.getElementById("logButton")
     let restartButton = document.getElementById("restartButton")
     let validButton = document.getElementById("validButton")
+    let validSkillButton = document.getElementById("validSkillButton")
     let themeButton = document.getElementById("themeButton")
     let optionButton = document.getElementById("optionButton")
     let playButton = document.getElementById("playButton")
@@ -1131,17 +1315,6 @@ export function activeButton(){
                 player.dataset.initialLife = parseInt(player.dataset.initialLife) + 1;
                 player.dataset.life = parseInt(player.dataset.life) + 1;
 
-
-                /*let hp = document.getElementById("hp");
-                hp.style.width = 20 * player.dataset.initialLife + "px";
-
-                let imageHeart = document.createElement("img");
-                imageHeart.src = "./assets/images/full_heart.png";
-                imageHeart.classList.add("heart");
-                imageHeart.id = "heart" + parseInt(player.dataset.initialLife - 1);
-                hp.appendChild(imageHeart);*/
-
-
                 lifeButton.setAttribute("data-selected", "false");
                 lifeButton.classList.remove("selected");
                 game.dataset.isGamePaused = false;
@@ -1193,6 +1366,47 @@ export function activeButton(){
                 document.getElementById("upgrade").style.display = "none";
             }
             
+        });
+    }
+
+    if(validSkillButton !== null){
+        validSkillButton.addEventListener("click", () => {
+            let multipleFireButton = document.getElementById("multipleFireButton")
+            let swordDanceButton = document.getElementById("swordDanceButton")
+            let shieldDanceButton = document.getElementById("shieldDanceButton")
+            
+            if (multipleFireButton.getAttribute("data-selected") === "true") {
+                let player = document.getElementById("player")
+ 
+                player.dataset.skill = 0;
+
+                multipleFireButton.setAttribute("data-selected", "false");
+                multipleFireButton.classList.remove("selected");
+                game.dataset.isGamePaused = false;
+                document.getElementById("skill").style.display = "none";
+            }
+        
+            if (swordDanceButton.getAttribute("data-selected") === "true") {
+                let player = document.getElementById("player")
+
+                player.dataset.skill = 1;
+                
+                swordDanceButton.setAttribute("data-selected", "false");
+                swordDanceButton.classList.remove("selected");
+                game.dataset.isGamePaused = false;
+                document.getElementById("skill").style.display = "none";
+            }
+        
+            if (shieldDanceButton.getAttribute("data-selected") === "true") {
+                let player = document.getElementById("player")
+
+                player.dataset.skill = 2;
+                
+                shieldDanceButton.setAttribute("data-selected", "false");
+                shieldDanceButton.classList.remove("selected");
+                game.dataset.isGamePaused = false;
+                document.getElementById("skill").style.display = "none";
+            }
         });
     }
     
