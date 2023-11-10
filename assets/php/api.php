@@ -301,8 +301,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             echo json_encode($response);
             break;
 
+        case "sendMail" :
+            //TODO ajout d'une table dans la DB pour les bug reports
+            $mysqli = mysqli_connect("localhost:3306", "gamer", "gamer", "game");
+
+            if (!$mysqli) {
+                die("Erreur de connexion : " . mysqli_connect_error());
+            }
+            
+            $message =  $_GET["message"];
+            $p_id = $_GET["player_id"];
+            //$result = mysqli_query($mysqli, "SELECT pseudo, score FROM `scores` INNER JOIN players ON scores.players_id = players.id ORDER BY score DESC LIMIT 5");
+            
+            $stmt = $mysqli->prepare("INSERT INTO `reports` (`players_id`, `message`) VALUES (?, ?)");
+
+            if ($stmt) {
+                // Lier la variable $pseudo à la requête
+                $stmt->bind_param("is", $p_id, $message );
+            
+                // Exécuter la requête
+                if ($stmt->execute()) {
+                    echo "Enregistrement inséré avec succès.";
+                } else {
+                    echo "Erreur lors de l'exécution de la requête : " . $stmt->error;
+                }
+            
+                // Fermer la requête préparée
+                $stmt->close();
+            } else {
+                echo "Erreur de préparation de la requête : " . $mysqli->error;
+            }
+            
+            $response[0] =  "Le report a bien été envoyé";
+         
+            header('Content-Type: application/json');
+            echo json_encode($response);
+            break;
 
 
+        
         };
 } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
 

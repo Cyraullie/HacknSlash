@@ -76,6 +76,24 @@ CREATE TABLE IF NOT EXISTS `game`.`advancements` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+
+
+-- -----------------------------------------------------
+-- Table `game`.`reports`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `game`.`reports` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `message` TEXT NOT NULL,
+  `players_id` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_report_has_players1_idx` (`players_id` ASC) VISIBLE,
+  CONSTRAINT `fk_report_has_players1`
+    FOREIGN KEY (`players_id`)
+    REFERENCES `game`.`players` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
 -- -----------------------------------------------------
 -- Insertition de succès
 -- -----------------------------------------------------

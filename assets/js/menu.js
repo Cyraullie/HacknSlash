@@ -13,7 +13,8 @@ export function displayGameOver(text1, text2) {
 
     dialog.style.display = "block";
 }
-
+//TODO bouton signaler un bug
+//TODO ajout de l'amélioration de skill
 export function displayUpgrade() {
     let dialog = document.getElementById("upgrade");
     let fireRateButton = document.getElementById("fireRateButton")
@@ -60,6 +61,7 @@ export function displaySkill() {
     let swordDanceButton = document.getElementById("swordDanceButton")
 //TODO trouver 3-4 autre compétence
 //TODO Un truc qui te tourne autour et qui inflige des degats
+//TODO skill qui tire tout au tour du joueur
 //TODO Un truc qui te tourne autour et protege ?
 //TODO Un boost de vitesse qui te permet de traverser les ennemies pdt 2 3 secondes ?
 

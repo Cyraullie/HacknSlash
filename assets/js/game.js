@@ -534,6 +534,7 @@ export function handleMouseClick() {
     }
 }
 
+
 function setSkill (player){
     switch (parseInt(player.dataset.skill)) {
         case 0 :
