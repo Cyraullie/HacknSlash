@@ -302,7 +302,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             break;
 
         case "report" :
-            //TODO ajout d'une table dans la DB pour les bug reports
             $mysqli = mysqli_connect("localhost:3306", "gamer", "gamer", "game");
 
             if (!$mysqli) {

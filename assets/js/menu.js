@@ -22,19 +22,20 @@ export function displayUpgrade() {
     let damageButton = document.getElementById("damageButton")
     let lifeButton = document.getElementById("lifeButton")
     let moveSpeedButton = document.getElementById("moveSpeedButton")
+    let skillUpButton = document.getElementById("skillUpButton")
     let upgradesToDisplay = 3; // Nombre d'améliorations à afficher
     let upgradesShown = 0; // Nombre d'améliorations actuellement affichées
     let buttonsToDisplay = [];
-    let buttonsToDisplayToHidden = [lifeButton, damageButton, regenButton, fireRateButton, moveSpeedButton];
+    let buttonsToDisplayToHidden = [lifeButton, damageButton, regenButton, fireRateButton, moveSpeedButton, skillUpButton];
 
     for(let i = 0; i < buttonsToDisplayToHidden.length; i++){
         buttonsToDisplayToHidden[i].hidden = true;
     }
 
     if (parseInt(player.dataset.fireRate) > 100) {
-        buttonsToDisplay = [lifeButton, damageButton, regenButton, fireRateButton, moveSpeedButton];
+        buttonsToDisplay = [lifeButton, damageButton, regenButton, fireRateButton, moveSpeedButton, skillUpButton];
     } else {
-        buttonsToDisplay = [lifeButton, damageButton, regenButton, moveSpeedButton];
+        buttonsToDisplay = [lifeButton, damageButton, regenButton, moveSpeedButton, skillUpButton];
     }
 
     while (upgradesShown < upgradesToDisplay) {
@@ -51,7 +52,6 @@ export function displayUpgrade() {
 
     dialog.style.display = "block";
 }
-
 
 export function displaySkill() {
     let dialog = document.getElementById("skill");
@@ -89,18 +89,10 @@ export function displayEscape(isGamePaused) {
         dialog.style.display = "block";
         resumeDiv.style.display = "block";
     } else {
-        let upButton = document.getElementById("upButton");
-        let downButton = document.getElementById("downButton");
-        let leftButton = document.getElementById("leftButton");
-        let rightButton = document.getElementById("rightButton");
     
         dialog.style.display = "none";
         resumeDiv.style.display = "none";
         customDialog.style.display = "none";
-        upButton.disabled = false;
-        downButton.disabled = false;
-        leftButton.disabled = false;
-        rightButton.disabled = false;
     }
 }
 
@@ -253,7 +245,17 @@ export function createUpgradeDialog (){
     buttonMoveSpeed.appendChild(imgMoveSpeed)
     div4.appendChild(buttonMoveSpeed)
 
-    let buttons = [buttonLife, buttonDamage, buttonRegen, buttonFireRate, buttonMoveSpeed];
+    let buttonSkillUp = document.createElement("button")
+    var imgSkillUp = document.createElement("img");
+    imgSkillUp.src = "./assets/images/skill.png";
+    buttonSkillUp.id = "skillUpButton"
+    buttonSkillUp.classList.add("upgradeButton")
+    buttonSkillUp.textContent = "amélio de compétence"
+    buttonSkillUp.setAttribute("data-selected", "false");
+    buttonSkillUp.appendChild(imgSkillUp)
+    div4.appendChild(buttonSkillUp)
+
+    let buttons = [buttonLife, buttonDamage, buttonRegen, buttonFireRate, buttonMoveSpeed, buttonSkillUp];
 
    /* for(let i = 0; i < buttons.length; i++){
         buttons[i].hidden = true;
@@ -340,7 +342,7 @@ export function createSkillDialog (){
    // imgDamage.src = "./assets/images/sword.png";
    buttonSwordDance.id = "swordDanceButton"
    buttonSwordDance.classList.add("skillButton")
-   buttonSwordDance.textContent = "danse des épées"
+   buttonSwordDance.textContent = "danse des épées (WIP)"
    buttonSwordDance.disabled = true
    buttonSwordDance.setAttribute("data-selected", "false");
    // buttonDamage.appendChild(imgDamage)
@@ -351,7 +353,7 @@ export function createSkillDialog (){
    // imgRegen.src = "./assets/images/full_heart.png";
    buttonShieldDance.id = "shieldDanceButton"
    buttonShieldDance.classList.add("skillButton")
-   buttonShieldDance.textContent = "danse des boucliers"
+   buttonShieldDance.textContent = "danse des boucliers (WIP)"
    buttonShieldDance.disabled = true
    buttonShieldDance.setAttribute("data-selected", "false");
   //  buttonRegen.appendChild(imgRegen)
@@ -429,6 +431,19 @@ export function createEchapDialog (){
     success.id = "successButton"
     success.textContent = "Succès"
     div4.appendChild(success)
+
+    let reportInput = document.createElement("input")
+    reportInput.id = "reportInput"
+    reportInput.type = "text"
+    reportInput.style.width = "190px"
+    reportInput.style.marginTop = "10px"
+    reportInput.placeholder = "rapport de bug"
+    div4.appendChild(reportInput)
+
+    let report = document.createElement("button")
+    report.id = "reportButton"
+    report.textContent = "Rapport de bug"
+    div4.appendChild(report)
 
     customDialog.style.width = "250px"
 
@@ -1056,6 +1071,19 @@ export function createStartDialog (){
     success.textContent = "Succès"
     div4.appendChild(success)
 
+    let reportStartInput = document.createElement("input")
+    reportStartInput.id = "reportStartInput"
+    reportStartInput.type = "text"
+    reportStartInput.style.width = "190px"
+    reportStartInput.style.marginTop = "10px"
+    reportStartInput.placeholder = "rapport de bug"
+    div4.appendChild(reportStartInput)
+
+    let report = document.createElement("button")
+    report.id = "reportStartButton"
+    report.textContent = "Rapport de bug"
+    div4.appendChild(report)
+
     let loginDiv = document.createElement("div")
     loginDiv.id = "loginDiv";
     loginDiv.style.marginTop = "10px";
@@ -1168,6 +1196,8 @@ export function activeButton(){
     let resumeRealButton = document.getElementById("resumeRealButton")
     let successStartButton = document.getElementById("successStartButton")
     let successButton = document.getElementById("successButton")
+    let reportStartButton = document.getElementById("reportStartButton")
+    let reportButton = document.getElementById("reportButton")
     let logoutButton = document.getElementById("logoutButton")
     let difficultyButton = document.getElementById("difficultyButton")
 
@@ -1310,7 +1340,19 @@ export function activeButton(){
             let regenButton = document.getElementById("regenButton")
             let fireRateButton = document.getElementById("fireRateButton")
             let moveSpeedButton = document.getElementById("moveSpeedButton")
+            let skillUpButton = document.getElementById("skillUpButton")
             
+            if (skillUpButton.getAttribute("data-selected") === "true") {
+                let player = document.getElementById("player")
+ 
+                player.dataset.skillLevel = parseInt(player.dataset.skillLevel) + 1;
+
+                skillUpButton.setAttribute("data-selected", "false");
+                skillUpButton.classList.remove("selected");
+                game.dataset.isGamePaused = false;
+                document.getElementById("upgrade").style.display = "none";
+            }
+
             if (lifeButton.getAttribute("data-selected") === "true") {
                 let player = document.getElementById("player")
  
@@ -1633,6 +1675,38 @@ export function activeButton(){
         });
     }
 
+    if(reportButton !== null){
+        reportButton.addEventListener("click", () => {
+            let reportInput = document.getElementById("reportInput");
+            let params = new URLSearchParams({ route: "report", message: reportInput.value, player_id: localStorage.getItem("player_id")});
+            let urlAvecParametres = `${apiURL}?${params}`;
+        
+            axios.get(urlAvecParametres)
+            .then(response => {
+                console.log(response)
+            })
+            .catch(error => {
+                console.error('Erreur :', error);
+            });
+        });
+    }
+
+    if(reportStartButton !== null){
+        reportStartButton.addEventListener("click", () => {
+            let reportInput = document.getElementById("reportStartInput");
+            let params = new URLSearchParams({ route: "report", message: reportInput.value, player_id: localStorage.getItem("player_id")});
+            let urlAvecParametres = `${apiURL}?${params}`;
+        
+            axios.get(urlAvecParametres)
+            .then(response => {
+                console.log(response)
+            })
+            .catch(error => {
+                console.error('Erreur :', error);
+            });
+        });
+    
+    }
 }
 
 function updateSuccess () {

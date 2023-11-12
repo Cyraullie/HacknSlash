@@ -1,15 +1,15 @@
 import { initializeGameData } from './game.js';
 
 document.addEventListener('DOMContentLoaded', function () {
-    document.addEventListener("keydown", function(event) {
+   /* document.addEventListener("keydown", function(event) {
         if (event.key === " ") {
           event.preventDefault(); // Empêche le comportement par défaut de la touche Espace
         }
-    });
+    });*/
 
-    document.addEventListener('contextmenu', function (event) {
+    /*document.addEventListener('contextmenu', function (event) {
       event.preventDefault();
-    });
+    });*/
 
     initializeGameData();
 });
