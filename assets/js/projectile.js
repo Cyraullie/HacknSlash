@@ -1,4 +1,3 @@
-import { playerHeight, playerWidth } from "./data";
 import { checkLVL } from "./game";
 
 const map = document.getElementById("map");
@@ -38,10 +37,12 @@ export function startShooting(x, y, player) {
         projectile.style.top = projectileY + "px";
                 
         targetX = x;
-        targetY = y;     
-
+        targetY = y; 
+            
         isShooting = true;
         moveProjectile(projectileX, projectileY, targetX, targetY, projectile)
+        
+
     }
     
 }

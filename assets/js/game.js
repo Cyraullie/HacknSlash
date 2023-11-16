@@ -3,7 +3,7 @@
 import { apiURL, windowHeight, windowWidth } from './data.js';
 import { createPlayer, } from './player.js';
 import { createMonster } from './monster.js';
-import { checkCollisionWithMonsters, startShooting } from './projectile.js';
+import { checkCollisionWithMonsters, rotateProjectile, startShooting } from './projectile.js';
 import { displayGameOver, displayUpgrade, createUpgradeDialog, createGameOverDialog, createEchapDialog, createOptionsDialog, displayEscape, activeButton, createStartDialog, createSuccessDialog, displaySkill, createSkillDialog } from './menu.js';
 import { Howl } from 'howler';
 import axios from 'axios';
@@ -45,9 +45,6 @@ let backgroundSound;
 //TODO Systeme de compétence ?
 //TODO plusieurs tir en un clique ?
 
-
-//TODO 1 compétences active sur la touche espace par défault
-//TODO la compétence est débloquer au niveau 1
 
 //TODO mettre un nombre de tir possible ? qui recharge après un action ?
 
@@ -180,6 +177,12 @@ export function initializeGameData() {
         game.dataset.keySkill = localStorage.getItem("keySkill")
     }else{
         game.dataset.keySkill = "q"
+    }
+
+    if(localStorage.getItem("keyFire") != null){
+        game.dataset.keyFire = localStorage.getItem("keyFire")
+    }else{
+        game.dataset.keyFire = "r"
     }
  
     // Initialisation du jeu
@@ -351,7 +354,7 @@ export function initializeGame() {
 function handleMouseClickDown(event){
     //if(event.button == game.dataset.keyFire){
         handleClick = true;
-   // }
+    //} 
 }
 
 function handleMouseClickUp(){
@@ -383,6 +386,9 @@ function handleKeyDown(event) {
         case game.dataset.keySkill:
             useSkill(player);
             break;
+        case game.dataset.keyFire:
+            handleClick = true;
+            break;
         case "escape":
             togglePauseGame();
             break;
@@ -402,6 +408,9 @@ function handleKeyUp(event) {
             break;
         case game.dataset.keyRight:
             player.dataset.movingRight = false;
+            break;
+        case game.dataset.keyFire:
+            handleClick = false;
             break;
     }
 }
@@ -534,25 +543,10 @@ export function handleMouseClick() {
     }
 }
 
-
-function setSkill (player){
-    switch (parseInt(player.dataset.skill)) {
-        case 0 :
-            console.log("tir multiple")
-            break;
-        case 1 :
-            console.log("danse de l'épée")
-            break;
-        case 2 :
-            console.log("danse du bouclier")
-            break;
-    }
-}
-
 function useSkill (player){
+    let skillKeyText = document.getElementById("skillKeyText")
     switch (parseInt(player.dataset.skill)) {
         case 0 :
-            let skillKeyText = document.getElementById("skillKeyText")
             if (!player.hasAttribute('data-skilled')) {
                 player.setAttribute('data-skilled', 'true');
 
@@ -592,10 +586,82 @@ function useSkill (player){
             }
             break;
         case 1 :
-            console.log("danse de l'épée")
+            if (!player.hasAttribute('data-skilled')) {
+                player.setAttribute('data-skilled', 'true');
+
+                // Définir le temps initial à 15 secondes
+                let remainingTime = 15;
+                // Afficher le compte à rebours initial
+
+                skillKeyText.textContent = remainingTime;
+                // Définir l'intervalle pour décrémenter le temps
+                const countdownInterval = setInterval(() => {
+                    if(!JSON.parse(game.dataset.isGamePaused)) {
+                        remainingTime--;
+                        skillKeyText.textContent = remainingTime;
+
+                        // Afficher le nouveau temps restant
+
+                        // Vérifier si le temps est écoulé
+                        if (remainingTime <= 0) {
+                            clearInterval(countdownInterval); // Arrêter l'intervalle
+                            skillKeyText.textContent = game.dataset.keySkill;
+                            player.removeAttribute('data-skilled');
+                        }
+                    }
+                }, 1000);
+
+                for(let y = 0; y < parseInt(player.dataset.skillLevel); y++){
+                    setTimeout(() => {
+                        for(let i = 0; i < 8; i++){
+                            let playerHitbox = player.getBoundingClientRect();
+                            let posX = 0;
+                            let posY = 0;
+                            switch(i){
+                                case 0 :
+                                    posX = playerHitbox.left;
+                                    posY = playerHitbox.top - playerHitbox.height / 2;
+                                    break;
+                                case 1  :
+                                    posX = playerHitbox.left +  playerHitbox.width * 2.5;
+                                    posY = playerHitbox.top - playerHitbox.height / 2;
+                                    break;
+                                case 2 :
+                                    posX = playerHitbox.left + playerHitbox.width / 2;
+                                    posY = playerHitbox.top + playerHitbox.height / 2;
+                                    break;
+                                case 3  :
+                                    posX = playerHitbox.left + playerHitbox.width * 4;
+                                    posY = playerHitbox.top + playerHitbox.height * 2;
+                                    break;
+                                case 4 :
+                                    posX = playerHitbox.left;
+                                    posY = playerHitbox.top + playerHitbox.height * 2;
+                                    break;
+                                case 5  :                            
+                                    posX = playerHitbox.left -  playerHitbox.width * 4;
+                                    posY = playerHitbox.top + playerHitbox.height * 2;
+                                    break;
+                                case 6  :
+                                    posX = playerHitbox.left - playerHitbox.width / 2;
+                                    posY =  playerHitbox.top + playerHitbox.height / 2;
+                                    break;
+                                case 7  :
+                                    posX = playerHitbox.left - playerHitbox.width * 6;
+                                    posY = playerHitbox.top - playerHitbox.height * 2;
+                                    break;
+                            }
+                            startShooting(posX, posY, player)
+                        }
+                    }, y * 100);
+                }
+            }
             break;
         case 2 :
             console.log("danse du bouclier")
+            break;
+        case 3 :
+            console.log("dance de l'épée")
             break;
     }
 }
@@ -793,13 +859,12 @@ function endGame() {
     monsters.forEach((monster) => {
         monster.remove();
     });
-    sessionStorage.setItem("vagues", numVague - 1)
+    sessionStorage.setItem("vagues", numVague)
     displayGameOver("votre score est de ", " vague(s)");
 }
 
 function gameLoop() {
     if(isNotSkilled  && document.getElementById("skill").style.display == "none"){
-        setSkill(player);
         isNotSkilled = false;
     }
 
@@ -846,7 +911,7 @@ function gameLoop() {
         }
     }
 
-    if (monsters.length === 0) {
+    if (monsters.length === 0 && !isEnded) {
         numVague++;
         numVagueNoMove++;
         numVagueNoHit++;

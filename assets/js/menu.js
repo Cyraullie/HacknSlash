@@ -13,8 +13,7 @@ export function displayGameOver(text1, text2) {
 
     dialog.style.display = "block";
 }
-//TODO bouton signaler un bug
-//TODO ajout de l'amélioration de skill
+
 export function displayUpgrade() {
     let dialog = document.getElementById("upgrade");
     let fireRateButton = document.getElementById("fireRateButton")
@@ -59,19 +58,17 @@ export function displaySkill() {
     let multipleFireButton = document.getElementById("multipleFireButton")
     let shieldDanceButton = document.getElementById("shieldDanceButton")
     let swordDanceButton = document.getElementById("swordDanceButton")
+    let projAroudButton = document.getElementById("projAroudButton")
 //TODO trouver 3-4 autre compétence
 //TODO Un truc qui te tourne autour et qui inflige des degats
 //TODO skill qui tire tout au tour du joueur
 //TODO Un truc qui te tourne autour et protege ?
-//TODO Un boost de vitesse qui te permet de traverser les ennemies pdt 2 3 secondes ?
 
 //TODO trouver des images pour chaque compétences
+//TODO une barre de mana qui recharge petit a petit pour pouvoir lancer les compétences ?
+//TODO ducoup avoir un upgrade qui augmente le mana gagner ?
     
-    
-    let damageButton = document.getElementById("damageButton")
-    let moveSpeedButton = document.getElementById("moveSpeedButton")
-
-    let buttonsToDisplay = [multipleFireButton, swordDanceButton, shieldDanceButton];
+    let buttonsToDisplay = [multipleFireButton, swordDanceButton, shieldDanceButton, projAroudButton];
 
     for(let i = 0; i < buttonsToDisplay.length; i++){
         buttonsToDisplay[i].hidden = false;
@@ -332,10 +329,21 @@ export function createSkillDialog (){
     //imgLife.src = "./assets/images/full_heart.png";
     buttonMultipleFire.id = "multipleFireButton"
     buttonMultipleFire.classList.add("skillButton")
-    buttonMultipleFire.textContent = "tir multiple"
+    buttonMultipleFire.textContent = "Tir Multiple"
     buttonMultipleFire.setAttribute("data-selected", "false");
     //buttonLife.appendChild(imgLife)
     div4.appendChild(buttonMultipleFire)  
+
+    let projAroudButton = document.createElement("button")
+   // var imgRegen = document.createElement("img");
+   // imgRegen.src = "./assets/images/full_heart.png";
+   projAroudButton.id = "projAroudButton"
+   projAroudButton.classList.add("skillButton")
+   projAroudButton.textContent = "Rafale Sphérique"
+   projAroudButton.disabled = false
+   projAroudButton.setAttribute("data-selected", "false");
+  //  buttonRegen.appendChild(imgRegen)
+    div4.appendChild(projAroudButton)
 
     let buttonSwordDance = document.createElement("button")
    // var imgDamage = document.createElement("img");
@@ -359,7 +367,12 @@ export function createSkillDialog (){
   //  buttonRegen.appendChild(imgRegen)
     div4.appendChild(buttonShieldDance)
 
-    let buttons = [buttonMultipleFire, buttonShieldDance, buttonSwordDance];
+
+
+    
+
+
+    let buttons = [buttonMultipleFire, buttonShieldDance, buttonSwordDance, projAroudButton];
 
     buttons.forEach((button) => {
         button.addEventListener("click", () => {
@@ -381,9 +394,7 @@ export function createSkillDialog (){
         });
     });
 
-
-   // customDialog.style.width = "1050px"
-   customDialog.style.width = "630px" 
+   customDialog.style.width = (buttons.length * 210) + "px" 
 
     let div5 = document.createElement("div")
     div5.id = "buttonDiv";
@@ -736,7 +747,7 @@ export function createOptionsDialog (){
         dashButton.addEventListener("keydown", keydownHandler);
     })
 
-    /*let fireDiv = document.createElement("div")
+    let fireDiv = document.createElement("div")
     fireDiv.classList.add("keyDiv");
     divControl.appendChild(fireDiv)
     
@@ -760,7 +771,7 @@ export function createOptionsDialog (){
     
         fireButton.addEventListener("keydown", keydownHandler);
       //fireButton.addEventListener("mousedown", keydownHandler);
-    })*/
+    })
 
     let skillDiv = document.createElement("div")
     skillDiv.classList.add("keyDiv");
@@ -1418,6 +1429,7 @@ export function activeButton(){
             let multipleFireButton = document.getElementById("multipleFireButton")
             let swordDanceButton = document.getElementById("swordDanceButton")
             let shieldDanceButton = document.getElementById("shieldDanceButton")
+            let projAroudButton = document.getElementById("projAroudButton")
             
             if (multipleFireButton.getAttribute("data-selected") === "true") {
                 let player = document.getElementById("player")
@@ -1433,7 +1445,7 @@ export function activeButton(){
             if (swordDanceButton.getAttribute("data-selected") === "true") {
                 let player = document.getElementById("player")
 
-                player.dataset.skill = 1;
+                player.dataset.skill = 3;
                 
                 swordDanceButton.setAttribute("data-selected", "false");
                 swordDanceButton.classList.remove("selected");
@@ -1451,6 +1463,20 @@ export function activeButton(){
                 game.dataset.isGamePaused = false;
                 document.getElementById("skill").style.display = "none";
             }
+            
+        
+            if (projAroudButton.getAttribute("data-selected") === "true") {
+                let player = document.getElementById("player")
+
+                player.dataset.skill = 1;
+                
+                projAroudButton.setAttribute("data-selected", "false");
+                projAroudButton.classList.remove("selected");
+                game.dataset.isGamePaused = false;
+                document.getElementById("skill").style.display = "none";
+            }
+
+            
         });
     }
     
@@ -1681,13 +1707,15 @@ export function activeButton(){
             let params = new URLSearchParams({ route: "report", message: reportInput.value, player_id: localStorage.getItem("player_id")});
             let urlAvecParametres = `${apiURL}?${params}`;
         
-            axios.get(urlAvecParametres)
-            .then(response => {
-                console.log(response)
-            })
-            .catch(error => {
-                console.error('Erreur :', error);
-            });
+            if (reportInput.value != "") {
+                axios.get(urlAvecParametres)
+                .then(response => {
+                    console.log(response)
+                })
+                .catch(error => {
+                    console.error('Erreur :', error);
+                });
+            }
         });
     }
 
@@ -1696,14 +1724,15 @@ export function activeButton(){
             let reportInput = document.getElementById("reportStartInput");
             let params = new URLSearchParams({ route: "report", message: reportInput.value, player_id: localStorage.getItem("player_id")});
             let urlAvecParametres = `${apiURL}?${params}`;
-        
-            axios.get(urlAvecParametres)
-            .then(response => {
-                console.log(response)
-            })
-            .catch(error => {
-                console.error('Erreur :', error);
-            });
+            if (reportInput.value != "") {
+                axios.get(urlAvecParametres)
+                .then(response => {
+                    console.log(response)
+                })
+                .catch(error => {
+                    console.error('Erreur :', error);
+                });
+            }
         });
     
     }
